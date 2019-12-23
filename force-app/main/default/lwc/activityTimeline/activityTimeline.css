@@ -1,0 +1,4 @@
+.cardSpacing {
+    margin-right: var(--lwc-spacingSmall);
+    margin-left: var(--lwc-spacingSmall);
+}

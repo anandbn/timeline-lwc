@@ -1,0 +1,21 @@
+<template>
+    <article if:true={isParametersValid} class="slds-card">
+        <ul if:false={error} class="slds-timeline">
+            <template for:each={childRecords} for:item="theRecord">
+               
+                <c-timeline-item key={theRecord.recordId} object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
+                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay} record-id={theRecord.recordId}
+                    theme-info={theRecord.themeInfo}>
+                </c-timeline-item>
+                
+            </template>
+        </ul>
+        <div if:true={error} class="slds-text-color_destructive">
+            {errorMsg} 
+        </div>
+        </article>
+    <div if:false={isParametersValid} class="slds-text-color_destructive">
+        Invalid configuration parameters. Either recordId or configId are empty.    
+    </div>
+
+</template>

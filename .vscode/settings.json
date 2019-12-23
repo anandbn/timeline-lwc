@@ -1,0 +1,9 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/.sfdx": true
+  },
+  "eslint.nodePath": "/Users/anarasimhan/.vscode/extensions/salesforce.salesforcedx-vscode-lwc-47.10.0/node_modules",
+  "salesforcedx-vscode-core.show-cli-success-msg": false
+}
