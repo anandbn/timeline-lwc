@@ -8,6 +8,9 @@
             ],
             "c/timelineItem": [
                 "timelineItem/timelineItem.js"
+            ],
+            "c/timelineItemTask": [
+                "timelineItemTask/timelineItemTask.js"
             ]
         }
     },

@@ -1,0 +1,56 @@
+<template>
+    <li class="cardSpacing">
+        <div class={itemStyle}>
+            <span class="slds-assistive-text">{object}</span>
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning-button-icon if:false={expanded} size="x-small" icon-name="utility:chevronright"
+                        alternative-text="Toggle details" onclick={toggleDetailSection}>
+                    </lightning-button-icon>
+                    <lightning-button-icon if:true={expanded} size="x-small" icon-name="utility:switch"
+                        alternative-text="Toggle details" onclick={toggleDetailSection}>
+                    </lightning-button-icon>
+                    <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                        <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+                            <h3 class="slds-truncate" title={title}>
+                                <a onclick={navigateToTask}>
+                                    <strong>{title}</strong>
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <p class="slds-timeline__date">{dateValue}</p>
+                        </div>
+                    </div>
+                    <p if:false={isCall} class="slds-m-horizontal_xx-small">
+                        <a onclick={navigateToOwner}>{assignedToName}</a> created a task with&nbsp;
+                        <a onclick={navigateToWho}>{whoToName}</a>
+                    </p>
+                    <p if:true={isCall} class="slds-m-horizontal_xx-small">
+                        <a onclick={navigateToOwner}>{assignedToName}</a> logged a call with&nbsp;
+                        <a onclick={navigateToWho}>{whoToName}</a>
+                    </p>
+                    <div if:true={expanded}
+                        class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                        <div class="slds-form-element">
+                            <span class="slds-form-element__label">Name</span>
+                            <div class="slds-form-element__control">
+                                <a onclick={navigateToWho}>{whoToName}</a>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <span class="slds-form-element__label">Description</span>
+                            <div class="slds-form-element__control">
+                                {description}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+
+</template>

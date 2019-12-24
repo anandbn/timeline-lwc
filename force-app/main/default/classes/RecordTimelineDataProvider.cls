@@ -27,6 +27,9 @@ public with sharing class RecordTimelineDataProvider {
         List<String> childSoqls = new List<String>();
         for(Timeline_Child_Object__c childObjConf: conf.Timeline_Child_Objects__r){
             String childSoql = '(select Id,CreatedDate';
+            if(childObjConf.Object__c.equalsIgnoreCase('Task')){
+                childSoql +=',OwnerId,WhoId,Owner.Name,Who.Name,TaskSubtype';
+            }
             if(childObjConf.Date_Field__c !=null){
                 childSoql +=','+childObjConf.Date_Field__c;
             }
