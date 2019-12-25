@@ -55,7 +55,9 @@ export default class ActivityTimeline extends LightningElement {
                                     childRec.WhoId=relRecords[j].WhoId;
                                     childRec.OwnerId=relRecords[j].OwnerId;
                                     childRec.assignedToName=(childRec.OwnerId === CURRENT_USER_ID) ? "You": relRecords[j].Owner.Name;
-                                    childRec.whoToName=relRecords[j].Who.Name;
+                                    if(relRecords[j].Who){
+                                        childRec.whoToName=relRecords[j].Who.Name;
+                                    }
                                     childRec.TaskSubtype=relRecords[j].TaskSubtype;
 
                                 }

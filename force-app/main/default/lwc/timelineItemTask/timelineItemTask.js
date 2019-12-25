@@ -1,5 +1,8 @@
-import { LightningElement,api,track } from 'lwc';
+import { LightningElement,api,track,wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation'
+import CURRENT_USER_ID from '@salesforce/user/Id';
+
+import getEmailDetails from '@salesforce/apex/RecordTimelineDataProvider.getEmailDetails';
 
 export default class TimelineItemTask extends NavigationMixin(LightningElement) {
 
@@ -14,20 +17,53 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     @api whoToName;
     @api taskSubtype;
 
+    @wire(getEmailDetails,{taskId:'$recordId'})
+    emailMessage ({ error, data }) {
+        if (data) {
+            this.assignedToName=data.FromName;
+            this.description=data.TextBody;
+            this.recordId=data.Id;
+            let emailRelations = data.EmailMessageRelations;
+            if(emailRelations && emailRelations.length>=1){
+                this.whoToName=emailRelations[0].Relation.Name;
+                this.whoId=emailRelations[0].RelationId;
+                if(emailRelations.length === 2){
+                    this.assignedToName=emailRelations[1].RelationId===CURRENT_USER_ID?"You":emailRelations[1].Relation.Name;
+                    this.ownerId=emailRelations[1].RelationId;
+                }
+
+            }
+           
+        } 
+    };
+
     get itemStyle() {
         return this.expanded ? "slds-timeline__item_expandable slds-is-open" : "slds-timeline__item_expandable";
     }
 
     get iconName(){
-        return this.taskSubtype === "Call"?"standard:log_a_call":"standard:task";
+        if(this.taskSubtype === "Call"){
+            return "standard:log_a_call"
+        }else if(this.taskSubtype === "Email"){
+            return "standard:email";
+        }else{
+            return "standard:task";
+        }
     }
 
     get isCall(){
         return this.taskSubtype === "Call";
     }
 
+    get isTask(){
+        return (this.taskSubtype != "Email" && this.taskSubtype != "Call");
+    }
 
+    get isEmail(){
+        return this.taskSubtype === "Email";
+    }
 
+    
     toggleDetailSection() {
         this.expanded = !this.expanded;
     }

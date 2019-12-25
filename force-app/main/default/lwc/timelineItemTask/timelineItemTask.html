@@ -25,13 +25,16 @@
                             <p class="slds-timeline__date">{dateValue}</p>
                         </div>
                     </div>
-                    <p if:false={isCall} class="slds-m-horizontal_xx-small">
+                    <p if:true={isTask} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> created a task with&nbsp;
                         <a onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <p if:true={isCall} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> logged a call with&nbsp;
                         <a onclick={navigateToWho}>{whoToName}</a>
+                    </p>
+                    <p if:true={isEmail} class="slds-m-horizontal_xx-small">
+                        <a onclick={navigateToOwner}>{assignedToName}</a> sent an email to <a onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <div if:true={expanded}
                         class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
@@ -43,7 +46,10 @@
                         </div>
                         <div class="slds-form-element">
                             <span class="slds-form-element__label">Description</span>
-                            <div class="slds-form-element__control">
+                            <div if:false={isEmail} class="slds-form-element__control">
+                                {description}
+                            </div>
+                            <div if:true={isEmail} class="slds-form-element__control" style="word-wrap: break-word;">
                                 {description}
                             </div>
                         </div>
