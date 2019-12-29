@@ -26,19 +26,26 @@
                         </div>
                     </div>
                     <p if:true={isTask} class="slds-m-horizontal_xx-small">
-                        <a onclick={navigateToOwner}>{assignedToName}</a> created a task with&nbsp;
-                        <a onclick={navigateToWho}>{whoToName}</a>
+                        <a onclick={navigateToOwner}>{assignedToName}</a> 
+                        <span if:false={hasWhoTo}> had a task</span>
+                        <span if:true={hasWhoTo}> created a task with&nbsp;</span>
+                        <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <p if:true={isCall} class="slds-m-horizontal_xx-small">
-                        <a onclick={navigateToOwner}>{assignedToName}</a> logged a call with&nbsp;
-                        <a onclick={navigateToWho}>{whoToName}</a>
+                        <a onclick={navigateToOwner}>{assignedToName}</a>
+                        <span if:false={hasWhoTo}> logged a task</span>
+                        <span if:true={hasWhoTo}> logged a call with&nbsp;</span>
+                        <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <p if:true={isEmail} class="slds-m-horizontal_xx-small">
-                        <a onclick={navigateToOwner}>{assignedToName}</a> sent an email to <a onclick={navigateToWho}>{whoToName}</a>
+                        <a onclick={navigateToOwner}>{assignedToName}</a> 
+                        <span if:false={hasWhoTo}> sent an email</span>
+                        <span if:true={hasWhoTo}> sent an email to </span>
+                        <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <div if:true={expanded}
                         class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
-                        <div class="slds-form-element">
+                        <div if:true={hasWhoTo} class="slds-form-element">
                             <span class="slds-form-element__label">Name</span>
                             <div class="slds-form-element__control">
                                 <a onclick={navigateToWho}>{whoToName}</a>

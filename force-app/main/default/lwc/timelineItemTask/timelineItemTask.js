@@ -63,7 +63,9 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         return this.taskSubtype === "Email";
     }
 
-    
+    get hasWhoTo(){
+        return this.whoId!=null;
+    }
     toggleDetailSection() {
         this.expanded = !this.expanded;
     }

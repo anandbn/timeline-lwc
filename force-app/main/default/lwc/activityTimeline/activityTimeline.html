@@ -1,26 +1,33 @@
 <template>
     <article if:true={isParametersValid} class="slds-card">
         <ul if:false={error} class="slds-timeline">
+            <li class="slds-timeline__actions slds-timeline__actions_inline">
+                <a class="slds-button" role="button" onclick={refreshData}>
+                    <lightning-button-icon icon-name="action:refresh" alternative-text="Refresh data" size="x-small"></lightning-button-icon>
+                    &nbsp;Refresh
+                </a>
+            </li>
             <template for:each={childRecords} for:item="theRecord">
-                <c-timeline-item if:true={theRecord.isCustom} key={theRecord.recordId} object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
+                <c-timeline-item if:true={theRecord.isCustom} key={theRecord.recordId} object={theRecord.object}
+                    title={theRecord.title} date-value={theRecord.dateValue}
                     expanded-fields-to-display={theRecord.expandedFieldsToDisplay} record-id={theRecord.recordId}
                     theme-info={theRecord.themeInfo}>
                 </c-timeline-item>
-                <c-timeline-item-task if:true={theRecord.isTask} key={theRecord.recordId} title={theRecord.title} date-value={theRecord.dateValue}
-                                        record-id={theRecord.recordId} description={theRecord.description} 
-                                        who-to-name={theRecord.whoToName} owner-id={theRecord.OwnerId} 
-                                        assigned-to-name={theRecord.assignedToName} who-id={theRecord.WhoId}
-                                        task-subtype={theRecord.TaskSubtype}>
+                <c-timeline-item-task if:true={theRecord.isTask} key={theRecord.recordId} title={theRecord.title}
+                    date-value={theRecord.dateValue} record-id={theRecord.recordId} description={theRecord.description}
+                    who-to-name={theRecord.whoToName} owner-id={theRecord.OwnerId}
+                    assigned-to-name={theRecord.assignedToName} who-id={theRecord.WhoId}
+                    task-subtype={theRecord.TaskSubtype}>
 
                 </c-timeline-item-task>
             </template>
         </ul>
         <div if:true={error} class="slds-text-color_destructive">
-            {errorMsg} 
+            {errorMsg}
         </div>
-        </article>
+    </article>
     <div if:false={isParametersValid} class="slds-text-color_destructive">
-        Invalid configuration parameters. Either recordId or configId are empty.    
+        Invalid configuration parameters. Either recordId or configId are empty.
     </div>
 
 </template>
