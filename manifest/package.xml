@@ -32,5 +32,15 @@
         <members>*</members>
         <name>StaticResource</name>
     </types>
+    <types>
+        <members>timeline__Timeline_Configuration__c</members>
+        <members>timeline__Timeline_Child_Object__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Timeline_Configuration__c-Timeline Configuration Layout</members>
+        <members>Timeline_Child_Object__c-Timeline Child Object Layout</members>
+        <name>Layout</name>
+    </types>
     <version>47.0</version>
 </Package>
