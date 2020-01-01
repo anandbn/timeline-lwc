@@ -4,11 +4,14 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript } from 'lightning/platformResourceLoader';
 import MOMENT_JS from '@salesforce/resourceUrl/moment_js';
 import CURRENT_USER_ID from '@salesforce/user/Id';
-import { refreshApex } from '@salesforce/apex';
 
 export default class ActivityTimeline extends LightningElement {
     @api recordId;
     @api configId;
+    @api headerTitle;
+    @api headerIcon;
+    @api showHeader=false;  
+    @api additionalMargin;
     @track childRecords;
     @track error;
     @track errorMsg;
@@ -74,7 +77,11 @@ export default class ActivityTimeline extends LightningElement {
                 })
                 .catch(error => {
                     this.error = true;
-                    this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
+                    if(error.body && error.body.exceptionType && error.body.message ){
+                        this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
+                    }else{
+                        this.errorMsg = JSON.stringify(error);
+                    }
                 });
 
         })
@@ -144,10 +151,22 @@ export default class ActivityTimeline extends LightningElement {
         })
         .catch(error => {
             this.error = true;
-            this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
+            if(error.body && error.body.exceptionType && error.body.message ){
+                this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
+            }else{
+                this.errorMsg = JSON.stringify(error);
+            }
         });
     }
     get isParametersValid() {
         return (this.recordId != null && this.configId != null)
+    }
+
+    get timelineStyles(){
+        if(this.additionalMargin){
+           return 'slds-card '+this.additionalMargin;
+        }else{
+            return 'slds-card';
+        }
     }
 }

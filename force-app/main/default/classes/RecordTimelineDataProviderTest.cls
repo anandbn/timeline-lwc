@@ -13,6 +13,15 @@ public with sharing class RecordTimelineDataProviderTest {
                                                                             Title_Field__c='Subject',
                                                                             Timeline_Configuration__c=timelineConf.Id);
         insert childConf;
+
+        childConf = new Timeline_Child_Object__c(  Date_Field__c='CreatedDate',
+                                                                            Fields_To_Display__c='Description',
+                                                                            Object__c='Case',
+                                                                            Relationship_Name__c='Cases',
+                                                                            Icon_Name__c='standard:case',
+                                                                            Title_Field__c='Subject',
+                                                                            Timeline_Configuration__c=timelineConf.Id);
+        insert childConf;
         Account acct = new Account(Name='My Timeline Test data account');
         insert acct;
         Contact ct = new Contact(FirstName='Test',LastName='Contact',Email='test@timeline.com',AccountId=acct.Id);
@@ -39,6 +48,7 @@ public with sharing class RecordTimelineDataProviderTest {
         Timeline_Configuration__c conf = [select Id from Timeline_Configuration__c limit 1];
         TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id);
         System.assert(resp.configuration!=null, 'Timeline configuration is null');
+        System.assert(resp.data!=null, 'Timeline data is null');
     }
 
     @isTest static void testGetTimelineItemDataNullInput(){

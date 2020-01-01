@@ -1,0 +1,32 @@
+<template>
+    <lightning-tabset>
+        <lightning-tab label="Standard Icons">
+            <div style="height: 300px;">
+                <lightning-datatable key-field="id" data={standardIcons} columns={columns} max-row-selection="1"
+                    onrowselection={iconSelected}>
+                </lightning-datatable>
+            </div>
+        </lightning-tab>
+        <lightning-tab label="Action Icons">
+            <div style="height: 300px;">
+                <lightning-datatable key-field="id" data={actionIcons} columns={columns} max-row-selection="1"
+                    onrowselection={iconSelected}>
+                </lightning-datatable>
+            </div>
+        </lightning-tab>
+        <lightning-tab label="Custom Icons">
+            <div style="height: 300px;">
+                <lightning-datatable key-field="id" data={customIcons} columns={columns} max-row-selection="1"
+                    onrowselection={iconSelected}>
+                </lightning-datatable>
+            </div>
+        </lightning-tab>
+        <lightning-tab label="Utility Icons">
+            <div style="height: 300px;">
+                <lightning-datatable key-field="id" data={utilityIcons} columns={columns} max-row-selection="1"
+                    onrowselection={iconSelected}>
+                </lightning-datatable>
+            </div>
+        </lightning-tab>
+    </lightning-tabset>
+</template>

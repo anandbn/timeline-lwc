@@ -1,0 +1,15 @@
+<template>
+    <div if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+    </div>
+    <div  if:false={isLoading} style="height: 300px;">
+        <lightning-datatable
+                key-field="id"
+                data={childRelationships}
+                columns={columns}
+                max-row-selection="1"
+                onrowselection={rowSelected}>
+        </lightning-datatable>
+    </div>  
+    
+</template>

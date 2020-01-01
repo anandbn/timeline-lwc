@@ -11,6 +11,21 @@
             ],
             "c/timelineItemTask": [
                 "timelineItemTask/timelineItemTask.js"
+            ],
+            "c/getObjectNameFromConfig": [
+                "getObjectNameFromConfig/getObjectNameFromConfig.js"
+            ],
+            "c/selectChildObject": [
+                "selectChildObject/selectChildObject.js"
+            ],
+            "c/selectFieldsForConfig": [
+                "selectFieldsForConfig/selectFieldsForConfig.js"
+            ],
+            "c/addChildObjectProgressBar": [
+                "addChildObjectProgressBar/addChildObjectProgressBar.js"
+            ],
+            "c/objectIconSelector": [
+                "objectIconSelector/objectIconSelector.js"
             ]
         }
     },

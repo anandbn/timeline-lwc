@@ -60,17 +60,28 @@ public with sharing class RecordTimelineDataProvider {
         String soqlStmt = 'select Id,';
         List<String> childSoqls = new List<String>();
         for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
-            String childSoql = '(select Id';
-            childSoql += childObjConf.timeline__Object__c.endsWith('__x')?'':',CreatedDate';
+            String childSoql = '(select ';
+            List<String> fieldsToQuery = childObjConf.timeline__Fields_to_Display__c.split(',');
+            fieldsToQuery.add('Id');
+
+            if(!childObjConf.timeline__Object__c.endsWith('__x')){
+                fieldsToQuery.add('CreatedDate');
+            }
+
             if(childObjConf.Object__c.equalsIgnoreCase('Task')){
-                childSoql +=',OwnerId,WhoId,Owner.Name,Who.Name,TaskSubtype';
+                fieldsToQuery.add('OwnerId');
+                fieldsToQuery.add('WhoId');
+                fieldsToQuery.add('Owner.Name');
+                fieldsToQuery.add('Who.Name');
+                fieldsToQuery.add('TaskSubtype');
             }
-            if(childObjConf.timeline__Date_Field__c !=null){
-                childSoql +=','+childObjConf.timeline__Date_Field__c;
+            if(childObjConf.timeline__Date_Field__c !=null && !fieldsToQuery.contains(childObjConf.timeline__Date_Field__c)){
+                fieldsToQuery.add(childObjConf.timeline__Date_Field__c);
             }
-            if(childObjConf.Title_Field__c !=null){
-                childSoql +=','+childObjConf.timeline__Title_Field__c;
+            if(childObjConf.Title_Field__c !=null && !fieldsToQuery.contains(childObjConf.Title_Field__c)){
+                fieldsToQuery.add(childObjConf.Title_Field__c);
             }
+            childSoql += String.join(fieldsToQuery,',');
             childSoql +=' from '+childObjConf.timeline__Relationship_Name__c+')';
             childSoqls.add(childSoql);
         }

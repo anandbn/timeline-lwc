@@ -42,5 +42,9 @@
         <members>Timeline_Child_Object__c-Timeline Child Object Layout</members>
         <name>Layout</name>
     </types>
+    <types>
+        <members>*</members>
+        <name>Flow</name>
+    </types>
     <version>47.0</version>
 </Package>
