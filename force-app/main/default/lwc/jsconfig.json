@@ -6,14 +6,14 @@
             "c/activityTimeline": [
                 "activityTimeline/activityTimeline.js"
             ],
-            "c/timelineItem": [
-                "timelineItem/timelineItem.js"
-            ],
-            "c/timelineItemTask": [
-                "timelineItemTask/timelineItemTask.js"
+            "c/addChildObjectProgressBar": [
+                "addChildObjectProgressBar/addChildObjectProgressBar.js"
             ],
             "c/getObjectNameFromConfig": [
                 "getObjectNameFromConfig/getObjectNameFromConfig.js"
+            ],
+            "c/objectIconSelector": [
+                "objectIconSelector/objectIconSelector.js"
             ],
             "c/selectChildObject": [
                 "selectChildObject/selectChildObject.js"
@@ -21,11 +21,11 @@
             "c/selectFieldsForConfig": [
                 "selectFieldsForConfig/selectFieldsForConfig.js"
             ],
-            "c/addChildObjectProgressBar": [
-                "addChildObjectProgressBar/addChildObjectProgressBar.js"
+            "c/timelineItem": [
+                "timelineItem/timelineItem.js"
             ],
-            "c/objectIconSelector": [
-                "objectIconSelector/objectIconSelector.js"
+            "c/timelineItemTask": [
+                "timelineItemTask/timelineItemTask.js"
             ]
         }
     },
