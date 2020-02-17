@@ -23,7 +23,7 @@ export default class ActivityTimeline extends LightningElement {
         ]).then(() => {
             this.momentJSLoaded = true;
             console.log(new Date() + ':MomentJS loaded');
-            getTimelineItemData({ confId: this.configId, recordId: this.recordId })
+            getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId })
                 .then(data => {
                     this.childRecords = new Array();
                     let unsortedRecords = new Array();

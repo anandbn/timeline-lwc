@@ -1,8 +1,8 @@
 public with sharing class RecordTimelineDataProvider {
     @AuraEnabled(cacheable=false)
-    public static TimelineDataResponse getTimelineItemData(String confId,String recordId) {
-        System.debug('>>>>>>>>>>> confId='+confId+', record Id:'+recordId);
-        if(recordId !=null && confId!=null){
+    public static TimelineDataResponse getTimelineItemData(String confIdOrName,String recordId) {
+        System.debug('>>>>>>>>>>> confIdOrName='+confIdOrName+', record Id:'+recordId);
+        if(recordId !=null && confIdOrName!=null){
             if(areObjectAndFieldsAccessible()){
                 Timeline_Configuration__c conf  = [ select Id,timeline__Object__c,
                                                     (SELECT timeline__Date_Field__c,timeline__Fields_to_Display__c,timeline__Icon_Image_Url__c,
@@ -10,7 +10,7 @@ public with sharing class RecordTimelineDataProvider {
                                                             timeline__Title_Field__c 
                                                     FROM timeline__Timeline_Child_Objects__r)
                                                     from timeline__Timeline_Configuration__c
-                                                    where Id=:confId
+                                                    where (Id=:confIdOrName or Name=:confIdOrName)
                                                 ];
                 String soqlToExec = getSOQLForTimeline(conf, recordId);
                 System.debug('>>>>>>>>> '+soqlToExec);
