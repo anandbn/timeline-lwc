@@ -6,9 +6,11 @@
     <description>Child Object icon selector</description>
     <targets>
         <target>lightning__FlowScreen</target>
+        <target>lightning__HomePage</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__FlowScreen">
-            <property name="iconName" type="String" role="outputOnly"></property>
+            <property name="iconName" type="String" role="outputOnly"/>
         </targetConfig>
-    </targetConfigs></LightningComponentBundle>
+    </targetConfigs>
+</LightningComponentBundle>

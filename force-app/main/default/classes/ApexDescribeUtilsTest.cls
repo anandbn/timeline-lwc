@@ -11,7 +11,7 @@ public with sharing class ApexDescribeUtilsTest {
 
     @isTest static void testGetFieldsForObjectWithFields(){
  
-        List<ApexDescribeUtils.FieldData> fielddata = ApexDescribeUtils.getFieldsForObject('Task',new String[]{'AccountId'});
+        List<ApexDescribeUtils.FieldData> fielddata = ApexDescribeUtils.getFieldsForObject('Account',new String[]{'Id'});
         System.assertEquals(1, fielddata.size(), 'Apex describe for specific field is mismatching');
 
     }
