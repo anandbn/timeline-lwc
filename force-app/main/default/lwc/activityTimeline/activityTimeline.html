@@ -28,11 +28,16 @@
                 </a>
             </li>
             <template for:each={childRecords} for:item="theRecord">
-                <c-timeline-item if:true={theRecord.isCustom} key={theRecord.recordId} object={theRecord.object}
+                <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId} object={theRecord.object}
                     title={theRecord.title} date-value={theRecord.dateValue}
                     expanded-fields-to-display={theRecord.expandedFieldsToDisplay} record-id={theRecord.recordId}
                     theme-info={theRecord.themeInfo}>
                 </c-timeline-item>
+                <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported} key={theRecord.recordId} object={theRecord.object}
+                    title={theRecord.title} date-value={theRecord.dateValue}
+                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay} record-id={theRecord.recordId}
+                    theme-info={theRecord.themeInfo}>
+                </c-timeline-item-other-object>
                 <c-timeline-item-task if:true={theRecord.isTask} key={theRecord.recordId} title={theRecord.title}
                     date-value={theRecord.dateValue} record-id={theRecord.recordId} description={theRecord.description}
                     who-to-name={theRecord.whoToName} owner-id={theRecord.OwnerId}

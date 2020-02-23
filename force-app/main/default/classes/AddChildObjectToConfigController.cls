@@ -12,6 +12,12 @@ public with sharing class AddChildObjectToConfigController {
         return null;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<ApexDescribeUtils.FieldData> getFieldsForObject(String objectApiName){
+        return ApexDescribeUtils.getFieldsForObject(objectApiName);
+    }
+
+
     private static Boolean areObjectAndFieldsAccessible(){
         return (Timeline_Configuration__c.sObjectType.getDescribe().isAccessible() &&
                 Timeline_Child_Object__c.sObjectType.getDescribe().isAccessible() &&
@@ -27,5 +33,6 @@ public with sharing class AddChildObjectToConfigController {
         );
     }
     
+
 
 }

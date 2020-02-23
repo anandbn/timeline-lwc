@@ -1,0 +1,10 @@
+<template>
+    <a onclick={navigateToRecordViewPage}>
+        <template if:true={isHeader}>
+            <strong>{label}</strong>
+        </template>
+        <template if:false={isHeader}>
+            {label}
+        </template>
+    </a>
+</template>

@@ -26,6 +26,12 @@
             ],
             "c/timelineItemTask": [
                 "timelineItemTask/timelineItemTask.js"
+            ],
+            "c/timelineItemOtherObject": [
+                "timelineItemOtherObject/timelineItemOtherObject.js"
+            ],
+            "c/linkedOutputText": [
+                "linkedOutputText/linkedOutputText.js"
             ]
         }
     },

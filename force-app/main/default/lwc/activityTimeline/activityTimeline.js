@@ -35,15 +35,19 @@ export default class ActivityTimeline extends LightningElement {
                             for (let j = 0; j < relRecords.length; j++) {
                                 let childRec = {};
                                 childRec.isTask = false;
-                                childRec.isCustom = true;
+                                childRec.isUiApiNotSupported=configs[i].timeline__LWC_Ui_Api_Not_Supported__c;
                                 childRec.object = configs[i].timeline__Object__c;
                                 childRec.title = relRecords[j][configs[i].timeline__Title_Field__c];
                                 childRec.dateValueDB = configs[i].timeline__Date_Field__c ? relRecords[j][configs[i].timeline__Date_Field__c] : relRecords[j].CreatedDate;
                                 childRec.dateValue = moment(childRec.dateValueDB).fromNow();
                                 let fldsToDisplay = configs[i].timeline__Fields_to_Display__c.split(',');
-                                childRec.expandedFieldsToDisplay = new Array();
-                                for (let k = 0; k < fldsToDisplay.length; k++) {
-                                    childRec.expandedFieldsToDisplay.push({ "id": fldsToDisplay[k], "apiName": fldsToDisplay[k] });
+                                if(!childRec.isUiApiNotSupported){
+                                    childRec.expandedFieldsToDisplay = new Array();
+                                    for (let k = 0; k < fldsToDisplay.length; k++) {
+                                        childRec.expandedFieldsToDisplay.push({ "id": fldsToDisplay[k], "apiName": fldsToDisplay[k] });
+                                    }    
+                                }else{
+                                    childRec.expandedFieldsToDisplay=configs[i].timeline__Fields_to_Display__c;
                                 }
                                 childRec.recordId = relRecords[j].Id;
                                 childRec.themeInfo = {
@@ -97,7 +101,7 @@ export default class ActivityTimeline extends LightningElement {
     }
 
     refreshData() {
-        getTimelineItemData({ confId: this.configId, recordId: this.recordId })
+        getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId })
         .then(data => {
             this.childRecords = new Array();
             let unsortedRecords = new Array();
@@ -109,7 +113,7 @@ export default class ActivityTimeline extends LightningElement {
                     for (let j = 0; j < relRecords.length; j++) {
                         let childRec = {};
                         childRec.isTask = false;
-                        childRec.isCustom = true;
+                        childRec.isUiApiNotSupported=configs[i].timeline__LWC_Ui_Api_Not_Supported__c;
                         childRec.object = configs[i].timeline__Object__c;
                         childRec.title = relRecords[j][configs[i].timeline__Title_Field__c];
                         childRec.dateValueDB = configs[i].timeline__Date_Field__c ? relRecords[j][configs[i].timeline__Date_Field__c] : relRecords[j].CreatedDate;

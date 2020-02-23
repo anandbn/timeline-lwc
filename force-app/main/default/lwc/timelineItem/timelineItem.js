@@ -35,16 +35,4 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
         this.expanded = !this.expanded;
     }
 
-    navigateToRecordViewPage() {
-        // View a custom object record.
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: this.recordId,
-                objectApiName: this.object,
-                actionName: 'view'
-            }
-        });
-    }
-
 }

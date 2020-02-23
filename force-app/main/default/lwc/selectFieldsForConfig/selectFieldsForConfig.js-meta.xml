@@ -19,5 +19,6 @@
             <property name="displayFields" type="String"></property>
             <property name="dateField" type="String"></property>
             <property name="titleField" type="String"></property>
+            <property name="uiApiNotSupported" type="Boolean" role="outputOnly"></property>
         </targetConfig>
     </targetConfigs></LightningComponentBundle>

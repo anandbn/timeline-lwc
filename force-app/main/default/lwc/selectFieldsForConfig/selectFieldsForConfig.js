@@ -1,6 +1,6 @@
-import { LightningElement,api,wire,track} from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-
+import getFieldsForObject from '@salesforce/apex/AddChildObjectToConfigController.getFieldsForObject';
 
 const columns = [
     { label: 'API Name', fieldName: 'apiName' },
@@ -22,21 +22,22 @@ export default class SelectFieldsForConfig extends LightningElement {
     @api stepName;
     @api childObjectFields;
     @api selectedFields;
-    
+    @api uiApiNotSupported;
+
     @track fields;
     @track columns = columns;
-    @track configExpanded=true;
+    @track configExpanded = true;
 
-    @wire(getObjectInfo,{objectApiName:'$childObjectApiName'})
-    getFieldNamesForObjectResponse({error,data}){
-        if(data){
-            this.iconImageUrl=data.themeInfo.iconUrl;
-            this.objectColor=data.themeInfo.color;
+    @wire(getObjectInfo, { objectApiName: '$childObjectApiName' })
+    getFieldNamesForObjectResponse({ error, data }) {
+        if (data) {
+            this.iconImageUrl = data.themeInfo.iconUrl;
+            this.objectColor = data.themeInfo.color;
             let fields = data.fields;
             let fieldResults = [];
             for (let field in fields) {
                 if (Object.prototype.hasOwnProperty.call(fields, field)) {
-                    if(this.stepName === "Display Fields" || this.stepName === "Title Field"){
+                    if (this.stepName === "Display Fields" || this.stepName === "Title Field") {
                         fieldResults.push({
                             fieldId: fields[field].apiName,
                             label: fields[field].label,
@@ -44,8 +45,8 @@ export default class SelectFieldsForConfig extends LightningElement {
                             type: fields[field].dataType
                         });
                     }
-                    if(this.stepName === "Date Field"){
-                        if(fields[field].dataType === "DateTime" ||fields[field].dataType === "Date"){
+                    if (this.stepName === "Date Field") {
+                        if (fields[field].dataType === "DateTime" || fields[field].dataType === "Date") {
                             fieldResults.push({
                                 fieldId: fields[field].apiName,
                                 label: fields[field].label,
@@ -57,20 +58,57 @@ export default class SelectFieldsForConfig extends LightningElement {
 
                 }
             }
-            this.fields=fieldResults;
-            this.isLoading=false;
+            this.fields = fieldResults;
+            this.isLoading = false;
         }
-        if(error){
-            console.log(JSON.stringify(error,null,4));
+        if (error) {
+            console.log(JSON.stringify(error, null, 4));
+            this.uiApiNotSupported=true;
+            getFieldsForObject({ objectApiName: this.childObjectApiName })
+                .then(result => {
+                    this.processFieldResults(result);
+                })
+                .catch(error => {
+                    this.error = error;
+                });
         }
     }
 
-    get maxRowsToSelect(){
-        if(this.stepName === "Display Fields"){
+    processFieldResults(fields){
+        let fieldResults = [];
+
+        for (let field in fields) {
+            if (Object.prototype.hasOwnProperty.call(fields, field)) {
+                if (this.stepName === "Display Fields" || this.stepName === "Title Field") {
+                    fieldResults.push({
+                        fieldId: fields[field].apiName,
+                        label: fields[field].label,
+                        apiName: fields[field].apiName,
+                        type: fields[field].dataType
+                    });
+                }
+                if (this.stepName === "Date Field") {
+                    if (fields[field].dataType.toUpperCase() === "DateTime".toUpperCase() || fields[field].dataType.toUpperCase() === "Date".toUpperCase()) {
+                        fieldResults.push({
+                            fieldId: fields[field].apiName,
+                            label: fields[field].label,
+                            apiName: fields[field].apiName,
+                            type: fields[field].dataType
+                        });
+                    }
+                }
+
+            }
+        }
+        this.fields = fieldResults;
+        this.isLoading = false;        
+    }
+    get maxRowsToSelect() {
+        if (this.stepName === "Display Fields") {
             return 5;
-        }else if(this.stepName === "Date Field" || this.stepName === "Title Field" ){
+        } else if (this.stepName === "Date Field" || this.stepName === "Title Field") {
             return 1;
-        }else{
+        } else {
             return 1;
         }
     }
@@ -78,54 +116,54 @@ export default class SelectFieldsForConfig extends LightningElement {
     rowSelected(event) {
         let selFlds = new Array();
         let selRows = event.detail.selectedRows;
-        for(let i=0;i<selRows.length;i++){
+        for (let i = 0; i < selRows.length; i++) {
             selFlds.push(selRows[i].apiName);
         }
-        this.selectedFields=selFlds.join(',');
+        this.selectedFields = selFlds.join(',');
     }
 
-    get stepTitle(){
-        if(this.stepName === "Display Fields"){
+    get stepTitle() {
+        if (this.stepName === "Display Fields") {
             return "Select upto 5 fields to display";
-        }else if(this.stepName === "Date Field"){
+        } else if (this.stepName === "Date Field") {
             return "Select a Date Field";
-        }else if(this.stepName === "Title Field"){
+        } else if (this.stepName === "Title Field") {
             return "Select a Title Field";
-        }else{
+        } else {
             return "";
         }
-        
+
     }
 
-    get hasIconInfo(){
-        return (this.iconImageUrl !=null && this.objectColor !=null) || 
-                (this.iconName !=null);
+    get hasIconInfo() {
+        return (this.iconImageUrl != null && this.objectColor != null) ||
+            (this.iconName != null);
     }
 
-    get objectIconStyle(){
-        return this.objectColor !=null?`background-color:#${this.objectColor};`:'';
+    get objectIconStyle() {
+        return this.objectColor != null ? `background-color:#${this.objectColor};` : '';
     }
-    
-    get isConfirmationStep(){
+
+    get isConfirmationStep() {
         return this.stepName === "Confirmation";
     }
 
-    get configSectionStyle(){
-        return this.configExpanded?'slds-section slds-is-open':'slds-section';
+    get configSectionStyle() {
+        return this.configExpanded ? 'slds-section slds-is-open' : 'slds-section';
     }
 
-    get sectionDisplayStyle(){
-        return this.configExpanded?'':'display:none;';
+    get sectionDisplayStyle() {
+        return this.configExpanded ? '' : 'display:none;';
     }
 
-    get sectionButtonIcon(){
-        return this.configExpanded?'utility:chevrondown':'utility:chevronright';
+    get sectionButtonIcon() {
+        return this.configExpanded ? 'utility:chevrondown' : 'utility:chevronright';
     }
 
-    get hasIconName(){
-        return this.iconName!=null;
+    get hasIconName() {
+        return this.iconName != null;
     }
-    expandOrCollapse(){
+    expandOrCollapse() {
         this.configExpanded = !this.configExpanded;
     }
 }

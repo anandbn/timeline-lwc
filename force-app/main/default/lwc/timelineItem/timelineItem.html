@@ -21,9 +21,8 @@
                             <div
                                 class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
                                 <h3 class="slds-truncate" title={title}>
-                                    <a onclick={navigateToRecordViewPage}>
-                                        <strong>{title}</strong>
-                                    </a>
+                                    <c-linked-output-text record-id={recordId} object={object} label={title} is-header="true">
+                                    </c-linked-output-text>
                                 </h3>
                             </div>
                             <div class="slds-timeline__actions slds-timeline__actions_inline">

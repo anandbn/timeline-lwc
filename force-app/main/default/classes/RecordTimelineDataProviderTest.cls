@@ -29,18 +29,7 @@ public with sharing class RecordTimelineDataProviderTest {
         Task acctTask = new Task(Subject='Test Task',ActivityDate=System.today(),Status='Completed',Description='Test Description',
                                 WhatId=acct.Id,WhoId=ct.Id);
         insert acctTask;
-        /*
-        EmailMessage msg = new EmailMessage(Subject='Test Email',TextBody='Text Body');
-        insert msg;
-        List<EmailMessageRelation> relToInsert = new List<EmailMessageRelation>();
-        relToInsert.add(new EmailMessageRelation(EmailMessageId=msg.Id,RelationId=UserInfo.getUserId(),
-                                                RelationType='FromAddress')
-                    );
-        relToInsert.add(new EmailMessageRelation(EmailMessageId=msg.Id,RelationId=ct.Id,
-                                                RelationType='FromAddress')
-                    );
-        insert relToInsert;
-        */
+        
     }
 
     @isTest static void testGetTimelineItemData(){
@@ -54,6 +43,13 @@ public with sharing class RecordTimelineDataProviderTest {
     @isTest static void testGetTimelineItemDataNullInput(){
         TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(null,null);
         System.assert(resp==null, 'Timeline configuration is not null');
+    }
+
+    @isTest static void testGetTimelineItemChildData(){
+        Account acct = [select Id from Account limit 1];
+        Task acctTask = [select Id from Task limit 1];
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemChildData('Task', 'Subject,WhatId,AccountId',acctTask.Id);
+        System.assert(resp.data!=null, 'Timeline data is null');
     }
 
     @isTest static void testGetEmailDetails(){
