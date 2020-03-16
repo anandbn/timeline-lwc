@@ -35,13 +35,13 @@ public with sharing class RecordTimelineDataProviderTest {
     @isTest static void testGetTimelineItemData(){
         Account acct = [select Id from Account limit 1];
         Timeline_Configuration__c conf = [select Id from Timeline_Configuration__c limit 1];
-        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id);
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id,null);
         System.assert(resp.configuration!=null, 'Timeline configuration is null');
         System.assert(resp.data!=null, 'Timeline data is null');
     }
 
     @isTest static void testGetTimelineItemDataNullInput(){
-        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(null,null);
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(null,null,null);
         System.assert(resp==null, 'Timeline configuration is not null');
     }
 
@@ -57,4 +57,70 @@ public with sharing class RecordTimelineDataProviderTest {
         EmailMessage msg = RecordTimelineDataProvider.getEmailDetails(tsk.Id);
         System.assert(msg==null, 'Message is not null');
     }
+
+    @isTest static void testNext7Days(){
+        Timeline_Configuration__c conf = [select Id from Timeline_Configuration__c limit 1];
+
+        Account acct = [select Id from Account limit 1];
+        Contact ct = [select Id from Contact limit 1];
+        Task acctTask = new Task(Subject='Test Task next 2',ActivityDate=System.today().addDays(2),Status='Completed',Description='Test Description',
+                                WhatId=acct.Id,WhoId=ct.Id);
+        insert acctTask;
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id,'next_7_days');
+        System.assert(resp.configuration!=null, 'testNext7Days - Timeline configuration is null');
+        System.assert(resp.data!=null, 'testNext7Days - Timeline data is null');
+
+    }
+
+    @isTest static void testLast7Days(){
+        Timeline_Configuration__c conf = [select Id from Timeline_Configuration__c limit 1];
+
+        Account acct = [select Id from Account limit 1];
+        Contact ct = [select Id from Contact limit 1];
+        Task acctTask = new Task(Subject='Test Task last 7',ActivityDate=System.today().addDays(-2),Status='Completed',Description='Test Description',
+                                WhatId=acct.Id,WhoId=ct.Id);
+        insert acctTask;
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id,'last_7_days');
+        System.assert(resp.configuration!=null, 'testLast7Days - Timeline configuration is null');
+        System.assert(resp.data!=null, 'testLast7Days - Timeline data is null');
+
+    }
+
+    @isTest static void testLast30Days(){
+        Timeline_Configuration__c conf = [select Id from Timeline_Configuration__c limit 1];
+
+        Account acct = [select Id from Account limit 1];
+        Contact ct = [select Id from Contact limit 1];
+        Task acctTask = new Task(Subject='Test Task last 30',ActivityDate=System.today().addDays(-10),Status='Completed',Description='Test Description',
+                                WhatId=acct.Id,WhoId=ct.Id);
+        insert acctTask;
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id,'last_30_days');
+        System.assert(resp.configuration!=null, 'testLast30Days - Timeline configuration is null');
+        System.assert(resp.data!=null, 'testLast30Days - Timeline data is null');
+
+    }
+
+    @isTest static void testLast30DaysWithContact(){
+        Timeline_Configuration__c timelineConf = new Timeline_Configuration__c(Object__c='Account');
+        insert timelineConf;
+        Timeline_Child_Object__c childConf = new Timeline_Child_Object__c(  Date_Field__c='CreatedDate',
+                                                                            Fields_To_Display__c='Name,Email',
+                                                                            Object__c='Contact',
+                                                                            Relationship_Name__c='Contacts',
+                                                                            Icon_Name__c='standard:contact',
+                                                                            Title_Field__c='Name',
+                                                                            Timeline_Configuration__c=timelineConf.Id);
+        insert childConf;
+
+        Account acct = [select Id from Account limit 1];
+        Contact ct = new Contact(FirstName='Test',LastName='Contact 2',Email='test2@timeline.com',AccountId=acct.Id);
+        insert ct;
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(timelineConf.Id, acct.Id,'last_30_days');
+        System.assert(resp.configuration!=null, 'testLast30DaysWithContact - Timeline configuration is null');
+        System.assert(resp.data!=null, 'testLast30DaysWithContact - Timeline data is null');
+
+    }
+
+
+
 }

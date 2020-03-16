@@ -10,12 +10,14 @@ export default class ActivityTimeline extends LightningElement {
     @api configId;
     @api headerTitle;
     @api headerIcon;
-    @api showHeader=false;  
+    @api showHeader = false;
     @api additionalMargin;
     @track childRecords;
     @track error;
     @track errorMsg;
     @track momentJSLoaded = false;
+    @track showFilter = false;
+    @track dateFilterSelection = "all_time";
 
     connectedCallback() {
         Promise.all([
@@ -23,69 +25,12 @@ export default class ActivityTimeline extends LightningElement {
         ]).then(() => {
             this.momentJSLoaded = true;
             console.log(new Date() + ':MomentJS loaded');
-            getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId })
+            getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId, dateFilter: this.dateFilterSelection })
                 .then(data => {
-                    this.childRecords = new Array();
-                    let unsortedRecords = new Array();
-                    //have to deep clone in order to Task and other standard objects
-                    let configs = data.configuration.timeline__Timeline_Child_Objects__r;
-                    for (let i = 0; i < configs.length; i++) {
-                        let relRecords = data.data[configs[i].timeline__Relationship_Name__c];
-                        if (relRecords) {
-                            for (let j = 0; j < relRecords.length; j++) {
-                                let childRec = {};
-                                childRec.isTask = false;
-                                childRec.isUiApiNotSupported=configs[i].timeline__LWC_Ui_Api_Not_Supported__c;
-                                childRec.object = configs[i].timeline__Object__c;
-                                childRec.title = relRecords[j][configs[i].timeline__Title_Field__c];
-                                childRec.dateValueDB = configs[i].timeline__Date_Field__c ? relRecords[j][configs[i].timeline__Date_Field__c] : relRecords[j].CreatedDate;
-                                childRec.dateValue = moment(childRec.dateValueDB).fromNow();
-                                let fldsToDisplay = configs[i].timeline__Fields_to_Display__c.split(',');
-                                if(!childRec.isUiApiNotSupported){
-                                    childRec.expandedFieldsToDisplay = new Array();
-                                    for (let k = 0; k < fldsToDisplay.length; k++) {
-                                        childRec.expandedFieldsToDisplay.push({ "id": fldsToDisplay[k], "apiName": fldsToDisplay[k] });
-                                    }    
-                                }else{
-                                    childRec.expandedFieldsToDisplay=configs[i].timeline__Fields_to_Display__c;
-                                }
-                                childRec.recordId = relRecords[j].Id;
-                                childRec.themeInfo = {
-                                    iconName: configs[i].timeline__Icon_Name__c,
-                                    iconImgUrl: configs[i].timeline__Icon_Image_Url__c,
-                                    color: configs[i].timeline__Object_Color__c
-                                };
-                                if (configs[i].timeline__Object__c === "Task") {
-                                    //Special fields for Task
-                                    childRec.isTask = true;
-                                    childRec.isCustom = false;
-                                    childRec.description = relRecords[j].Description;
-                                    childRec.WhoId = relRecords[j].WhoId;
-                                    childRec.OwnerId = relRecords[j].OwnerId;
-                                    childRec.assignedToName = (childRec.OwnerId === CURRENT_USER_ID) ? "You" : relRecords[j].Owner.Name;
-                                    if (relRecords[j].Who) {
-                                        childRec.whoToName = relRecords[j].Who.Name;
-                                    }
-                                    childRec.TaskSubtype = relRecords[j].TaskSubtype;
-
-                                }
-                                unsortedRecords.push(childRec);
-                            }
-                        }
-
-                    }
-                    unsortedRecords.sort(function (a, b) {
-                        return new Date(b.dateValueDB) - new Date(a.dateValueDB);
-                    });
-                    this.childRecords = unsortedRecords;
+                    this.processTimelineData(data);
                 })
                 .catch(error => {
-                    this.error = true;
-                    if(error.body && error.body.exceptionType && error.body.message ){
-                        this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
-                    }else{
-                        this.errorMsg = JSON.stringify(error);
-                    }
+                    this.errorLoadingData(error);
                 });
 
         })
@@ -101,76 +46,118 @@ export default class ActivityTimeline extends LightningElement {
     }
 
     refreshData() {
-        getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId })
-        .then(data => {
-            this.childRecords = new Array();
-            let unsortedRecords = new Array();
-            //have to deep clone in order to Task and other standard objects
-            let configs = data.configuration.timeline__Timeline_Child_Objects__r;
-            for (let i = 0; i < configs.length; i++) {
-                let relRecords = data.data[configs[i].timeline__Relationship_Name__c];
-                if (relRecords) {
-                    for (let j = 0; j < relRecords.length; j++) {
-                        let childRec = {};
-                        childRec.isTask = false;
-                        childRec.isUiApiNotSupported=configs[i].timeline__LWC_Ui_Api_Not_Supported__c;
-                        childRec.object = configs[i].timeline__Object__c;
-                        childRec.title = relRecords[j][configs[i].timeline__Title_Field__c];
-                        childRec.dateValueDB = configs[i].timeline__Date_Field__c ? relRecords[j][configs[i].timeline__Date_Field__c] : relRecords[j].CreatedDate;
-                        childRec.dateValue = moment(childRec.dateValueDB).fromNow();
-                        let fldsToDisplay = configs[i].timeline__Fields_to_Display__c.split(',');
+        getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId, dateFilter: this.dateFilterSelection })
+            .then(data => {
+                this.processTimelineData(data);
+            })
+            .catch(error => {
+                this.errorLoadingData(error);
+            });
+
+    }
+
+    processTimelineData(data) {
+        this.childRecords = new Array();
+        let unsortedRecords = new Array();
+        //have to deep clone in order to Task and other standard objects
+        let configs = data.configuration.timeline__Timeline_Child_Objects__r;
+        for (let i = 0; i < configs.length; i++) {
+            let relRecords = data.data[configs[i].timeline__Relationship_Name__c];
+            if (relRecords) {
+                for (let j = 0; j < relRecords.length; j++) {
+                    let childRec = {};
+                    childRec.isTask = false;
+                    childRec.isUiApiNotSupported = configs[i].timeline__LWC_Ui_Api_Not_Supported__c;
+                    childRec.object = configs[i].timeline__Object__c;
+                    childRec.title = relRecords[j][configs[i].timeline__Title_Field__c];
+                    childRec.dateValueDB = configs[i].timeline__Date_Field__c ? relRecords[j][configs[i].timeline__Date_Field__c] : relRecords[j].CreatedDate;
+                    childRec.dateValue = moment(childRec.dateValueDB).fromNow();
+                    let fldsToDisplay = configs[i].timeline__Fields_to_Display__c.split(',');
+                    if (!childRec.isUiApiNotSupported) {
                         childRec.expandedFieldsToDisplay = new Array();
                         for (let k = 0; k < fldsToDisplay.length; k++) {
                             childRec.expandedFieldsToDisplay.push({ "id": fldsToDisplay[k], "apiName": fldsToDisplay[k] });
                         }
-                        childRec.recordId = relRecords[j].Id;
-                        childRec.themeInfo = {
-                            iconName: configs[i].timeline__Icon_Name__c,
-                            iconImgUrl: configs[i].timeline__Icon_Image_Url__c,
-                            color: configs[i].timeline__Object_Color__c
-                        };
-                        if (configs[i].timeline__Object__c === "Task") {
-                            //Special fields for Task
-                            childRec.isTask = true;
-                            childRec.isCustom = false;
-                            childRec.description = relRecords[j].Description;
-                            childRec.WhoId = relRecords[j].WhoId;
-                            childRec.OwnerId = relRecords[j].OwnerId;
-                            childRec.assignedToName = (childRec.OwnerId === CURRENT_USER_ID) ? "You" : relRecords[j].Owner.Name;
-                            if (relRecords[j].Who) {
-                                childRec.whoToName = relRecords[j].Who.Name;
-                            }
-                            childRec.TaskSubtype = relRecords[j].TaskSubtype;
-
-                        }
-                        unsortedRecords.push(childRec);
+                    } else {
+                        childRec.expandedFieldsToDisplay = configs[i].timeline__Fields_to_Display__c;
                     }
-                }
+                    childRec.recordId = relRecords[j].Id;
+                    childRec.themeInfo = {
+                        iconName: configs[i].timeline__Icon_Name__c,
+                        iconImgUrl: configs[i].timeline__Icon_Image_Url__c,
+                        color: configs[i].timeline__Object_Color__c
+                    };
+                    if (configs[i].timeline__Object__c === "Task") {
+                        //Special fields for Task
+                        childRec.isTask = true;
+                        childRec.isCustom = false;
+                        childRec.description = relRecords[j].Description;
+                        childRec.WhoId = relRecords[j].WhoId;
+                        childRec.OwnerId = relRecords[j].OwnerId;
+                        childRec.assignedToName = (childRec.OwnerId === CURRENT_USER_ID) ? "You" : relRecords[j].Owner.Name;
+                        if (relRecords[j].Who) {
+                            childRec.whoToName = relRecords[j].Who.Name;
+                        }
+                        childRec.TaskSubtype = relRecords[j].TaskSubtype;
 
+                    }
+                    unsortedRecords.push(childRec);
+                }
             }
-            unsortedRecords.sort(function (a, b) {
-                return new Date(b.dateValueDB) - new Date(a.dateValueDB);
-            });
-            this.childRecords = unsortedRecords;
-        })
-        .catch(error => {
-            this.error = true;
-            if(error.body && error.body.exceptionType && error.body.message ){
-                this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
-            }else{
-                this.errorMsg = JSON.stringify(error);
-            }
+
+        }
+        unsortedRecords.sort(function (a, b) {
+            return new Date(b.dateValueDB) - new Date(a.dateValueDB);
         });
+        this.childRecords = unsortedRecords;
+    }
+
+    errorLoadingData(error) {
+
+        this.error = true;
+        if (error.body && error.body.exceptionType && error.body.message) {
+            this.errorMsg = `[ ${error.body.exceptionType} ] : ${error.body.message}`;
+        } else {
+            this.errorMsg = JSON.stringify(error);
+        }
     }
     get isParametersValid() {
         return (this.recordId != null && this.configId != null)
     }
 
-    get timelineStyles(){
-        if(this.additionalMargin){
-           return 'slds-card '+this.additionalMargin;
-        }else{
+    get timelineStyles() {
+        if (this.additionalMargin) {
+            return 'slds-card ' + this.additionalMargin;
+        } else {
             return 'slds-card';
         }
+    }
+
+    get filterStyles() {
+        let filterStyle = '';
+        if (this.showFilter) {
+            filterStyle += 'display:block;';
+        } else {
+            filterStyle += 'display:none;';
+        }
+        filterStyle += 'position:absolute;top:2.25rem;left:-285px;width:300px;'
+        return filterStyle;
+    }
+    showHideFilters() {
+        this.showFilter = !this.showFilter;
+    }
+
+    get dateFilterOptions() {
+        return [
+            { label: 'All Time', value: 'all_time' },
+            { label: 'Last 7 days', value: 'last_7_days' },
+            { label: 'Next 7 days', value: 'next_7_days' },
+            { label: 'Last 30 days', value: 'last_30_days' },
+        ];
+    }
+
+    handleDateFilterChange(event) {
+        this.dateFilterSelection = event.detail.value;
+        this.refreshData();
     }
 }

@@ -1,7 +1,10 @@
 public with sharing class RecordTimelineDataProvider {
     @AuraEnabled(cacheable=false)
-    public static TimelineDataResponse getTimelineItemData(String confIdOrName,String recordId) {
-        System.debug('>>>>>>>>>>> confIdOrName='+confIdOrName+', record Id:'+recordId);
+    public static TimelineDataResponse getTimelineItemData(String confIdOrName,String recordId,String dateFilter) {
+        if(dataFilter == null){
+            dateFilter='all_time';
+        }
+        System.debug('>>>>>>>>>>> confIdOrName='+confIdOrName+', record Id:'+recordId+',dateFilter:'+dateFilter);
         if(recordId !=null && confIdOrName!=null){
             if(areObjectAndFieldsAccessible()){
                 Timeline_Configuration__c conf  = [ select Id,timeline__Object__c,
@@ -12,7 +15,7 @@ public with sharing class RecordTimelineDataProvider {
                                                     from timeline__Timeline_Configuration__c
                                                     where (Id=:confIdOrName or Name=:confIdOrName)
                                                 ];
-                String soqlToExec = getSOQLForTimeline(conf, recordId);
+                String soqlToExec = getSOQLForTimeline(conf, recordId,dateFilter);
                 System.debug('>>>>>>>>> '+soqlToExec);
                 List<SObject> result = Database.query(soqlToExec);
                 SObject theObject = result[0];
@@ -93,7 +96,7 @@ public with sharing class RecordTimelineDataProvider {
         }
     }
 
-    private static String getSOQLForTimeline(timeline__Timeline_Configuration__c conf,String recordId){
+    private static String getSOQLForTimeline(timeline__Timeline_Configuration__c conf,String recordId,String dateFilter){
         String soqlStmt = 'select Id,';
         List<String> childSoqls = new List<String>();
         for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
@@ -120,10 +123,35 @@ public with sharing class RecordTimelineDataProvider {
             }
             childSoql += String.join(fieldsToQuery,',');
             childSoql +=' from '+childObjConf.timeline__Relationship_Name__c;
+            String dateFilterStr;
+            if(dateFilter!=null){
+                System.debug('Date filter= LAST_7_DAYS');
+                switch on dateFilter{
+                    when 'last_7_days'{
+                        System.debug('Date filter= LAST_7_DAYS');
+                        dateFilterStr='LAST_N_DAYS:7';
+                    }
+                    when 'last_30_days'{
+                        System.debug('Date filter= LAST_30_DAYS');
+                        dateFilterStr='LAST_N_DAYS:30';
+                    }
+                    when 'next_7_days'{
+                        System.debug('Date filter= NEXT_7_DAYS');
+                        dateFilterStr='NEXT_N_DAYS:7';
+                    }
+                }
+            }
             if(childObjConf.timeline__Date_Field__c !=null){
                 childSoql +=' where ' +childObjConf.timeline__Date_Field__c+ ' !=null';
+                if(dateFilterStr !=null){
+                    childSoql +=' and '+childObjConf.timeline__Date_Field__c+'='+dateFilterStr;
+                }
+            }else if(!childObjConf.timeline__Object__c.endsWith('__x')){
+                if(dateFilterStr !=null){
+                    childSoql +=' where CreatedDate='+dateFilterStr;
+                }
             }
-            childSoql +=' )';
+            childSoql +=')';
             childSoqls.add(childSoql);
         }
         soqlStmt += String.join(childSoqls,',');

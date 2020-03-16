@@ -2,3 +2,7 @@
     margin-right: var(--lwc-spacingSmall);
     margin-left: var(--lwc-spacingSmall);
 }
+
+.filterPopover{
+    z-index:var(--lwc-z-index-modal);
+}

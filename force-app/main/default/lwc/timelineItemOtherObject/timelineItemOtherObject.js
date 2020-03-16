@@ -79,6 +79,7 @@ export default class TimelineItemOtherObject extends LightningElement {
                     }
                 })
                 .catch(error => {
+                    console.log(JSON.stringify(error));
                 });
         }
     }

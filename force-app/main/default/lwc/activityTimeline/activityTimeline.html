@@ -10,22 +10,50 @@
                         </a>
                     </h2>
                 </div>
-                <div class="slds-no-flex slds-float_right">
+                <div class="slds-no-flex slds-float_right slds-is-relative">
+                    <a class="slds-button" role="button" onclick={showHideFilters}>
+                        <lightning-button-icon icon-name="utility:filterList" alternative-text="Filter" size="x-small">
+                        </lightning-button-icon>
+                    </a>
                     <a class="slds-button" role="button" onclick={refreshData}>
                         <lightning-button-icon icon-name="action:refresh" alternative-text="Refresh data" size="x-small">
                         </lightning-button-icon>
-                        &nbsp;Refresh
-                    </a> 
+                    </a>
+                    <div class="filterPopover" style={filterStyles}>
+                        <section aria-label="Filter results" aria-describedby="filter-body-id"
+                            class="slds-popover slds-nubbin_top-right" role="dialog">
+                            <div id="filter-body-id" class="slds-popover__body">
+                                <lightning-radio-group name="dateFilterCriteria" label="Date Range" onchange={handleDateFilterChange} options={dateFilterOptions} value={dateFilterSelection} type="radio">
+                                </lightning-radio-group>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </header>
         </div>
         <article if:true={isParametersValid}>
         <ul if:false={error} class="slds-timeline slds-m-around_small">
-            <li if:false={showHeader} class="slds-timeline__actions slds-timeline__actions_inline">
-                <a class="slds-button" role="button" onclick={refreshData}>
-                    <lightning-button-icon icon-name="action:refresh" alternative-text="Refresh data" size="x-small"></lightning-button-icon>
-                    &nbsp;Refresh
-                </a>
+            <li if:false={showHeader} class="slds-timeline__actions slds-timeline__actions_inline slds-is-relative">
+                <div class="slds-no-flex slds-float_right slds-is-relative">
+                    <a class="slds-button" role="button" onclick={showHideFilters}>
+                        <lightning-button-icon icon-name="utility:filterList" alternative-text="Filter" size="x-small">
+                        </lightning-button-icon>
+                    </a>
+                    <a class="slds-button" role="button" onclick={refreshData}>
+                        <lightning-button-icon icon-name="action:refresh" alternative-text="Refresh data" size="x-small">
+                        </lightning-button-icon>
+                    </a>
+                    <div class="filterPopover" style={filterStyles}>
+                        <section aria-label="Filter results" aria-describedby="filter-body-id_2"
+                            class="slds-popover slds-nubbin_top-right" role="dialog">
+                            <div id="filter-body-id_2" class="slds-popover__body">
+                                <lightning-radio-group name="dateFilterCriteria" label="Date Range" onchange={handleDateFilterChange} options={dateFilterOptions} value={dateFilterSelection} type="radio">
+                                </lightning-radio-group>
+                            </div>
+                        </section>
+                    </div>
+    
+                </div>
             </li>
             <template for:each={childRecords} for:item="theRecord">
                 <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId} object={theRecord.object}
