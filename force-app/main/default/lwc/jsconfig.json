@@ -32,6 +32,9 @@
             ],
             "c/linkedOutputText": [
                 "linkedOutputText/linkedOutputText.js"
+            ],
+            "c/timelineFilterPanel": [
+                "timelineFilterPanel/timelineFilterPanel.js"
             ]
         }
     },

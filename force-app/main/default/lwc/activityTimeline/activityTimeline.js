@@ -12,6 +12,9 @@ export default class ActivityTimeline extends LightningElement {
     @api headerIcon;
     @api showHeader = false;
     @api additionalMargin;
+    @api availableObjects;
+    @api initialObjectSelection;
+    @api objectFilters;
     @track childRecords;
     @track error;
     @track errorMsg;
@@ -59,9 +62,18 @@ export default class ActivityTimeline extends LightningElement {
     processTimelineData(data) {
         this.childRecords = new Array();
         let unsortedRecords = new Array();
+        let availableObjects = new Array();
         //have to deep clone in order to Task and other standard objects
         let configs = data.configuration.timeline__Timeline_Child_Objects__r;
+        this.availableObjects=new Array();
+        this.initialObjectSelection=new Array();
         for (let i = 0; i < configs.length; i++) {
+            this.availableObjects.push({"label":configs[i].timeline__Relationship_Name__c,"value":configs[i].timeline__Object__c});
+            this.initialObjectSelection.push(configs[i].timeline__Object__c);
+            //If the current object was filtered out, don't do any processing
+            if(this.objectFilters && !this.objectFilters.includes(configs[i].timeline__Object__c)){
+                continue;
+            }
             let relRecords = data.data[configs[i].timeline__Relationship_Name__c];
             if (relRecords) {
                 for (let j = 0; j < relRecords.length; j++) {
@@ -156,8 +168,15 @@ export default class ActivityTimeline extends LightningElement {
         ];
     }
 
-    handleDateFilterChange(event) {
-        this.dateFilterSelection = event.detail.value;
-        this.refreshData();
+    handleFilterChange(event) {
+        if(event.detail.dateFilter){
+            this.dateFilterSelection = event.detail.dateFilter;
+            this.objectFilters=event.detail.objectFilter;
+            this.refreshData();
+        }
+    }
+
+    get filteredObjects(){
+        return this.objectFilters !=null?this.objectFilters:this.initialObjectSelection;
     }
 }
