@@ -5,11 +5,27 @@ public with sharing class TimelineDataResponse {
     @AuraEnabled
     public SObject data {get; set;}
 
+    @AuraEnabled 
+    public Map<String,TimelineDataResponse.ApexConfigAndData> apexConfigData {get; set;}
+
     @AuraEnabled
     public List<ApexDescribeUtils.FieldData> fieldMetadata {get; set;}
 
-    public TimelineDataResponse(Timeline_Configuration__c conf,Sobject theRecord) {
+    public TimelineDataResponse(Timeline_Configuration__c conf,Sobject theRecord, Map<String,TimelineDataResponse.ApexConfigAndData> apexData) {
         this.configuration=conf;
         this.data=theRecord;
+        this.apexConfigData=apexData;
+    }
+
+    public class ApexConfigAndData{
+        @AuraEnabled
+        public List<Object> apexData {get; set;}
+        @AuraEnabled
+        public String recordIdentifierField {get; set;}
+        @AuraEnabled
+        public String baseUrlForRecordDetail {get; set;}
+        @AuraEnabled
+        public List<TimelineFieldType> fieldsWithTypes {get; set;}
+
     }
 }

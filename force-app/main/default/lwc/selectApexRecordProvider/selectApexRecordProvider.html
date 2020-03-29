@@ -1,0 +1,17 @@
+<template>
+    <div class="slds-m-around_medium selectoptions">
+        <lightning-input class="slds-m-bottom_small" label="Search Apex Class" value={selectedApexClass} onkeyup={handleKeyChange}>
+        </lightning-input>
+        <template if:true={showoptions}>
+            <template if:true={records}>
+                <template for:each={records} for:item="record">
+                    <c-apex-class-row-item key={record.Id} record={record} onlookupselect={handlelookupselect}>  
+                    </c-apex-class-row-item> 
+                </template>
+            </template>
+        </template>
+        <template if:true={noRecordsFlag}>
+            <p>No apex classes found for '{searchString}' </p>
+        </template>
+    </div>
+</template>

@@ -23,6 +23,8 @@ export default class SelectFieldsForConfig extends LightningElement {
     @api childObjectFields;
     @api selectedFields;
     @api uiApiNotSupported;
+    @api selectedApexClass;
+    @api providerType;
 
     @track fields;
     @track columns = columns;
@@ -162,6 +164,10 @@ export default class SelectFieldsForConfig extends LightningElement {
 
     get hasIconName() {
         return this.iconName != null;
+    }
+
+    get isApexProvider(){
+        return this.providerType === "Apex class";
     }
     expandOrCollapse() {
         this.configExpanded = !this.configExpanded;

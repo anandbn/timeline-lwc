@@ -121,6 +121,73 @@ public with sharing class RecordTimelineDataProviderTest {
 
     }
 
+    @isTest static void testApexProvider(){
+        Timeline_Configuration__c timelineConf = new Timeline_Configuration__c(Object__c='Account');
+        insert timelineConf;
+        Timeline_Child_Object__c childConf = new Timeline_Child_Object__c(  Date_Field__c='CreatedDate',
+                                                                            Fields_To_Display__c='Name,Email',
+                                                                            Object__c='Contact',
+                                                                            Relationship_Name__c='Contacts',
+                                                                            Icon_Name__c='standard:contact',
+                                                                            Title_Field__c='Name',
+                                                                            Timeline_Configuration__c=timelineConf.Id);
+        insert childConf;
+
+        childConf = new Timeline_Child_Object__c(  Date_Field__c='invoiceDate',
+                                                                            Fields_To_Display__c='referenceNumber,description,amount',
+                                                                            Object__c='Invoice',
+                                                                            Relationship_Name__c='Invoices',
+                                                                            Icon_Name__c='standard:order',
+                                                                            Title_Field__c='referenceNumber',
+                                                                            Data_Provider_Type__c='Apex class',
+                                                                            Provider_Apex_Classname__c='SampleApexDataProvider',
+                                                                            Timeline_Configuration__c=timelineConf.Id);
+        insert childConf;
+
+        Test.startTest();
+        Account acct = [select Id from Account limit 1];
+        Test.setMock(HttpCalloutMock.class, new SampleInvoiceMockImpl());
+
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(timelineConf.Id, acct.Id,'all_time');
+        System.assert(resp.apexConfigData!=null,'Apex data is null');
+        TimelineDataResponse.ApexConfigAndData apexConfigAndData= resp.apexConfigData.get('Invoices');
+        System.assert(apexConfigAndData!=null,'apexConfigAndData is null');
+        System.assert(apexConfigAndData.apexData!=null,'Invoice data is null');
+        System.assert(apexConfigAndData.baseUrlForRecordDetail!=null,'baseUrlForRecordDetail is null');
+        System.assert(apexConfigAndData.fieldsWithTypes!=null,'fieldsWithTypes is null');
+        System.assert(apexConfigAndData.recordIdentifierField!=null,'recordIdentifierField is null');
+        Test.stopTest();
+    }
+
+
+    @isTest static void testApexProviderOnly(){
+        Timeline_Configuration__c timelineConf = new Timeline_Configuration__c(Object__c='Account');
+        insert timelineConf;
+        Timeline_Child_Object__c childConf = new Timeline_Child_Object__c(  Date_Field__c='invoiceDate',
+                                                                            Fields_To_Display__c='referenceNumber,description,amount',
+                                                                            Object__c='Invoice',
+                                                                            Relationship_Name__c='Invoices',
+                                                                            Icon_Name__c='standard:order',
+                                                                            Title_Field__c='referenceNumber',
+                                                                            Data_Provider_Type__c='Apex class',
+                                                                            Provider_Apex_Classname__c='SampleApexDataProvider',
+                                                                            Timeline_Configuration__c=timelineConf.Id);
+        insert childConf;
+
+        Test.startTest();
+        Account acct = [select Id from Account limit 1];
+        Test.setMock(HttpCalloutMock.class, new SampleInvoiceMockImpl());
+
+        TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(timelineConf.Id, acct.Id,'all_time');
+        System.assert(resp.apexConfigData!=null,'Apex data is null');
+        TimelineDataResponse.ApexConfigAndData apexConfigAndData= resp.apexConfigData.get('Invoices');
+        System.assert(apexConfigAndData!=null,'apexConfigAndData is null');
+        System.assert(apexConfigAndData.apexData!=null,'Invoice data is null');
+        System.assert(apexConfigAndData.baseUrlForRecordDetail!=null,'baseUrlForRecordDetail is null');
+        System.assert(apexConfigAndData.fieldsWithTypes!=null,'fieldsWithTypes is null');
+        System.assert(apexConfigAndData.recordIdentifierField!=null,'recordIdentifierField is null');
+        Test.stopTest();
+    }
 
 
 }

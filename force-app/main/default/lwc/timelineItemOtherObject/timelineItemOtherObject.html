@@ -10,7 +10,7 @@
                     <lightning-button-icon if:true={expanded} size="x-small" icon-name="utility:switch"
                         alternative-text="Toggle details" onclick={toggleDetailSection}>
                     </lightning-button-icon>
-                    <lightning-icon if:true={hasIconName} size="small" icon-name={themeInfo.iconName}></lightning-icon>
+                    <lightning-icon if:true={hasIconName} size="small" style={objectThemeColor} icon-name={themeInfo.iconName}></lightning-icon>
                     <span if:false={hasIconName} class="slds-avatar slds-avatar--small" style={objectThemeColor}>
                         <img src={themeInfo.iconImgUrl}></img>
                     </span>
@@ -19,7 +19,8 @@
                     <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
                         <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
                             <h3 class="slds-truncate" title={title}>
-                                <c-linked-output-text record-id={recordId} object={object} label={title} is-header="true">
+                                <c-linked-output-text record-id={recordId} object={object} label={title} is-header="true"
+                                is-external-service-data={isExternalServiceData} base-url-for-record-detail={baseUrlForRecordDetail} >
                                 </c-linked-output-text>
                             </h3>
                         </div>

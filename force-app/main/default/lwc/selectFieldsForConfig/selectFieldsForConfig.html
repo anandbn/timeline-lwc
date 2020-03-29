@@ -63,6 +63,26 @@
                     </div>
                 </div>
             </div>
+            <div class="slds-grid slds-gutters_direct-x-small">
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Data Provider Type</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" disabled value={providerType} class="slds-input" />
+                        </div>
+                    </div>
+                </div>
+                <template if:true={isApexProvider}>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Data Provider Apex class</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" disabled value={selectedApexClass} class="slds-input" />
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
        </div>
    </div>
    <div if:false={isConfirmationStep} class="slds-section slds-is-open">

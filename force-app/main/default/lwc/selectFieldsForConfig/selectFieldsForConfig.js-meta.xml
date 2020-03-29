@@ -20,5 +20,7 @@
             <property name="dateField" type="String"></property>
             <property name="titleField" type="String"></property>
             <property name="uiApiNotSupported" type="Boolean" role="outputOnly"></property>
+            <property name="selectedApexClass" type="String" role="inputOnly"></property>
+            <property name="providerType" type="String" role="inputOnly"></property>
         </targetConfig>
     </targetConfigs></LightningComponentBundle>

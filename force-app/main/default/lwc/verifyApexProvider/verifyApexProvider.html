@@ -1,0 +1,5 @@
+<template>
+    <template for:each={verificationResults} for:item="verifyResult">
+        <c-apex-verify-step-item key={verifyResult.message} verification-item={verifyResult}></c-apex-verify-step-item>
+    </template>
+</template>

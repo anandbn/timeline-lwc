@@ -35,6 +35,21 @@
             ],
             "c/timelineFilterPanel": [
                 "timelineFilterPanel/timelineFilterPanel.js"
+            ],
+            "c/selectApexRecordProvider": [
+                "selectApexRecordProvider/selectApexRecordProvider.js"
+            ],
+            "c/apexClassRowItem": [
+                "apexClassRowItem/apexClassRowItem.js"
+            ],
+            "c/apexVerifyStepItem": [
+                "apexVerifyStepItem/apexVerifyStepItem.js"
+            ],
+            "c/verifyApexProvider": [
+                "verifyApexProvider/verifyApexProvider.js"
+            ],
+            "c/selectObjectThemeColor": [
+                "selectObjectThemeColor/selectObjectThemeColor.js"
             ]
         }
     },

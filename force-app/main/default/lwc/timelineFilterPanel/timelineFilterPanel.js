@@ -52,4 +52,6 @@ export default class TimelineFilterPanel extends LightningElement {
         this.dispatchEvent(filterChangeEvent);
 
     }
+
+    
 }

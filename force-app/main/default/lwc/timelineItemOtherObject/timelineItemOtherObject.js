@@ -11,6 +11,11 @@ export default class TimelineItemOtherObject extends LightningElement {
     @api expandedFieldsToDisplay;
     @api fieldData;
     @api recordId;
+    @api isExternalServiceData;
+    @api externalData;
+    @api externalDataFieldTypes;
+    @api baseUrlForRecordDetail;
+
     @track expanded;
     @api themeInfo;
     @track dataLoaded = false;
@@ -31,7 +36,7 @@ export default class TimelineItemOtherObject extends LightningElement {
     }
 
     get objectThemeColor() {
-        return `background-color: #${this.themeInfo.color};`;
+        return (this.themeInfo.color && this.themeInfo.color.length>0)?`background-color: #${this.themeInfo.color}`:'';
     }
 
     get itemStyle() {
@@ -44,44 +49,54 @@ export default class TimelineItemOtherObject extends LightningElement {
 
     toggleDetailSection() {
         this.expanded = !this.expanded;
-        if (this.expanded && !this.dataLoaded) {
+        if (this.expanded && !this.dataLoaded && !this.isExternalServiceData) {
             getTimelineItemChildData({
                 objectApiName: this.object,
                 fieldsToExtract: this.expandedFieldsToDisplay,
                 recordId: this.recordId
             })
-                .then(data => {
-                    this.dataLoaded=true;
-                    this.fieldData = new Array();
-                    for (let i = 0; i < data.fieldMetadata.length; i++) {
-                        let fld = data.fieldMetadata[i];
-                        let fldData = {};
-                        fldData.apiName = fld.apiName;
-                        fldData.fieldLabel = fld.fieldLabel;
-                        fldData.dataType = fld.dataType;
-                        fldData.fieldValue = data.data[fld.apiName];
-                        if(fld.isNamePointing){
-                            fldData.fieldValue=data.data[fld.relationshipName]['Name'];
-                            fldData.isHyperLink=true;
-                            fldData.hyperLinkToId=data.data[fld.relationshipName]['Id'];
-                        }else if(fld.dataType.toUpperCase() === "REFERENCE"){
-                            fldData.fieldValue=data.data[fld.relationshipName][fld.referenceToApiName];
-                            fldData.isHyperLink=true;
-                            fldData.hyperLinkToId=data.data[fld.relationshipName]['Id'];
-                        }
-                        fldData.isBoolean = fld.dataType.toUpperCase() === "Boolean".toUpperCase();
-                        fldData.isBooleanTrue = fldData.fieldValue;
-                        if(fldData.dataType.toUpperCase() === "Date".toUpperCase() || fldData.dataType.toUpperCase() === "DateTime".toUpperCase()){
-                            fldData.fieldValue =  moment(fldData.fieldValue).format("dddd, MMMM Do YYYY, h:mm:ss a");
-                        }
-                        
-                        this.fieldData.push(fldData);
-                    }
-                })
-                .catch(error => {
-                    console.log(JSON.stringify(error));
-                });
+            .then(data => {
+                this.dataLoaded=true;
+                this.fieldData = this.populateFieldData(data.data,data.fieldMetadata);
+            })
+            .catch(error => {
+                console.log(JSON.stringify(error));
+            });
         }
+        //Data loaded via a Apex data provider so just display the data from the `externalData` attribute
+        if(this.isExternalServiceData){
+            this.dataLoaded=true;
+            this.fieldData = this.populateFieldData(this.externalData,this.externalDataFieldTypes);
+        }
+    }
+
+    populateFieldData(data,fieldMetadata){
+        let fieldData = new Array();
+        for (let i = 0; i < fieldMetadata.length; i++) {
+            let fld = fieldMetadata[i];
+            let fldData = {};
+            fldData.apiName = fld.apiName;
+            fldData.fieldLabel = fld.fieldLabel;
+            fldData.dataType = fld.dataType;
+            fldData.fieldValue = data[fld.apiName];
+            if(fld.isNamePointing){
+                fldData.fieldValue=data[fld.relationshipName]['Name'];
+                fldData.isHyperLink=true;
+                fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
+            }else if(fld.dataType.toUpperCase() === "REFERENCE"){
+                fldData.fieldValue=data[fld.relationshipName][fld.referenceToApiName];
+                fldData.isHyperLink=true;
+                fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
+            }
+            fldData.isBoolean = fld.dataType.toUpperCase() === "Boolean".toUpperCase();
+            fldData.isBooleanTrue = fldData.fieldValue;
+            if(fldData.dataType.toUpperCase() === "Date".toUpperCase() || fldData.dataType.toUpperCase() === "DateTime".toUpperCase()){
+                fldData.fieldValue =  moment(fldData.fieldValue).format("dddd, MMMM Do YYYY, h:mm:ss a");
+            }
+            
+            fieldData.push(fldData);
+        } 
+        return fieldData;       
     }
 
 }

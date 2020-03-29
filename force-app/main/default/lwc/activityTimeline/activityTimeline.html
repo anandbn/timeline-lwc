@@ -10,41 +10,77 @@
                         </a>
                     </h2>
                 </div>
-                <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects} onchange={handleFilterChange}></c-timeline-filter-panel>
+                    <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
+                        onchange={handleFilterChange}></c-timeline-filter-panel>
             </header>
         </div>
         <article if:true={isParametersValid}>
-        <ul if:false={error} class="slds-timeline slds-m-around_small">
-            <li if:false={showHeader} class="slds-timeline__actions slds-timeline__actions_inline slds-is-relative">
-                <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects} onchange={handleFilterChange}></c-timeline-filter-panel>
-            </li>
-            <template for:each={childRecords} for:item="theRecord">
-                <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId} object={theRecord.object}
-                    title={theRecord.title} date-value={theRecord.dateValue}
-                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay} record-id={theRecord.recordId}
-                    theme-info={theRecord.themeInfo}>
-                </c-timeline-item>
-                <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported} key={theRecord.recordId} object={theRecord.object}
-                    title={theRecord.title} date-value={theRecord.dateValue}
-                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay} record-id={theRecord.recordId}
-                    theme-info={theRecord.themeInfo}>
-                </c-timeline-item-other-object>
-                <c-timeline-item-task if:true={theRecord.isTask} key={theRecord.recordId} title={theRecord.title}
-                    date-value={theRecord.dateValue} record-id={theRecord.recordId} description={theRecord.description}
-                    who-to-name={theRecord.whoToName} owner-id={theRecord.OwnerId}
-                    assigned-to-name={theRecord.assignedToName} who-id={theRecord.WhoId}
-                    task-subtype={theRecord.TaskSubtype}>
+            <ul if:false={error} class="slds-timeline slds-m-around_small">
+                <template if:false={isLoading}>
+                    <template if:true={hasTimelineData}>
+                        <li if:false={showHeader}
+                            class="slds-timeline__actions slds-timeline__actions_inline slds-is-relative">
+                            <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
+                                onchange={handleFilterChange}></c-timeline-filter-panel>
+                        </li>
+                        <template for:each={childRecords} for:item="theRecord">
+                            <template if:false={theRecord.isTask}>
+                                <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
+                                    object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
+                                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
+                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo}>
+                                </c-timeline-item>
+                                <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported}
+                                    key={theRecord.recordId} object={theRecord.object} title={theRecord.title}
+                                    date-value={theRecord.dateValue}
+                                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
+                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
+                                    is-external-service-data={theRecord.isExternalServiceData}
+                                    external-data={theRecord.externalData}
+                                    external-data-field-types={theRecord.externalDataFieldTypes}
+                                    base-url-for-record-detail={theRecord.baseUrlForRecordDetail}>
+                                </c-timeline-item-other-object>
+                            </template>
+                            <template if:true={theRecord.isTask}>
+                                <c-timeline-item-task key={theRecord.recordId} title={theRecord.title}
+                                    date-value={theRecord.dateValue} record-id={theRecord.recordId}
+                                    description={theRecord.description} who-to-name={theRecord.whoToName}
+                                    owner-id={theRecord.OwnerId} assigned-to-name={theRecord.assignedToName}
+                                    who-id={theRecord.WhoId} task-subtype={theRecord.TaskSubtype}>
+    
+                                </c-timeline-item-task>
+                            </template>
+    
+                        </template>
+                    </template>
+                    <template if:false={hasTimelineData}>
+                        <span class="slds-badge slds-theme_warning">
+                            <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>&nbsp;No data found
+                            !!!!
+                        </span>
+                    </template>
+                </template>
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </template>
+            </ul>
+            <div if:true={error} class="slds-text-color_destructive">
+                <span class="slds-badge slds-theme_error">
+                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;Error loading data:
+                </span>
+                &nbsp;{errorMsg}
 
-                </c-timeline-item-task>
-            </template>
-        </ul>
-        <div if:true={error} class="slds-text-color_destructive">
-            {errorMsg}
+            </div>
+        </article>
+        <div if:false={isParametersValid} class="slds-text-color_destructive">
+            <span class="slds-badge slds-theme_error">
+                <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;Invalid parameters
+            </span>
+            &nbsp; Either recordId or configId are empty.
+
         </div>
-    </article>
-<div if:false={isParametersValid} class="slds-text-color_destructive">
-        Invalid configuration parameters. Either recordId or configId are empty.
     </div>
-</div>
+
+
 
 </template>
