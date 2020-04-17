@@ -6,10 +6,10 @@
                 <div class="slds-media">
                     <div class="slds-media__figure">
                         <lightning-button-icon if:false={expanded} size="x-small" icon-name="utility:chevronright"
-                            alternative-text="Toggle details" onclick={toggleDetailSection}>
+                            alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
                         </lightning-button-icon>
                         <lightning-button-icon if:true={expanded} size="x-small" icon-name="utility:switch"
-                            alternative-text="Toggle details" onclick={toggleDetailSection}>
+                            alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
                         </lightning-button-icon>
                         <lightning-icon if:true={hasIconName} size="small" icon-name={themeInfo.iconName}></lightning-icon>
                         <span if:false={hasIconName} class="slds-avatar slds-avatar--small" style={objectThemeColor}>

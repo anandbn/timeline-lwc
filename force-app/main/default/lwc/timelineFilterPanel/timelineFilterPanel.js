@@ -1,4 +1,7 @@
 import { LightningElement,track,api } from 'lwc';
+import Filter from '@salesforce/label/c.Filter';
+import Refresh_data from '@salesforce/label/c.Refresh_data';
+import Apply from '@salesforce/label/c.Apply';
 
 export default class TimelineFilterPanel extends LightningElement {
     @track showFilter=false;
@@ -6,7 +9,9 @@ export default class TimelineFilterPanel extends LightningElement {
     @api objectFilters;
     @api availableObjects;
 
-
+    label = {
+        Filter,Refresh_data,Apply
+    }
     get filterStyles() {
         let filterStyle = '';
         if (this.showFilter) {

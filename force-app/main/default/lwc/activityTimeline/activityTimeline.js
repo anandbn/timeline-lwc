@@ -5,6 +5,11 @@ import { loadScript } from 'lightning/platformResourceLoader';
 import MOMENT_JS from '@salesforce/resourceUrl/moment_js';
 import CURRENT_USER_ID from '@salesforce/user/Id';
 
+import No_data_found from '@salesforce/label/c.No_data_found';
+import Error_loading_data from '@salesforce/label/c.Error_loading_data';
+import Invalid_parameters from '@salesforce/label/c.Invalid_parameters'
+import 	Either_recordId_or_configId_are_empty  from '@salesforce/label/c.Either_recordId_or_configId_are_empty'
+
 export default class ActivityTimeline extends LightningElement {
     @api recordId;
     @api configId;
@@ -24,6 +29,12 @@ export default class ActivityTimeline extends LightningElement {
     @track dateFilterSelection = "all_time";
     @track isLoading = true;
 
+    label = {
+        No_data_found,
+        Error_loading_data,
+        Invalid_parameters,
+        Either_recordId_or_configId_are_empty
+    }
     connectedCallback() {
         Promise.all([
             loadScript(this, MOMENT_JS),

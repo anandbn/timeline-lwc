@@ -5,10 +5,10 @@
             <div class="slds-media">
                 <div class="slds-media__figure">
                     <lightning-button-icon if:false={expanded} size="x-small" icon-name="utility:chevronright"
-                        alternative-text="Toggle details" onclick={toggleDetailSection}>
+                        alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
                     </lightning-button-icon>
                     <lightning-button-icon if:true={expanded} size="x-small" icon-name="utility:switch"
-                        alternative-text="Toggle details" onclick={toggleDetailSection}>
+                        alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
                     </lightning-button-icon>
                     <lightning-icon icon-name={iconName} size="small"></lightning-icon>
                 </div>
@@ -27,32 +27,32 @@
                     </div>
                     <p if:true={isTask} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> 
-                        <span if:false={hasWhoTo}> had a task</span>
-                        <span if:true={hasWhoTo}> created a task with&nbsp;</span>
+                        <span if:false={hasWhoTo}> {label.had_a_task}</span>
+                        <span if:true={hasWhoTo}> {label.created_a_task_with}&nbsp;</span>
                         <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <p if:true={isCall} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a>
-                        <span if:false={hasWhoTo}> logged a task</span>
-                        <span if:true={hasWhoTo}> logged a call with&nbsp;</span>
+                        <span if:false={hasWhoTo}> {label.logged_a_task}</span>
+                        <span if:true={hasWhoTo}> {label.logged_a_call_with}&nbsp;</span>
                         <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <p if:true={isEmail} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> 
-                        <span if:false={hasWhoTo}> sent an email</span>
-                        <span if:true={hasWhoTo}> sent an email to </span>
+                        <span if:false={hasWhoTo}> {label.sent_an_email}</span>
+                        <span if:true={hasWhoTo}> {label.sent_an_email_to} </span>
                         <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
                     <div if:true={expanded}
                         class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
                         <div if:true={hasWhoTo} class="slds-form-element">
-                            <span class="slds-form-element__label">Name</span>
+                            <span class="slds-form-element__label">{label.Name}</span>
                             <div class="slds-form-element__control">
                                 <a onclick={navigateToWho}>{whoToName}</a>
                             </div>
                         </div>
                         <div class="slds-form-element">
-                            <span class="slds-form-element__label">Description</span>
+                            <span class="slds-form-element__label">{label.Description}</span>
                             <div if:false={isEmail} class="slds-form-element__control">
                                 {description}
                             </div>

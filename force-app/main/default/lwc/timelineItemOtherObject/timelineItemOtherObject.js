@@ -2,6 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import getTimelineItemChildData from '@salesforce/apex/RecordTimelineDataProvider.getTimelineItemChildData';
 import { loadScript } from 'lightning/platformResourceLoader';
 import MOMENT_JS from '@salesforce/resourceUrl/moment_js';
+import Toggle_Details from '@salesforce/label/c.Toggle_Details';
 
 export default class TimelineItemOtherObject extends LightningElement {
 
@@ -20,6 +21,9 @@ export default class TimelineItemOtherObject extends LightningElement {
     @api themeInfo;
     @track dataLoaded = false;
 
+    label = {
+        Toggle_Details
+    }
     connectedCallback() {
         Promise.all([
             loadScript(this, MOMENT_JS),

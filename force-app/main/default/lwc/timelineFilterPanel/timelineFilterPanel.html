@@ -1,27 +1,27 @@
 <template>
     <div class="slds-no-flex slds-float_right slds-is-relative">
         <a class="slds-button" role="button" onclick={showHideFilters}>
-            <lightning-button-icon icon-name="utility:filterList" alternative-text="Filter" size="x-small">
+            <lightning-button-icon icon-name="utility:filterList" alternative-text={label.Filter} size="x-small">
             </lightning-button-icon>
         </a>
         <a class="slds-button" role="button" onclick={applyFilters}>
-            <lightning-button-icon icon-name="action:refresh" alternative-text="Refresh data" size="x-small">
+            <lightning-button-icon icon-name="action:refresh" alternative-text={label.Refresh_data} size="x-small">
             </lightning-button-icon>
         </a>
         <div class="filterPopover" style={filterStyles}>
             <section aria-label="Filter results" aria-describedby="filter-body-id_2"
                 class="slds-popover slds-nubbin_top-right" role="dialog">
                 <div id="filter-body-id_2" class="slds-popover__body">
-                    <lightning-radio-group name="dateFilterCriteria" label="Date Range" onchange={handleDateFilterChange} options={dateFilterOptions} value={dateFilterSelection} type="radio">
+                    <lightning-radio-group name="dateFilterCriteria" label={label.Date_Range} onchange={handleDateFilterChange} options={dateFilterOptions} value={dateFilterSelection} type="radio">
                     </lightning-radio-group>
                 </div>
                 <div id="filter-body-id_3" class="slds-popover__body">
-                    <lightning-checkbox-group name="objectFilterCriteria" label="Select objects" onchange={handleObjectFilterChange} options={objectFilterOptions} value={objectFilters}>
+                    <lightning-checkbox-group name="objectFilterCriteria" label={label.Select_Objects} onchange={handleObjectFilterChange} options={objectFilterOptions} value={objectFilters}>
                     </lightning-checkbox-group>
                 </div>
                 <footer class="slds-popover__footer">
                     <div class="slds-grid slds-grid_vertical-align-center">
-                      <lightning-button variant="brand" class="slds-col_bump-left" onclick={applyFilters} label="Apply"></lightning-button>
+                      <lightning-button variant="brand" class="slds-col_bump-left" onclick={applyFilters} label={label.Apply}></lightning-button>
                     </div>
                   </footer>
             </section>

@@ -55,7 +55,7 @@
                     </template>
                     <template if:false={hasTimelineData}>
                         <span class="slds-badge slds-theme_warning">
-                            <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>&nbsp;No data found
+                            <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>&nbsp;{label.No_data_found}
                             !!!!
                         </span>
                     </template>
@@ -66,7 +66,7 @@
             </ul>
             <div if:true={error} class="slds-text-color_destructive">
                 <span class="slds-badge slds-theme_error">
-                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;Error loading data:
+                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;{label.Error_loading_data}:
                 </span>
                 &nbsp;{errorMsg}
 
@@ -74,9 +74,9 @@
         </article>
         <div if:false={isParametersValid} class="slds-text-color_destructive">
             <span class="slds-badge slds-theme_error">
-                <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;Invalid parameters
+                <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;{label.Invalid_parameters}
             </span>
-            &nbsp; Either recordId or configId are empty.
+            &nbsp; {label.Either_recordId_or_configId_are_empty}.
 
         </div>
     </div>

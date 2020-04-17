@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation'
+import Toggle_details from '@salesforce/label/c.Toggle_details';
 
 export default class TimelineItem extends NavigationMixin(LightningElement) {
 
@@ -10,7 +11,9 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
     @api recordId;
     @track expanded;
     @api themeInfo;
-
+    label = {
+        Toggle_details
+    }
 
     get hasIconName() {
         return this.themeInfo.iconName != null;
