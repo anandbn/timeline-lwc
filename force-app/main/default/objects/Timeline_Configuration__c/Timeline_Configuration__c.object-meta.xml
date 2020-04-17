@@ -159,6 +159,7 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
     <label>Timeline Configuration</label>
     <nameField>
         <displayFormat>TL-{00000}</displayFormat>

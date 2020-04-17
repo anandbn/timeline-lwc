@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Apply</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Apply</shortDescription>
+        <value>Apply</value>
+    </labels>
+    <labels>
+        <fullName>Date_Range</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date Range</shortDescription>
+        <value>Date Range</value>
+    </labels>
+    <labels>
+        <fullName>Description</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description</shortDescription>
+        <value>Description</value>
+    </labels>
+    <labels>
+        <fullName>Either_recordId_or_configId_are_empty</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Either recordId or configId are empty.</shortDescription>
+        <value>Either recordId or configId are empty.</value>
+    </labels>
+    <labels>
+        <fullName>Error_loading_data</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error loading data</shortDescription>
+        <value>Error loading data</value>
+    </labels>
+    <labels>
+        <fullName>Filter</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Filter</shortDescription>
+        <value>Filter</value>
+    </labels>
+    <labels>
+        <fullName>Filter_Results</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Filter Results</shortDescription>
+        <value>Filter Results</value>
+    </labels>
+    <labels>
+        <fullName>Invalid_parameters</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid parameters</shortDescription>
+        <value>Invalid parameters</value>
+    </labels>
+    <labels>
+        <fullName>Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>No_data_found</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No data found</shortDescription>
+        <value>No data found</value>
+    </labels>
+    <labels>
+        <fullName>Refresh_Data</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh Data</shortDescription>
+        <value>Refresh Data</value>
+    </labels>
+    <labels>
+        <fullName>Select_Objects</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select Objects</shortDescription>
+        <value>Select Objects</value>
+    </labels>
+    <labels>
+        <fullName>Toggle_details</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toggle details</shortDescription>
+        <value>Toggle details</value>
+    </labels>
+    <labels>
+        <fullName>You</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>You</shortDescription>
+        <value>You</value>
+    </labels>
+    <labels>
+        <fullName>created_a_task_with</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>created a task with</shortDescription>
+        <value>created a task with</value>
+    </labels>
+    <labels>
+        <fullName>had_a_task</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>had a task</shortDescription>
+        <value>had a task</value>
+    </labels>
+    <labels>
+        <fullName>logged_a_call_with</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>logged a call with</shortDescription>
+        <value>logged a call with</value>
+    </labels>
+    <labels>
+        <fullName>logged_a_task</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>logged a task</shortDescription>
+        <value>logged a task</value>
+    </labels>
+    <labels>
+        <fullName>sent_an_email</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sent an email</shortDescription>
+        <value>sent an email</value>
+    </labels>
+    <labels>
+        <fullName>sent_an_email_to</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sent an email to</shortDescription>
+        <value>sent an email to</value>
+    </labels>
+</CustomLabels>

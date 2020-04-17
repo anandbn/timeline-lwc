@@ -31,4 +31,4 @@ export default class SelectApexRecordProvider extends LightningElement {
         this.showoptions = true;
         this.searchString = event.target.value;
     }
-}  
+}

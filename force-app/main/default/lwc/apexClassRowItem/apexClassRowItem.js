@@ -11,4 +11,4 @@ export default class ApexClassRowItem extends LightningElement {
         // Fire the custom event  
         this.dispatchEvent(selectEvent);
     }
-}  
+}

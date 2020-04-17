@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <assignments>
         <name>Assign_Fields_to_Display_for_Task</name>
         <label>Assign Fields to Display for Task</label>
@@ -37,6 +37,96 @@
             <targetReference>Step_7_Confirmation</targetReference>
         </connector>
     </assignments>
+    <assignments>
+        <name>Assign_LWC_UI_Support</name>
+        <label>Assign LWC UI Support</label>
+        <locationX>944</locationX>
+        <locationY>541</locationY>
+        <assignmentItems>
+            <assignToReference>uiApiNotSupported</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Select_Object_Theme_Color</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Check_Provider_Type</name>
+        <label>Check Provider Type</label>
+        <locationX>258</locationX>
+        <locationY>407</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Apex_class</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>var_dataProviderType2</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Apex class</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Select_Data_provider_Apex_Class</targetReference>
+            </connector>
+            <label>Apex class</label>
+        </rules>
+        <rules>
+            <name>Related_Record</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>var_dataProviderType2</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Related Record</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Step_2_Select_Related_Object</targetReference>
+            </connector>
+            <label>Related Record</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Apex_Class_Valid</name>
+        <label>Is Apex Class Valid</label>
+        <locationX>659</locationX>
+        <locationY>545</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Apex_Class_Valid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>apexClassVerified</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_LWC_UI_Support</targetReference>
+            </connector>
+            <label>Apex Class Valid</label>
+        </rules>
+        <rules>
+            <name>Apex_Class_Invalid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>apexClassVerified</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Select_Data_provider_Apex_Class</targetReference>
+            </connector>
+            <label>Apex Class Invalid</label>
+        </rules>
+    </decisions>
     <decisions>
         <name>Is_Object_Task</name>
         <label>Is Object Task</label>
@@ -75,6 +165,14 @@
         </rules>
     </decisions>
     <description>A wizard driven flow to add child object to a timeline configuration.</description>
+    <dynamicChoiceSets>
+        <name>DataProviderType</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Data_Provider_Type__c</picklistField>
+        <picklistObject>Timeline_Child_Object__c</picklistObject>
+    </dynamicChoiceSets>
     <interviewLabel>Add Child object to Config {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Add Child object to Config</label>
     <processMetadataValues>
@@ -93,12 +191,18 @@
     <recordCreates>
         <name>Create_Timeline_Child_Object</name>
         <label>Create Timeline Child Object</label>
-        <locationX>901</locationX>
-        <locationY>318</locationY>
+        <locationX>1187</locationX>
+        <locationY>462</locationY>
         <assignRecordIdToReference>var_childConfigId</assignRecordIdToReference>
         <connector>
             <targetReference>Step_7_Confirm_record_creation</targetReference>
         </connector>
+        <inputAssignments>
+            <field>Data_Provider_Type__c</field>
+            <value>
+                <elementReference>DataProviderType</elementReference>
+            </value>
+        </inputAssignments>
         <inputAssignments>
             <field>Date_Field__c</field>
             <value>
@@ -142,6 +246,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Provider_Apex_Classname__c</field>
+            <value>
+                <elementReference>selectedApexClass</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Relationship_Name__c</field>
             <value>
                 <elementReference>var_relationshipName</elementReference>
@@ -162,15 +272,87 @@
         <object>Timeline_Child_Object__c</object>
     </recordCreates>
     <screens>
-        <name>Step_1_Confirm_Object</name>
-        <label>Step 1: Confirm Object</label>
-        <locationX>174</locationX>
-        <locationY>76</locationY>
+        <description>Select if the related record is being provided by an Apex class or a related record of the primary object.</description>
+        <name>Is_Apex_or_Related_Record</name>
+        <label>Is Apex or Related Record</label>
+        <locationX>111</locationX>
+        <locationY>309</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Check_Provider_Type</targetReference>
+        </connector>
+        <fields>
+            <name>var_dataProviderType2</name>
+            <choiceReferences>DataProviderType</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>What type of child record?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <helpText>&lt;p&gt;You can either display a related record or select an apex class that implements &lt;b&gt;timeline__IDataProvider&lt;/b&gt; interface.&lt;/p&gt;</helpText>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Select_Data_provider_Apex_Class</name>
+        <label>Select Data provider Apex Class</label>
+        <locationX>273</locationX>
+        <locationY>556</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Verify_Apex_Class</targetReference>
+        </connector>
+        <fields>
+            <name>cmp_Select_Apex_Class</name>
+            <extensionName>timeline:selectApexRecordProvider</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>selectedApexClass</assignToReference>
+                <name>selectedApexClass</name>
+            </outputParameters>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Select_Object_Theme_Color</name>
+        <label>Select Object Theme Color</label>
+        <locationX>943</locationX>
+        <locationY>381</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Step_2_Select_Related_Object</targetReference>
+            <targetReference>Step_6_Icon_Selection</targetReference>
+        </connector>
+        <fields>
+            <name>cmp_selectObjectColor</name>
+            <extensionName>timeline:selectObjectThemeColor</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>var_objectColor</assignToReference>
+                <name>selectedColor</name>
+            </outputParameters>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Step_1_Confirm_Object</name>
+        <label>Step 1: Confirm Object</label>
+        <locationX>158</locationX>
+        <locationY>174</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Is_Apex_or_Related_Record</targetReference>
         </connector>
         <fields>
             <name>lwc_progress_1</name>
@@ -514,8 +696,8 @@
     <screens>
         <name>Step_6_Icon_Selection</name>
         <label>Step 6: Icon Selection</label>
-        <locationX>998</locationX>
-        <locationY>37</locationY>
+        <locationX>954</locationX>
+        <locationY>146</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -555,8 +737,8 @@
     <screens>
         <name>Step_7_Confirm_record_creation</name>
         <label>Step 7: Confirm record creation</label>
-        <locationX>916</locationX>
-        <locationY>483</locationY>
+        <locationX>1187</locationX>
+        <locationY>629</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -583,8 +765,8 @@
     <screens>
         <name>Step_7_Confirmation</name>
         <label>Step 7: Confirmation</label>
-        <locationX>998</locationX>
-        <locationY>169</locationY>
+        <locationX>1187</locationX>
+        <locationY>321</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -661,7 +843,74 @@
                     <elementReference>var_iconName</elementReference>
                 </value>
             </inputParameters>
+            <inputParameters>
+                <name>selectedApexClass</name>
+                <value>
+                    <elementReference>selectedApexClass</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>providerType</name>
+                <value>
+                    <elementReference>var_dataProviderType2</elementReference>
+                </value>
+            </inputParameters>
             <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Verify_Apex_Class</name>
+        <label>Verify Apex Class</label>
+        <locationX>473</locationX>
+        <locationY>682</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Is_Apex_Class_Valid</targetReference>
+        </connector>
+        <fields>
+            <name>txt_Select_Apex_Class</name>
+            <fieldText>&lt;p&gt;Apex Class Selected: {!selectedApexClass}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>cmp_Verify_apex_class</name>
+            <extensionName>timeline:verifyApexProvider</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>selectedApexClass</name>
+                <value>
+                    <elementReference>selectedApexClass</elementReference>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>apexClassVerified</assignToReference>
+                <name>verified</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_childObjectApiName</assignToReference>
+                <name>childObjectName</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_relationshipName</assignToReference>
+                <name>childRelationshipName</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_dateField</assignToReference>
+                <name>dateFieldName</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_fieldsToDisplay</assignToReference>
+                <name>fieldsToDisplay</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_titleField</assignToReference>
+                <name>titleFieldName</name>
+            </outputParameters>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
@@ -675,11 +924,25 @@
     </start>
     <status>Active</status>
     <variables>
+        <name>apexClassVerified</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
         <name>recordId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>selectedApexClass</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
     </variables>
     <variables>
         <name>uiApiNotSupported</name>

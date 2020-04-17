@@ -153,6 +153,7 @@
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Timeline Child Object</label>
     <nameField>
         <displayFormat>TLC-{000000}</displayFormat>

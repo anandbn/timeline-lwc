@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation'
 import CURRENT_USER_ID from '@salesforce/user/Id';
 
 import getEmailDetails from '@salesforce/apex/RecordTimelineDataProvider.getEmailDetails';
-import Toggle_Details from '@salesforce/label/c.Toggle_Details';
+import Toggle_Details from '@salesforce/label/c.Toggle_details';
 import had_a_task from '@salesforce/label/c.had_a_task';
 import created_a_task_with from '@salesforce/label/c.created_a_task_with';
 import logged_a_task from '@salesforce/label/c.logged_a_task';

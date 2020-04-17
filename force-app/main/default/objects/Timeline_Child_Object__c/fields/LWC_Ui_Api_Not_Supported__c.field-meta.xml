@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>LWC_Ui_Api_Not_Supported__c</fullName>
     <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
     <description>This field indicates that this object isn&#39;t supported via the LWC UI API and hence will need special handling that can&#39;t use outputField LWC component.</description>
     <externalId>false</externalId>
     <inlineHelpText>This field indicates that this object isn&#39;t supported via the LWC UI API and hence will need special handling that can&#39;t use outputField LWC component.</inlineHelpText>

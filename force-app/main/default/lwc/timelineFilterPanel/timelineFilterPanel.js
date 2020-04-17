@@ -1,6 +1,6 @@
 import { LightningElement,track,api } from 'lwc';
 import Filter from '@salesforce/label/c.Filter';
-import Refresh_data from '@salesforce/label/c.Refresh_data';
+import Refresh_data from '@salesforce/label/c.Refresh_Data';
 import Apply from '@salesforce/label/c.Apply';
 
 export default class TimelineFilterPanel extends LightningElement {

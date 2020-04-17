@@ -6,14 +6,6 @@
     </types>
     <types>
         <members>*</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexPage</name>
-    </types>
-    <types>
-        <members>*</members>
         <name>ApexTestSuite</name>
     </types>
     <types>
@@ -22,14 +14,10 @@
     </types>
     <types>
         <members>*</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
-        <members>*</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
-        <members>*</members>
+        <members>moment_js</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -45,6 +33,10 @@
     <types>
         <members>*</members>
         <name>Flow</name>
+    </types>
+        <types>
+        <members>*</members>
+        <name>CustomLabel</name>
     </types>
     <version>47.0</version>
 </Package>
