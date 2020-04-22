@@ -43,7 +43,7 @@
                             </template>
                             <template if:true={theRecord.isTask}>
                                 <c-timeline-item-task key={theRecord.recordId} title={theRecord.title}
-                                    date-value={theRecord.dateValue} record-id={theRecord.recordId}
+                                    date-value={theRecord.dateValue} date-value-from-db={theRecord.dateValueDB} record-id={theRecord.recordId}
                                     description={theRecord.description} who-to-name={theRecord.whoToName}
                                     owner-id={theRecord.OwnerId} assigned-to-name={theRecord.assignedToName}
                                     who-id={theRecord.WhoId} task-subtype={theRecord.TaskSubtype}>

@@ -77,3 +77,6 @@ SiteRegisterController.cls
 SiteRegisterController.cls-meta.xml
 SiteRegisterControllerTest.cls
 SiteRegisterControllerTest.cls-meta.xml
+
+#Translation files
+fr.translation-meta.xml

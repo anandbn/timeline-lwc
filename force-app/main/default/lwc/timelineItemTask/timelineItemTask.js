@@ -5,6 +5,7 @@ import CURRENT_USER_ID from '@salesforce/user/Id';
 import getEmailDetails from '@salesforce/apex/RecordTimelineDataProvider.getEmailDetails';
 import Toggle_Details from '@salesforce/label/c.Toggle_details';
 import had_a_task from '@salesforce/label/c.had_a_task';
+import have_a_task from '@salesforce/label/c.have_a_task';
 import created_a_task_with from '@salesforce/label/c.created_a_task_with';
 import logged_a_task from '@salesforce/label/c.logged_a_task';
 import logged_a_call_with from '@salesforce/label/c.logged_a_call_with';
@@ -12,11 +13,14 @@ import sent_an_email from '@salesforce/label/c.sent_an_email';
 import sent_an_email_to from '@salesforce/label/c.sent_an_email_to';
 import Name from '@salesforce/label/c.Name';
 import Description from '@salesforce/label/c.Description';
+import You from '@salesforce/label/c.You';
+import have_a_upoming_task_with from '@salesforce/label/c.have_a_upoming_task_with';
 
 export default class TimelineItemTask extends NavigationMixin(LightningElement) {
 
     @api title;
     @api dateValue;
+    @api dateValueFromDb;
     @api recordId;
     @api description;
     @track expanded;
@@ -29,6 +33,8 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     label = {
         Toggle_Details,
         had_a_task,
+        have_a_task,
+        have_a_upoming_task_with,
         created_a_task_with,
         logged_a_task,
         logged_a_call_with,
@@ -50,7 +56,7 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
                 this.whoToName=emailRelations[0].Relation.Name;
                 this.whoId=emailRelations[0].RelationId;
                 if(emailRelations.length === 2){
-                    this.assignedToName=emailRelations[1].RelationId===CURRENT_USER_ID?"You":emailRelations[1].Relation.Name;
+                    this.assignedToName=emailRelations[1].RelationId===CURRENT_USER_ID?You:emailRelations[1].Relation.Name;
                     this.ownerId=emailRelations[1].RelationId;
                 }
 
@@ -87,6 +93,11 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
 
     get hasWhoTo(){
         return this.whoId!=null;
+    }
+
+    get isFutureTask(){
+        var dtVal = Date.parse(this.dateValueFromDb);
+        return dtVal > new Date().getTime();
     }
     toggleDetailSection() {
         this.expanded = !this.expanded;

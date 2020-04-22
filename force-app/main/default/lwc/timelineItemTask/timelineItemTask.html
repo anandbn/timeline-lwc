@@ -27,9 +27,24 @@
                     </div>
                     <p if:true={isTask} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> 
-                        <span if:false={hasWhoTo}> {label.had_a_task}</span>
-                        <span if:true={hasWhoTo}> {label.created_a_task_with}&nbsp;</span>
-                        <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
+                        <template if:false={hasWhoTo}>
+                            <template if:true={isFutureTask}>
+                                <span> {label.have_a_task}</span>
+                            </template>
+                            <template if:false={isFutureTask}>
+                                <span> {label.had_a_task}</span>
+                            </template>
+                        </template>
+                        <template if:true={hasWhoTo}>
+                            <template if:false={isFutureTask}>
+                                <span> {label.created_a_task_with}&nbsp;</span>
+                            </template>
+                            <template if:true={isFutureTask}>
+                                <span> {label.have_a_upoming_task_with}&nbsp;</span>
+                            </template>
+                            
+                            <a onclick={navigateToWho}>{whoToName}</a>
+                        </template>
                     </p>
                     <p if:true={isCall} class="slds-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a>

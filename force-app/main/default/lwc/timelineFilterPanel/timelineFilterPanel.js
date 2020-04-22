@@ -2,6 +2,13 @@ import { LightningElement,track,api } from 'lwc';
 import Filter from '@salesforce/label/c.Filter';
 import Refresh_data from '@salesforce/label/c.Refresh_Data';
 import Apply from '@salesforce/label/c.Apply';
+import Date_Range from '@salesforce/label/c.Date_Range';
+import Select_Objects from '@salesforce/label/c.Select_Objects';
+import Filter_Results from '@salesforce/label/c.Filter_Results';
+import All_Time from '@salesforce/label/c.All_Time';
+import Last_7_days from '@salesforce/label/c.Last_7_days';
+import Next_7_days from '@salesforce/label/c.Next_7_days';
+import Last_30_days from '@salesforce/label/c.Last_30_days';
 
 export default class TimelineFilterPanel extends LightningElement {
     @track showFilter=false;
@@ -10,7 +17,7 @@ export default class TimelineFilterPanel extends LightningElement {
     @api availableObjects;
 
     label = {
-        Filter,Refresh_data,Apply
+        Filter,Refresh_data,Apply,Date_Range,Select_Objects,Filter_Results
     }
     get filterStyles() {
         let filterStyle = '';
@@ -28,10 +35,10 @@ export default class TimelineFilterPanel extends LightningElement {
 
     get dateFilterOptions() {
         return [
-            { label: 'All Time', value: 'all_time' },
-            { label: 'Last 7 days', value: 'last_7_days' },
-            { label: 'Next 7 days', value: 'next_7_days' },
-            { label: 'Last 30 days', value: 'last_30_days' },
+            { label:All_Time, value: 'all_time' },
+            { label: Last_7_days, value: 'last_7_days' },
+            { label: Next_7_days, value: 'next_7_days' },
+            { label: Last_30_days, value: 'last_30_days' },
         ];
     }
 

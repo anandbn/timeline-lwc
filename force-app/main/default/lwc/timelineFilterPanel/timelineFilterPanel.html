@@ -9,7 +9,7 @@
             </lightning-button-icon>
         </a>
         <div class="filterPopover" style={filterStyles}>
-            <section aria-label="Filter results" aria-describedby="filter-body-id_2"
+            <section aria-label={label.Filter_Results} aria-describedby="filter-body-id_2"
                 class="slds-popover slds-nubbin_top-right" role="dialog">
                 <div id="filter-body-id_2" class="slds-popover__body">
                     <lightning-radio-group name="dateFilterCriteria" label={label.Date_Range} onchange={handleDateFilterChange} options={dateFilterOptions} value={dateFilterSelection} type="radio">

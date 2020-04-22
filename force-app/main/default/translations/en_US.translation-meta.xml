@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label>Apply</label>
+        <name>Apply</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Date Range --></label>
+        <name>Date_Range</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Description --></label>
+        <name>Description</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Either recordId or configId are empty. --></label>
+        <name>Either_recordId_or_configId_are_empty</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error loading data --></label>
+        <name>Error_loading_data</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Filter --></label>
+        <name>Filter</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Filter Results --></label>
+        <name>Filter_Results</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Invalid parameters --></label>
+        <name>Invalid_parameters</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Name --></label>
+        <name>Name</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- No data found --></label>
+        <name>No_data_found</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Refresh Data --></label>
+        <name>Refresh_Data</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Select Objects --></label>
+        <name>Select_Objects</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Toggle details --></label>
+        <name>Toggle_details</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- You --></label>
+        <name>You</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- created a task with --></label>
+        <name>created_a_task_with</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- had a task --></label>
+        <name>had_a_task</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- logged a call with --></label>
+        <name>logged_a_call_with</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- logged a task --></label>
+        <name>logged_a_task</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sent an email --></label>
+        <name>sent_an_email</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- sent an email to --></label>
+        <name>sent_an_email_to</name>
+    </customLabels>
+    <flowDefinitions>
+        <flows>
+            <fullName>Add_Child_object_to_Config-8</fullName>
+            <screens>
+                <fields>
+                    <name>var_dataProviderType2</name>
+                </fields>
+                <name>Is_Apex_or_Related_Record</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>cmp_Select_Apex_Class</name>
+                </fields>
+                <name>Select_Data_provider_Apex_Class</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>cmp_selectObjectColor</name>
+                </fields>
+                <name>Select_Object_Theme_Color</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>lwc_get_object_name</name>
+                </fields>
+                <fields>
+                    <name>lwc_progress_1</name>
+                </fields>
+                <name>Step_1_Confirm_Object</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>lwc_progress_2</name>
+                </fields>
+                <fields>
+                    <name>lwc_select_child</name>
+                </fields>
+                <name>Step_2_Select_Related_Object</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>lwc_progress_3</name>
+                </fields>
+                <fields>
+                    <name>lwc_title_field</name>
+                </fields>
+                <name>Step_3_Select_Title_Field</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>lwc_date_field</name>
+                </fields>
+                <fields>
+                    <name>lwc_progress_4</name>
+                </fields>
+                <name>Step_4_Select_Date_Field</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>lwc_display_fields</name>
+                </fields>
+                <fields>
+                    <name>lwc_progress_5</name>
+                </fields>
+                <name>Step_5_Select_Display_Fields</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>display_icon_warning</name>
+                </fields>
+                <fields>
+                    <name>lwc_icon_name</name>
+                </fields>
+                <fields>
+                    <name>lwc_progress_6</name>
+                </fields>
+                <name>Step_6_Icon_Selection</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>display_confirmation</name>
+                </fields>
+                <fields>
+                    <name>lwc_progress_8</name>
+                </fields>
+                <name>Step_7_Confirm_record_creation</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>lwc_confirmation</name>
+                </fields>
+                <fields>
+                    <name>lwc_progress_7</name>
+                </fields>
+                <name>Step_7_Confirmation</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>cmp_Verify_apex_class</name>
+                </fields>
+                <fields>
+                    <name>txt_Select_Apex_Class</name>
+                </fields>
+                <name>Verify_Apex_Class</name>
+            </screens>
+        </flows>
+        <fullName>Add_Child_object_to_Config</fullName>
+    </flowDefinitions>
+</Translations>

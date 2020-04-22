@@ -1,142 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
-        <fullName>Apply</fullName>
+        <fullName>All_Time</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
+        <shortDescription>All Time</shortDescription>
+        <value>All Time</value>
+    </labels>
+    <labels>
+        <fullName>Apply</fullName>
+        <categories>Activity Timeline</categories>
+        <language>en_US</language>
+        <protected>false</protected>
         <shortDescription>Apply</shortDescription>
         <value>Apply</value>
     </labels>
     <labels>
         <fullName>Date_Range</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Date Range</shortDescription>
         <value>Date Range</value>
     </labels>
     <labels>
         <fullName>Description</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Description</shortDescription>
         <value>Description</value>
     </labels>
     <labels>
         <fullName>Either_recordId_or_configId_are_empty</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Either recordId or configId are empty.</shortDescription>
         <value>Either recordId or configId are empty.</value>
     </labels>
     <labels>
         <fullName>Error_loading_data</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Error loading data</shortDescription>
         <value>Error loading data</value>
     </labels>
     <labels>
         <fullName>Filter</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Filter</shortDescription>
         <value>Filter</value>
     </labels>
     <labels>
         <fullName>Filter_Results</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Filter Results</shortDescription>
         <value>Filter Results</value>
     </labels>
     <labels>
         <fullName>Invalid_parameters</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Invalid parameters</shortDescription>
         <value>Invalid parameters</value>
     </labels>
     <labels>
-        <fullName>Name</fullName>
+        <fullName>Last_30_days</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
+        <shortDescription>Last 30 days</shortDescription>
+        <value>Last 30 days</value>
+    </labels>
+    <labels>
+        <fullName>Last_7_days</fullName>
+        <categories>Activity Timeline</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Last 7 days</shortDescription>
+        <value>Last 7 days</value>
+    </labels>
+    <labels>
+        <fullName>Name</fullName>
+        <categories>Activity Timeline</categories>
+        <language>en_US</language>
+        <protected>false</protected>
         <shortDescription>Name</shortDescription>
         <value>Name</value>
     </labels>
     <labels>
-        <fullName>No_data_found</fullName>
+        <fullName>Next_7_days</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
+        <shortDescription>Next 7 days</shortDescription>
+        <value>Next 7 days</value>
+    </labels>
+    <labels>
+        <fullName>No_data_found</fullName>
+        <categories>Activity Timeline</categories>
+        <language>en_US</language>
+        <protected>false</protected>
         <shortDescription>No data found</shortDescription>
         <value>No data found</value>
     </labels>
     <labels>
         <fullName>Refresh_Data</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Refresh Data</shortDescription>
         <value>Refresh Data</value>
     </labels>
     <labels>
         <fullName>Select_Objects</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Select Objects</shortDescription>
         <value>Select Objects</value>
     </labels>
     <labels>
         <fullName>Toggle_details</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Toggle details</shortDescription>
         <value>Toggle details</value>
     </labels>
     <labels>
         <fullName>You</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>You</shortDescription>
         <value>You</value>
     </labels>
     <labels>
         <fullName>created_a_task_with</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>created a task with</shortDescription>
         <value>created a task with</value>
     </labels>
     <labels>
         <fullName>had_a_task</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>had a task</shortDescription>
         <value>had a task</value>
     </labels>
     <labels>
-        <fullName>logged_a_call_with</fullName>
+        <fullName>have_a_task</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
+        <shortDescription>have a task</shortDescription>
+        <value>have a task</value>
+    </labels>
+    <labels>
+        <fullName>have_a_upoming_task_with</fullName>
+        <categories>Activity Timeline</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>have an upoming task with</shortDescription>
+        <value>have an upoming task with</value>
+    </labels>
+    <labels>
+        <fullName>logged_a_call_with</fullName>
+        <categories>Activity Timeline</categories>
+        <language>en_US</language>
+        <protected>false</protected>
         <shortDescription>logged a call with</shortDescription>
         <value>logged a call with</value>
     </labels>
     <labels>
         <fullName>logged_a_task</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>logged a task</shortDescription>
         <value>logged a task</value>
     </labels>
     <labels>
         <fullName>sent_an_email</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>sent an email</shortDescription>
         <value>sent an email</value>
     </labels>
     <labels>
         <fullName>sent_an_email_to</fullName>
+        <categories>Activity Timeline</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>sent an email to</shortDescription>
         <value>sent an email to</value>
     </labels>

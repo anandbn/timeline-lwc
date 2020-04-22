@@ -9,6 +9,7 @@ import No_data_found from '@salesforce/label/c.No_data_found';
 import Error_loading_data from '@salesforce/label/c.Error_loading_data';
 import Invalid_parameters from '@salesforce/label/c.Invalid_parameters'
 import 	Either_recordId_or_configId_are_empty  from '@salesforce/label/c.Either_recordId_or_configId_are_empty'
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class ActivityTimeline extends LightningElement {
     @api recordId;
@@ -40,6 +41,8 @@ export default class ActivityTimeline extends LightningElement {
             loadScript(this, MOMENT_JS),
         ]).then(() => {
             this.momentJSLoaded = true;
+            //set the locale with values from translated labels
+            moment.locale(LOCALE);
             console.log(new Date() + ':MomentJS loaded');
             getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId, dateFilter: this.dateFilterSelection })
                 .then(data => {
@@ -74,6 +77,7 @@ export default class ActivityTimeline extends LightningElement {
     }
 
     processTimelineData(data) {
+        moment.locale()
         this.isLoading=false;
         this.hasTimelineData=false;
         if(data){
