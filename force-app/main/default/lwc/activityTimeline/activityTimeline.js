@@ -9,6 +9,7 @@ import No_data_found from '@salesforce/label/c.No_data_found';
 import Error_loading_data from '@salesforce/label/c.Error_loading_data';
 import Invalid_parameters from '@salesforce/label/c.Invalid_parameters'
 import 	Either_recordId_or_configId_are_empty  from '@salesforce/label/c.Either_recordId_or_configId_are_empty'
+import You from '@salesforce/label/c.You';
 import LOCALE from '@salesforce/i18n/locale';
 
 export default class ActivityTimeline extends LightningElement {
@@ -146,7 +147,7 @@ export default class ActivityTimeline extends LightningElement {
                             childRec.description = relRecords[j].Description;
                             childRec.WhoId = relRecords[j].WhoId;
                             childRec.OwnerId = relRecords[j].OwnerId;
-                            childRec.assignedToName = (childRec.OwnerId === CURRENT_USER_ID) ? "You" : relRecords[j].Owner.Name;
+                            childRec.assignedToName = (childRec.OwnerId === CURRENT_USER_ID) ? You : relRecords[j].Owner.Name;
                             if (relRecords[j].Who) {
                                 childRec.whoToName = relRecords[j].Who.Name;
                             }
