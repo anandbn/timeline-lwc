@@ -23,34 +23,11 @@
                             <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
                                 onchange={handleFilterChange}></c-timeline-filter-panel>
                         </li>
-                        <template for:each={childRecords} for:item="theRecord">
-                            <template if:false={theRecord.isTask}>
-                                <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
-                                    object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
-                                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo}>
-                                </c-timeline-item>
-                                <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported}
-                                    key={theRecord.recordId} object={theRecord.object} title={theRecord.title}
-                                    date-value={theRecord.dateValue}
-                                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
-                                    is-external-service-data={theRecord.isExternalServiceData}
-                                    external-data={theRecord.externalData}
-                                    external-data-field-types={theRecord.externalDataFieldTypes}
-                                    base-url-for-record-detail={theRecord.baseUrlForRecordDetail}>
-                                </c-timeline-item-other-object>
-                            </template>
-                            <template if:true={theRecord.isTask}>
-                                <c-timeline-item-task key={theRecord.recordId} title={theRecord.title}
-                                    date-value={theRecord.dateValue} date-value-from-db={theRecord.dateValueDB} record-id={theRecord.recordId}
-                                    description={theRecord.description} who-to-name={theRecord.whoToName}
-                                    owner-id={theRecord.OwnerId} assigned-to-name={theRecord.assignedToName}
-                                    who-id={theRecord.WhoId} task-subtype={theRecord.TaskSubtype}>
-    
-                                </c-timeline-item-task>
-                            </template>
-    
+                        <template for:each={timelineItemsByMonth} for:item="theMonth">
+                            <c-timeline-month   key={theMonth.monthValue} month={theMonth.monthValue} 
+                                                month-as-duration={theMonth.timeFromNow}
+                                                timeline-items={theMonth.timelineItems}>
+                            </c-timeline-month>
                         </template>
                     </template>
                     <template if:false={hasTimelineData}>

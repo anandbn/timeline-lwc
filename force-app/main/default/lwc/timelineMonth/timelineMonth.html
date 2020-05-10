@@ -1,0 +1,47 @@
+<template>
+    <div class={sectionCssClass}>
+        <h3 class="slds-section__title">
+            <button onclick={toggleExpanded} aria-controls={month} aria-expanded={expanded}
+                class="slds-button slds-section__title-action">
+                <lightning-icon icon-name={iconName} size="x-small" class="slds-p-around_x-small">
+                </lightning-icon>
+                <span class="slds-col_bump-right timelineMonthTitle">{month}</span>
+                <span class="timelineMonthTitle">{monthAsDuration}</span>
+            </button>
+        </h3>
+        <template if:true={expanded}>
+            <div aria-hidden={expanded} class="slds-section__content" id={month}>
+                <template for:each={timelineItems} for:item="theRecord">
+                    <template if:false={theRecord.isTask}>
+                        <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
+                            object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
+                            expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
+                            record-id={theRecord.recordId} theme-info={theRecord.themeInfo}>
+                        </c-timeline-item>
+                        <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported}
+                            key={theRecord.recordId} object={theRecord.object} title={theRecord.title}
+                            date-value={theRecord.dateValue}
+                            expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
+                            record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
+                            is-external-service-data={theRecord.isExternalServiceData}
+                            external-data={theRecord.externalData}
+                            external-data-field-types={theRecord.externalDataFieldTypes}
+                            base-url-for-record-detail={theRecord.baseUrlForRecordDetail}>
+                        </c-timeline-item-other-object>
+                    </template>
+                    <template if:true={theRecord.isTask}>
+                        <c-timeline-item-task key={theRecord.recordId} title={theRecord.title} 
+                            date-value={theRecord.dateValue} date-value-from-db={theRecord.dateValueDB} record-id={theRecord.recordId}
+                            description={theRecord.description} who-to-name={theRecord.whoToName}
+                            owner-id={theRecord.OwnerId} assigned-to-name={theRecord.assignedToName}
+                            who-id={theRecord.WhoId} task-subtype={theRecord.TaskSubtype} expanded-fields-to-display={theRecord.expandedFieldsToDisplay}>
+                
+                        </c-timeline-item-task>
+                    </template>
+                
+                </template>
+            </div>
+        </template>
+        
+    </div>
+</template>

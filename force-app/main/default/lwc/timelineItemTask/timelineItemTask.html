@@ -60,21 +60,7 @@
                     </p>
                     <div if:true={expanded}
                         class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
-                        <div if:true={hasWhoTo} class="slds-form-element">
-                            <span class="slds-form-element__label">{label.Name}</span>
-                            <div class="slds-form-element__control">
-                                <a onclick={navigateToWho}>{whoToName}</a>
-                            </div>
-                        </div>
-                        <div class="slds-form-element">
-                            <span class="slds-form-element__label">{label.Description}</span>
-                            <div if:false={isEmail} class="slds-form-element__control">
-                                {description}
-                            </div>
-                            <div if:true={isEmail} class="slds-form-element__control" style="word-wrap: break-word;">
-                                {description}
-                            </div>
-                        </div>
+                        <c-timeline-item-detail field-data={fieldData}></c-timeline-item-detail>
                     </div>
                 </div>
             </div>

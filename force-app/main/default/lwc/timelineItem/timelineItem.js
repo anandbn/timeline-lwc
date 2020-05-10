@@ -9,7 +9,7 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
     @api dateValue;
     @api expandedFieldsToDisplay;
     @api recordId;
-    @track expanded;
+    @api expanded;
     @api themeInfo;
     label = {
         Toggle_details
@@ -31,6 +31,9 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
         return this.expandedFieldsToDisplay.length;
     }
 
+    get expandCollapseIcon(){
+        return this.expanded?"utility:switch":"utility:chevronright";
+    }
     get isCase() {
         return this.object === "Case";
     }

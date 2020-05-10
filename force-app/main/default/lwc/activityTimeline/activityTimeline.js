@@ -23,6 +23,7 @@ export default class ActivityTimeline extends LightningElement {
     @api initialObjectSelection;
     @api objectFilters;
     @track childRecords;
+    @track timelineItemsByMonth;
     @track hasTimelineData;
     @track error;
     @track errorMsg;
@@ -116,6 +117,8 @@ export default class ActivityTimeline extends LightningElement {
                         childRec.title = relRecords[j][configs[i].timeline__Title_Field__c];
                         childRec.dateValueDB = configs[i].timeline__Date_Field__c ? relRecords[j][configs[i].timeline__Date_Field__c] : relRecords[j].CreatedDate;
                         childRec.dateValue = moment(childRec.dateValueDB).fromNow();
+                        childRec.monthValue = moment(childRec.dateValueDB).format("YYYY-MM-01");  
+
                         let fldsToDisplay = configs[i].timeline__Fields_to_Display__c.split(',');
                         if (!childRec.isUiApiNotSupported) {
                             childRec.expandedFieldsToDisplay = new Array();
@@ -161,6 +164,18 @@ export default class ActivityTimeline extends LightningElement {
             }
             unsortedRecords.sort(function (a, b) {
                 return new Date(b.dateValueDB) - new Date(a.dateValueDB);
+            });
+            var groupedByMonth = this.groupBy(unsortedRecords,'monthValue');
+            this.timelineItemsByMonth=new Array();
+            for (let [key, value] of Object.entries(groupedByMonth)) {
+                var monthItem = {};
+                monthItem.monthValue=moment(key).format("MMM  •  YYYY");
+                monthItem.timeFromNow=moment(monthItem.monthValue).fromNow();
+                monthItem.timelineItems = value;
+                this.timelineItemsByMonth.push(monthItem);
+            }
+            this.timelineItemsByMonth.sort(function (a, b) {
+                return new Date(b.monthValue) - new Date(a.monthValue);
             });
             this.childRecords = unsortedRecords;
         }else{
@@ -225,4 +240,11 @@ export default class ActivityTimeline extends LightningElement {
     get filteredObjects(){
         return this.objectFilters !=null?this.objectFilters:this.initialObjectSelection;
     }
+
+    groupBy(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      }
 }

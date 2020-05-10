@@ -30,40 +30,7 @@
                     </div>
                     <template if:true={expanded}>
                         <div class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
-                            <template for:each={fieldData} for:item="theField">
-                                <div class="slds-form-element" key={theField.apiName}>
-                                    <span class="slds-form-element__label">{theField.fieldLabel}</span>
-                                    <div class="slds-form-element__control">
-                                        <template if:false={theField.isBoolean}>
-                                            <div class="slds-form-element__static">
-                                                <template if:false={theField.isHyperLink}>
-                                                    {theField.fieldValue}
-                                                </template>
-                                                <template if:true={theField.isHyperLink}>
-                                                    <c-linked-output-text record-id={theField.hyperLinkToId} object={theField.object} label={theField.fieldValue} is-header="false">
-                                                    </c-linked-output-text>
-                                                </template>
-    
-                                            </div>
-
-                                            
-                                        </template>
-                                        <template if:true={theField.isBoolean}>
-                                            <div class="slds-form-element__static">
-                                                <template if:true={theField.isBooleanTrue}>
-                                                    <lightning-input type="checkbox" name={theField.fieldLabel} checked
-                                                        disabled></lightning-input>
-                                                </template>
-                                                <template if:false={theField.isBooleanTrue}>
-                                                    <lightning-input type="checkbox" name={theField.fieldLabel}
-                                                        disabled></lightning-input>
-                                                </template>
-
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </template>
+                            <c-timeline-item-detail field-data={fieldData}></c-timeline-item-detail>
                         </div>
                     </template>
                 </div>

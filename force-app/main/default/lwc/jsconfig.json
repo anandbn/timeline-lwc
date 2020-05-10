@@ -50,6 +50,12 @@
             ],
             "c/selectObjectThemeColor": [
                 "selectObjectThemeColor/selectObjectThemeColor.js"
+            ],
+            "c/timelineItemDetail": [
+                "timelineItemDetail/timelineItemDetail.js"
+            ],
+            "c/timelineMonth": [
+                "timelineMonth/timelineMonth.js"
             ]
         }
     },

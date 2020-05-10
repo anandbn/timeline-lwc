@@ -138,11 +138,11 @@ public with sharing class RecordTimelineDataProvider {
                 }
     
                 if(childObjConf.Object__c.equalsIgnoreCase('Task')){
-                    fieldsToQuery.add('OwnerId');
-                    fieldsToQuery.add('WhoId');
+                    if(!fieldsToQuery.contains('OwnerId')) fieldsToQuery.add('OwnerId');
+                    if(!fieldsToQuery.contains('WhoId')) fieldsToQuery.add('WhoId');
+                    if(!fieldsToQuery.contains('TaskSubtype')) fieldsToQuery.add('TaskSubtype');
                     fieldsToQuery.add('Owner.Name');
                     fieldsToQuery.add('Who.Name');
-                    fieldsToQuery.add('TaskSubtype');
                 }
                 if(childObjConf.timeline__Date_Field__c !=null && !fieldsToQuery.contains(childObjConf.timeline__Date_Field__c)){
                     fieldsToQuery.add(childObjConf.timeline__Date_Field__c);

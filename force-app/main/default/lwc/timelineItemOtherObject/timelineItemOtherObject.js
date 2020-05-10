@@ -17,7 +17,7 @@ export default class TimelineItemOtherObject extends LightningElement {
     @api externalDataFieldTypes;
     @api baseUrlForRecordDetail;
 
-    @track expanded;
+    @api expanded;
     @api themeInfo;
     @track dataLoaded = false;
 

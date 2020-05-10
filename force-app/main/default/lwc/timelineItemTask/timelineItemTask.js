@@ -3,6 +3,8 @@ import { NavigationMixin } from 'lightning/navigation'
 import CURRENT_USER_ID from '@salesforce/user/Id';
 
 import getEmailDetails from '@salesforce/apex/RecordTimelineDataProvider.getEmailDetails';
+import getTimelineItemChildData from '@salesforce/apex/RecordTimelineDataProvider.getTimelineItemChildData';
+
 import Toggle_Details from '@salesforce/label/c.Toggle_details';
 import had_a_task from '@salesforce/label/c.had_a_task';
 import have_a_task from '@salesforce/label/c.have_a_task';
@@ -23,13 +25,17 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     @api dateValueFromDb;
     @api recordId;
     @api description;
-    @track expanded;
+    @api expanded;
     @api assignedToName;
     @api ownerId;
     @api whoId;
     @api whoToName;
     @api taskSubtype;
-    
+    @api expandedFieldsToDisplay;
+    @track dataLoaded = false;
+
+    @api fieldData;
+
     label = {
         Toggle_Details,
         had_a_task,
@@ -99,10 +105,8 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         var dtVal = Date.parse(this.dateValueFromDb);
         return dtVal > new Date().getTime();
     }
-    toggleDetailSection() {
-        this.expanded = !this.expanded;
-    }
 
+    
     navigateToOwner() {
         // View a custom object record.
         this[NavigationMixin.Navigate]({
@@ -138,4 +142,59 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         });
     }
 
+    toggleDetailSection() {
+        this.expanded = !this.expanded;
+        if (this.expanded && !this.dataLoaded) {
+            getTimelineItemChildData({
+                objectApiName: 'Task',
+                fieldsToExtract: this.expandedFieldsToDisplay,
+                recordId: this.recordId
+            })
+            .then(data => {
+                this.dataLoaded=true;
+                this.fieldData = this.populateFieldData(data.data,data.fieldMetadata);
+            })
+            .catch(error => {
+                console.log(JSON.stringify(error));
+            });
+        }
+        //Data loaded via a Apex data provider so just display the data from the `externalData` attribute
+        if(this.isExternalServiceData){
+            this.dataLoaded=true;
+            this.fieldData = this.populateFieldData(this.externalData,this.externalDataFieldTypes);
+        }
+    }
+
+    populateFieldData(data,fieldMetadata){
+        let fieldData = new Array();
+        for (let i = 0; i < fieldMetadata.length; i++) {
+            let fld = fieldMetadata[i];
+            let fldData = {};
+            fldData.apiName = fld.apiName;
+            fldData.fieldLabel = fld.fieldLabel;
+            fldData.dataType = fld.dataType;
+            fldData.fieldValue = data[fld.apiName];
+            if(fld.isNamePointing){
+                if(data[fld.relationshipName]){
+                    fldData.fieldValue=data[fld.relationshipName]['Name'];
+                    fldData.isHyperLink=true;
+                    fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
+                }
+            }else if(fld.dataType.toUpperCase() === "REFERENCE"){
+                if(data[fld.relationshipName]){
+                    fldData.fieldValue=data[fld.relationshipName][fld.referenceToApiName];
+                    fldData.isHyperLink=true;
+                    fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
+                }
+            }
+            fldData.isBoolean = fld.dataType.toUpperCase() === "Boolean".toUpperCase();
+            fldData.isBooleanTrue = fldData.fieldValue;
+            if(fldData.dataType.toUpperCase() === "Date".toUpperCase() || fldData.dataType.toUpperCase() === "DateTime".toUpperCase()){
+                fldData.fieldValue =  moment(fldData.fieldValue).format("dddd, MMMM Do YYYY, h:mm:ss a");
+            }
+            
+            fieldData.push(fldData);
+        } 
+        return fieldData;       
+    }
 }
