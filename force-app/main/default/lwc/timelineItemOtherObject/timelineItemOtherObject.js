@@ -3,6 +3,8 @@ import getTimelineItemChildData from '@salesforce/apex/RecordTimelineDataProvide
 import { loadScript } from 'lightning/platformResourceLoader';
 import MOMENT_JS from '@salesforce/resourceUrl/moment_js';
 import Toggle_Details from '@salesforce/label/c.Toggle_details';
+import LANG from '@salesforce/i18n/lang';
+import LOCALE from '@salesforce/i18n/locale';
 
 export default class TimelineItemOtherObject extends LightningElement {
 
@@ -28,7 +30,9 @@ export default class TimelineItemOtherObject extends LightningElement {
         Promise.all([
             loadScript(this, MOMENT_JS),
         ]).then(() => {
-            console.log('TimelineItemOtherObject: MomentJS loaded');
+            moment.lang(LANG);
+            moment.locale(LOCALE);
+
         })
         .catch(error => {
             console.log('TimelineItemOtherObject: MomentJS not loaded');

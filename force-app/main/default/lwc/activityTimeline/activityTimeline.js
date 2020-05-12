@@ -10,6 +10,7 @@ import Error_loading_data from '@salesforce/label/c.Error_loading_data';
 import Invalid_parameters from '@salesforce/label/c.Invalid_parameters'
 import 	Either_recordId_or_configId_are_empty  from '@salesforce/label/c.Either_recordId_or_configId_are_empty'
 import You from '@salesforce/label/c.You';
+import LANG from '@salesforce/i18n/lang';
 import LOCALE from '@salesforce/i18n/locale';
 
 export default class ActivityTimeline extends LightningElement {
@@ -45,7 +46,8 @@ export default class ActivityTimeline extends LightningElement {
             this.momentJSLoaded = true;
             //set the locale with values from translated labels
             moment.locale(LOCALE);
-            console.log(new Date() + ':MomentJS loaded');
+            moment.lang(LANG);
+            //console.log(new Date() + ':MomentJS loaded');
             getTimelineItemData({ confIdOrName: this.configId, recordId: this.recordId, dateFilter: this.dateFilterSelection })
                 .then(data => {
                     this.processTimelineData(data);
@@ -79,7 +81,6 @@ export default class ActivityTimeline extends LightningElement {
     }
 
     processTimelineData(data) {
-        moment.locale()
         this.isLoading=false;
         this.hasTimelineData=false;
         if(data){
@@ -170,12 +171,13 @@ export default class ActivityTimeline extends LightningElement {
             for (let [key, value] of Object.entries(groupedByMonth)) {
                 var monthItem = {};
                 monthItem.monthValue=moment(key).format("MMM  •  YYYY");
+                monthItem.firstOfMonth=moment(key).format("YYYY-MM-01");
                 monthItem.timeFromNow=moment(monthItem.monthValue).fromNow();
                 monthItem.timelineItems = value;
                 this.timelineItemsByMonth.push(monthItem);
             }
             this.timelineItemsByMonth.sort(function (a, b) {
-                return new Date(b.monthValue) - new Date(a.monthValue);
+                return new Date(b.firstOfMonth) - new Date(a.firstOfMonth);
             });
             this.childRecords = unsortedRecords;
         }else{
