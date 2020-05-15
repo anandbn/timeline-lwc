@@ -5,5 +5,22 @@
     "**/.sfdx": true
   },
   "salesforcedx-vscode-core.show-cli-success-msg": false,
-  "salesforcedx-vscode-core.retrieve-test-code-coverage": true
+  "salesforcedx-vscode-core.retrieve-test-code-coverage": true,
+  "license-header-manager.additionalCommentStyles": [
+    {
+      "extension": ".cls",
+      "commentStart": " /*",
+      "commentMiddle": " * ",
+      "commentEnd": " */"
+    },
+    {
+      "extension": ".cls-meta.xml",
+      "commentStart": "  ",
+      "commentMiddle": "  ",
+      "commentEnd": " "
+    }
+  ],
+  "license-header-manager.excludeExtensions": [
+    ".xml"
+  ]
 }
