@@ -1,0 +1,61 @@
+<!-- 
+  Copyright (c) 2018, salesforce.com, inc.
+  All rights reserved.
+  SPDX-License-Identifier: BSD-3-Clause
+  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ -->
+
+<template>
+    <article class="slds-card slds_card_noborder ">
+        <div class="slds-card__body slds-card__body_inner slds_card_body_no_top_margin">
+            <c-text-combo-box onselect={setSubject} field-name="subject" label="Subject" place-holder-text=""
+                list-of-options={taskSubjects} value={subject}></c-text-combo-box>
+            <template if:false={hideDueDate}>
+                <lightning-input class="slds-p-bottom_x-small composer_dueDate" type="date" name="dueDate" label="Due Date"
+                    onchange={onChangeDueDate}>
+                </lightning-input>
+            </template>
+            <template if:false={hideComments}>
+                <div class="slds-p-bottom_x-small">
+                    <lightning-textarea name="comments" label="Comments" onchange={setComments}></lightning-textarea>
+                </div>
+            </template>
+
+            <c-text-combo-box display-object-selector="true" field-name="Name" label="Name"
+                object-selector-config={nameObjectSelectorMenuConfig} search-delegate-apex-class="Blah"
+                onselect={setName}>
+            </c-text-combo-box>
+
+            <div class="slds-p-bottom_x-small">
+                <c-readonly-text-with-icon  label="Related To" icon-img-url={parentRecordIcon} icon-size="x-small"  
+                                            icon-background-color={parentRecordColor} display-text={parentRecordName}>
+                </c-readonly-text-with-icon>
+            </div>
+            <div class="slds-p-bottom_x-small">
+                <c-readonly-text-with-icon label="Assigned To" icon-name="standard:user" icon-size="x-small" display-text={currentUserName}>
+                </c-readonly-text-with-icon>
+            </div>
+            <template if:false={hideStatus}>
+                <div class="slds-p-bottom_x-small">
+                    <div class="slds-grid slds-size_12-of-12">
+                        <div class="slds-col">
+                            <lightning-combobox name="status" label="Status" value={statusValue}
+                                options={statusOptions} onchange={setStatus}></lightning-combobox>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <div class="slds-p-bottom_x-small">
+                <div class="slds-grid slds-size_12-of-12">
+                    <div class="slds-col">
+                        <div class="slds-clearfix">
+                            <div class="slds-float_right">
+                                <lightning-button name="save" label="Save" variant="brand" onclick={saveTask}></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</template>

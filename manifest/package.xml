@@ -9,6 +9,11 @@
         <name>ApexTestSuite</name>
     </types>
     <types>
+        <members>LC_VisualforceDomainPage</members>
+        <members>LC_APIPage</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
         <members>*</members>
         <name>ApexTrigger</name>
     </types>
@@ -17,7 +22,14 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>LC_API</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
         <members>moment_js</members>
+        <members>mustache_js</members>
+        <members>penpal</members>
+        <members>jsforce</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -41,6 +53,10 @@
     <types>
         <members>*</members>
         <name>Translations</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>LightningMessageChannel</name>
     </types>
     <version>47.0</version>
 </Package>

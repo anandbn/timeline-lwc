@@ -1,10 +1,3 @@
-/* 
- *  Copyright (c) 2018, salesforce.com, inc.
- *  All rights reserved.
- *  SPDX-License-Identifier: BSD-3-Clause
- *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
-
 import { LightningElement, api, track, wire } from 'lwc';
 import getTimelineItemChildData from '@salesforce/apex/RecordTimelineDataProvider.getTimelineItemChildData';
 import { loadScript } from 'lightning/platformResourceLoader';
@@ -92,7 +85,7 @@ export default class TimelineItemOtherObject extends LightningElement {
             let fldData = {};
             fldData.apiName = fld.apiName;
             fldData.fieldLabel = fld.fieldLabel;
-            fldData.dataType = fld.dataType;
+            fldData.dataType = fld.extraTypeInfo?fld.extraTypeInfo.toUpperCase():fld.dataType;
             fldData.fieldValue = data[fld.apiName];
             if(fld.isNamePointing){
                 fldData.fieldValue=data[fld.relationshipName]['Name'];
@@ -104,11 +97,17 @@ export default class TimelineItemOtherObject extends LightningElement {
                 fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
             }
             fldData.isBoolean = fld.dataType.toUpperCase() === "Boolean".toUpperCase();
-            fldData.isBooleanTrue = fldData.fieldValue;
+            if(fldData.isBoolean){
+                fldData.isBooleanTrue = fldData.fieldValue;
+            }
             if(fldData.dataType.toUpperCase() === "Date".toUpperCase() || fldData.dataType.toUpperCase() === "DateTime".toUpperCase()){
                 fldData.fieldValue =  moment(fldData.fieldValue).format("dddd, MMMM Do YYYY, h:mm:ss a");
             }
-            
+ 
+            if(fldData.dataType.toUpperCase() === "RICHTEXTAREA".toUpperCase()){
+                fldData.isRichText=true;
+            }
+             
             fieldData.push(fldData);
         } 
         return fieldData;       

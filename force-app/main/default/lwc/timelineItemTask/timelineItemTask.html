@@ -24,12 +24,26 @@
                         <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
                             <h3 class="slds-truncate" title={title}>
                                 <a onclick={navigateToTask}>
-                                    <strong>{title}</strong>
+                                    <template if:true={hasSubject}>
+                                        <strong>{title}</strong>
+                                    </template>
+                                    <template if:false={hasSubject}>
+                                        <strong>{label.No_Subject}</strong>
+                                    </template>
                                 </a>
+                                <template if:true={isOverdue}>
+                                    &nbsp;<lightning-icon icon-name="utility:warning" variant="error" size="x-small" alternative-text={label.Overdue}></lightning-icon>
+                                </template>
                             </h3>
                         </div>
                         <div class="slds-timeline__actions slds-timeline__actions_inline">
-                            <p class="slds-timeline__date">{dateValue}</p>
+                            <template if:true={isOverdue}>
+                                <strong><p class="slds-timeline__date overdue">{dateValue}</p></strong>
+                            </template>
+                            <template if:false={isOverdue}>
+                                <p class="slds-timeline__date">{dateValue}</p>
+                            </template>
+                            
                         </div>
                     </div>
                     <p if:true={isTask} class="slds-m-horizontal_xx-small">
@@ -64,6 +78,12 @@
                         <span if:false={hasWhoTo}> {label.sent_an_email}</span>
                         <span if:true={hasWhoTo}> {label.sent_an_email_to} </span>
                         <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
+                        <template if:true={hasToOrCCAddresses}>
+                            <a href={recipientLink}>{firstRecipient}</a>
+                            <template if:true={hasMoreThan1Recipient}>
+                                {otherEmailRecipientLabel}
+                            </template>
+                        </template>
                     </p>
                     <div if:true={expanded}
                         class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">

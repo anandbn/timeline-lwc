@@ -1,0 +1,8 @@
+.slds_card_noborder{
+    border:0px;
+    box-shadow:none;
+}
+
+.slds_card_body_no_top_margin{
+    margin-top: 0px;
+}

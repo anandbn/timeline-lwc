@@ -1,0 +1,24 @@
+<template>
+    <div class="slds-grid slds-size_12-of-12">
+        <label class="slds-form-element__label">{label}</label>
+    </div>
+    <div class="slds-grid slds-box slds-box_xx-small">
+        <div class="slds-col">
+            <div class="slds-media slds-media_small slds-is-selected" role="option">
+                <template if:false={hasIcon}>
+                    <span class={iconImgCssClass} style={iconStyle}>
+                        <img src={iconImgUrl}></img>
+                    </span>
+                </template>
+                <template if:true={hasIcon}>
+                    <lightning-icon icon-name={iconName} size={iconSize} title={displaText}></lightning-icon>
+                </template>
+                <span class="slds-media__body">
+                    <span class="slds-truncate slds-p-left_x-small" title={parentRecordName}>
+                        {displayText}</span>
+                </span>
+            </div>
+
+        </div>
+    </div>
+</template>

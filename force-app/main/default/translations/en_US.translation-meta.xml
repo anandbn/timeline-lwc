@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
     <customLabels>
+        <label><!-- All Time --></label>
+        <name>All_Time</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- All Types --></label>
+        <name>All_Types</name>
+    </customLabels>
+    <customLabels>
         <label>Apply</label>
         <name>Apply</name>
     </customLabels>
     <customLabels>
-        <label><!-- Date Range --></label>
+        <label>Date-Range</label>
         <name>Date_Range</name>
     </customLabels>
     <customLabels>
@@ -29,16 +37,40 @@
         <name>Filter_Results</name>
     </customLabels>
     <customLabels>
+        <label><!-- Filters --></label>
+        <name>Filters</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Invalid parameters --></label>
         <name>Invalid_parameters</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Last 30 days --></label>
+        <name>Last_30_days</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Last 7 days --></label>
+        <name>Last_7_days</name>
     </customLabels>
     <customLabels>
         <label><!-- Name --></label>
         <name>Name</name>
     </customLabels>
     <customLabels>
+        <label><!-- Next 7 days --></label>
+        <name>Next_7_days</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- No Subject --></label>
+        <name>No_Subject</name>
+    </customLabels>
+    <customLabels>
         <label><!-- No data found --></label>
         <name>No_data_found</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Overdue --></label>
+        <name>Overdue</name>
     </customLabels>
     <customLabels>
         <label><!-- Refresh Data --></label>
@@ -53,8 +85,16 @@
         <name>Toggle_details</name>
     </customLabels>
     <customLabels>
-        <label><!-- You --></label>
+        <label><!-- Upcoming &amp; Overdue --></label>
+        <name>Upcoming</name>
+    </customLabels>
+    <customLabels>
+        <label>You</label>
         <name>You</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- and --></label>
+        <name>and</name>
     </customLabels>
     <customLabels>
         <label><!-- created a task with --></label>
@@ -65,12 +105,32 @@
         <name>had_a_task</name>
     </customLabels>
     <customLabels>
+        <label><!-- have a task --></label>
+        <name>have_a_task</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- have a task overdue --></label>
+        <name>have_a_task_overdue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- have an upoming task with --></label>
+        <name>have_a_upoming_task_with</name>
+    </customLabels>
+    <customLabels>
         <label><!-- logged a call with --></label>
         <name>logged_a_call_with</name>
     </customLabels>
     <customLabels>
         <label><!-- logged a task --></label>
         <name>logged_a_task</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- other --></label>
+        <name>other</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- others --></label>
+        <name>others</name>
     </customLabels>
     <customLabels>
         <label><!-- sent an email --></label>
@@ -82,7 +142,24 @@
     </customLabels>
     <flowDefinitions>
         <flows>
-            <fullName>Add_Child_object_to_Config-8</fullName>
+            <choices>
+                <name>FilterCriteriaChoice_No</name>
+            </choices>
+            <choices>
+                <name>FilterCriteriaChoice_Yes</name>
+            </choices>
+            <screens>
+                <fields>
+                    <name>Do_you_want_to_add_filter_criteria</name>
+                </fields>
+                <name>Add_Filter_Criteria</name>
+            </screens>
+            <screens>
+                <fields>
+                    <name>cmp_AddFilterCriteria</name>
+                </fields>
+                <name>Add_Filter_Criteria_Details</name>
+            </screens>
             <screens>
                 <fields>
                     <name>var_dataProviderType2</name>

@@ -1,0 +1,40 @@
+<template>
+
+    <lightning-card>
+        <h3 slot="title">
+            <lightning-icon icon-name="utility:filter" size="small"></lightning-icon>
+            <span class="slds-p-left_small">Add a filter:</span>
+        </h3>
+        <c-filter-criteria child-object-api-name={childObjectApiName} parent-object-ref-name={parentObjectRefName}
+            object-api-name={objectApiName} onaddfilter={addFilterCriteria}>
+        </c-filter-criteria>
+    </lightning-card>
+    <lightning-card>
+        <h3 slot="title">
+            <lightning-icon icon-name="utility:filterList" size="small"></lightning-icon>
+            <span class="slds-p-left_small">Selected Filters:</span>
+        </h3>
+        <lightning-datatable show-row-number-column="true" columns={columns} data={listOfFilters} key-field="field" onrowaction={handleRowAction}></lightning-datatable>
+        <lightning-input class="slds-p-left_small slds-p-right_small" type="text" onchange={setExpression} placeholder="Expression"></lightning-input>
+    </lightning-card>
+    <lightning-card>
+        <h3 slot="title">
+            <lightning-icon icon-name="utility:apex" size="small"></lightning-icon>
+            <span class="slds-p-left_small">SOQL </span>
+            <template if:true={isSoqlVerified}>
+                <lightning-icon icon-name="utility:success" size="small" variant="success"></lightning-icon>
+                <span class="slds-text-color_success">Verified</span>
+            </template>
+            <template if:true={isSoqlError}>
+                <lightning-icon icon-name="utility:error" size="small" variant="error">></lightning-icon>
+                <span class="slds-text-color_error">Error</span>
+            </template>
+            
+        </h3>
+        <lightning-input class="slds-p-left_small slds-p-right_small" type="text" onchange={setParentRecordId} placeholder="Parent Record Id"></lightning-input>
+        <lightning-textarea class="slds-p-left_small slds-p-right_small" name="soqlQuery" value={soqlQuery} disabled></lightning-textarea>
+        <div>
+            <lightning-button class="slds-p-left_small" label="Verify" onclick={runSoql} variant="brand"></lightning-button>
+        </div>
+    </lightning-card>
+</template>

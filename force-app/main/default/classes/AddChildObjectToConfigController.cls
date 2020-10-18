@@ -1,10 +1,3 @@
- /*
- *  Copyright (c) 2018, salesforce.com, inc.
- *  All rights reserved.
- *  SPDX-License-Identifier: BSD-3-Clause
- *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
-
 public with sharing class AddChildObjectToConfigController {
     
     @AuraEnabled(cacheable=true)
@@ -22,6 +15,12 @@ public with sharing class AddChildObjectToConfigController {
     @AuraEnabled(cacheable=true)
     public static List<ApexDescribeUtils.FieldData> getFieldsForObject(String objectApiName){
         return ApexDescribeUtils.getFieldsForObject(objectApiName);
+    }
+
+
+    @AuraEnabled(cacheable=false)
+    public static List<SObject> runSoql(String soqlQuery){
+        return Database.query(soqlQuery);
     }
 
 

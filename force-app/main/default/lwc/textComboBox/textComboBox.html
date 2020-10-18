@@ -1,0 +1,99 @@
+<!-- 
+  Copyright (c) 2018, salesforce.com, inc.
+  All rights reserved.
+  SPDX-License-Identifier: BSD-3-Clause
+  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ -->
+
+<template>
+    <div class="slds-p-bottom_x-small">
+        <div class="slds-grid slds-size_12-of-12">
+            <label class="slds-form-element__label" for="text-input-id-1">{label}</label>
+        </div>
+        <div class="slds-grid slds-box slds-box_xx-small">
+            <template if:false={hasRecordId}>
+                <template if:true={displayObjectSelector}>
+                    <template if:false={hasRecordId}>
+                        <div class="slds-col slds-size_2-of-12">
+                            <lightning-icon icon-name={selectedObjectIcon} size="small"></lightning-icon>
+                            <a onclick={displayObjectSelectorMenu}>
+                                <lightning-icon icon-name="utility:down" size="x-small">
+                                </lightning-icon>
+                            </a>
+                            <template if:true={showObjectSelector}>
+                                <div class="slds-m-left_x-small slds-dropdown slds-dropdown_length-5 slds-dropdown_xx-small slds-dropdown_left"
+                                    role="listbox">
+                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                        <template for:each={objectSelectionOptions} for:item="theObject">
+                                            <li key={theObject.objectName} role="presentation" class="slds-listbox__item">
+                                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-is-selected"
+                                                    role="option">
+                                                    <lightning-icon icon-name={theObject.iconName} size="small"></lightning-icon>
+                                                    <span class="slds-media__body">
+                                                        <a onclick={selectObject} data-object-name={theObject.objectName} data-object-icon={theObject.iconName} class="slds-truncate slds-p-left_x-small" title={theObject.objectName}>
+                                                            {theObject.objectName} 
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </template>
+    
+                                    </ul>
+                                </div>
+                            </template>
+    
+                        </div>
+                    </template>
+    
+                </template>
+            </template>
+            <div class="slds-col">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                        <template if:false={hasRecordId}>
+                            <lightning-icon class="slds-input__icon slds-input__icon_right slds-icon-text-default"
+                            icon-name="utility:search" size="x-small"></lightning-icon>
+                            <input onfocus={onFocus} type="text" placeholder={placeHolderText} class="slds-input"
+                            style="border: none;box-shadow: none;background: transparent;" value={fieldValue} onkeyup={textChanged}/>
+                        </template>
+                        <template if:true={hasRecordId}>
+                            <lightning-pill label={selectedRecordName} class="selectedRecordPill" onremove={resetSelectedObject}>
+                                <lightning-icon icon-name={selectedRecordIcon}></lightning-icon>
+                            </lightning-pill>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-size_12-of-12">
+            <template if:false={hasRecordId}>
+                <template if:true={showOptions}>
+                    <div id="listbox"
+                        class="slds-m-left_x-small slds-m-right_x-small slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
+                        role="listbox">
+                            <template if:true={hasListOptions}>
+                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                    <template for:each={listOfOptions} for:item="theOption">
+                                        <c-text-combo-box-item key={theOption.value} label={theOption.label}
+                                            value={theOption.value}  onselect={optionSelected} icon-name={theOption.iconName}
+                                            sub-label={theOption.sublabel} record-id={theOption.recordId}>
+                                        </c-text-combo-box-item>
+                                    </template>
+                                </ul>
+                            </template>
+                            <template if:false={hasListOptions}>
+                                <ul class="slds-listbox slds-listbox_vertical slds-p-around_x-small" role="presentation">
+                                    <li role="presentation" class="slds-listbox__item">
+                                        <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon> No matching records found !!!
+                                    </li>
+                                </ul>
+                            </template>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </div>
+
+
+
+</template>

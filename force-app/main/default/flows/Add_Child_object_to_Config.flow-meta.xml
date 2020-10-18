@@ -1,46 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <assignments>
-        <name>Assign_Fields_to_Display_for_Task</name>
-        <label>Assign Fields to Display for Task</label>
-        <locationX>465</locationX>
-        <locationY>328</locationY>
-        <assignmentItems>
-            <assignToReference>var_dateField</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>ActivityDate</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_titleField</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Subject</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_fieldsToDisplay</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Description</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_iconName</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>standard:task</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Step_7_Confirmation</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <name>Assign_LWC_UI_Support</name>
         <label>Assign LWC UI Support</label>
-        <locationX>944</locationX>
+        <locationX>1034</locationX>
         <locationY>541</locationY>
         <assignmentItems>
             <assignToReference>uiApiNotSupported</assignToReference>
@@ -53,10 +16,26 @@
             <targetReference>Select_Object_Theme_Color</targetReference>
         </connector>
     </assignments>
+    <choices>
+        <name>FilterCriteriaChoice_No</name>
+        <choiceText>No</choiceText>
+        <dataType>Boolean</dataType>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </choices>
+    <choices>
+        <name>FilterCriteriaChoice_Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>Boolean</dataType>
+        <value>
+            <booleanValue>true</booleanValue>
+        </value>
+    </choices>
     <decisions>
         <name>Check_Provider_Type</name>
         <label>Check Provider Type</label>
-        <locationX>258</locationX>
+        <locationX>348</locationX>
         <locationY>407</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -93,7 +72,7 @@
     <decisions>
         <name>Is_Apex_Class_Valid</name>
         <label>Is Apex Class Valid</label>
-        <locationX>659</locationX>
+        <locationX>749</locationX>
         <locationY>545</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -128,40 +107,77 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Is_Object_Task</name>
-        <label>Is Object Task</label>
-        <locationX>397</locationX>
-        <locationY>80</locationY>
+        <name>Is_SOQL_Verified</name>
+        <label>Is SOQL Verified</label>
+        <locationX>1554</locationX>
+        <locationY>360</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>No</name>
+            <name>Soql_Verified_yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>var_childObjectApiName</leftValueReference>
-                <operator>NotEqualTo</operator>
+                <leftValueReference>var_IsSOQLVerified</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Task</stringValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Step_3_Select_Title_Field</targetReference>
+                <targetReference>Step_7_Confirmation</targetReference>
             </connector>
-            <label>No</label>
+            <label>Soql Verified yes</label>
         </rules>
+        <rules>
+            <name>Soql_Verified_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>var_IsSOQLVerified</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Filter_Criteria_Details</targetReference>
+            </connector>
+            <label>Soql Verified No</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Proceed_to_adding_criteria</name>
+        <label>Proceed to adding criteria?</label>
+        <locationX>1375</locationX>
+        <locationY>137</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>var_childObjectApiName</leftValueReference>
+                <leftValueReference>Do_you_want_to_add_filter_criteria</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Task</stringValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Assign_Fields_to_Display_for_Task</targetReference>
+                <targetReference>Add_Filter_Criteria_Details</targetReference>
             </connector>
             <label>Yes</label>
+        </rules>
+        <rules>
+            <name>No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Do_you_want_to_add_filter_criteria</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Step_7_Confirmation</targetReference>
+            </connector>
+            <label>No</label>
         </rules>
     </decisions>
     <description>A wizard driven flow to add child object to a timeline configuration.</description>
@@ -191,7 +207,7 @@
     <recordCreates>
         <name>Create_Timeline_Child_Object</name>
         <label>Create Timeline Child Object</label>
-        <locationX>1187</locationX>
+        <locationX>1277</locationX>
         <locationY>462</locationY>
         <assignRecordIdToReference>var_childConfigId</assignRecordIdToReference>
         <connector>
@@ -213,6 +229,12 @@
             <field>Fields_to_Display__c</field>
             <value>
                 <elementReference>var_fieldsToDisplay</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Filter_Criteria_Config__c</field>
+            <value>
+                <elementReference>var_FilterJson</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -252,6 +274,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Reference_Field_Name__c</field>
+            <value>
+                <elementReference>var_parentRefFieldName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Relationship_Name__c</field>
             <value>
                 <elementReference>var_relationshipName</elementReference>
@@ -269,13 +297,93 @@
                 <elementReference>var_titleField</elementReference>
             </value>
         </inputAssignments>
+        <inputAssignments>
+            <field>Where_Clause__c</field>
+            <value>
+                <elementReference>var_SOQLWhere</elementReference>
+            </value>
+        </inputAssignments>
         <object>Timeline_Child_Object__c</object>
     </recordCreates>
+    <screens>
+        <name>Add_Filter_Criteria</name>
+        <label>Add Filter Criteria</label>
+        <locationX>1222</locationX>
+        <locationY>131</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Proceed_to_adding_criteria</targetReference>
+        </connector>
+        <fields>
+            <name>Do_you_want_to_add_filter_criteria</name>
+            <choiceReferences>FilterCriteriaChoice_Yes</choiceReferences>
+            <choiceReferences>FilterCriteriaChoice_No</choiceReferences>
+            <dataType>Boolean</dataType>
+            <defaultSelectedChoiceReference>FilterCriteriaChoice_No</defaultSelectedChoiceReference>
+            <fieldText>Do you want to add filter criteria?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Add_Filter_Criteria_Details</name>
+        <label>Add Filter Criteria Details</label>
+        <locationX>1559</locationX>
+        <locationY>204</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Is_SOQL_Verified</targetReference>
+        </connector>
+        <fields>
+            <name>cmp_AddFilterCriteria</name>
+            <extensionName>timeline:addFilterToChildObject</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>childObjectApiName</name>
+                <value>
+                    <elementReference>var_childObjectApiName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>objectApiName</name>
+                <value>
+                    <elementReference>var_objectApiName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>parentObjectRefName</name>
+                <value>
+                    <elementReference>var_parentRefFieldName</elementReference>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>var_IsSOQLVerified</assignToReference>
+                <name>isSoqlVerified</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_FilterJson</assignToReference>
+                <name>filterListJson</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>var_SOQLWhere</assignToReference>
+                <name>whereClause</name>
+            </outputParameters>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <screens>
         <description>Select if the related record is being provided by an Apex class or a related record of the primary object.</description>
         <name>Is_Apex_or_Related_Record</name>
         <label>Is Apex or Related Record</label>
-        <locationX>111</locationX>
+        <locationX>201</locationX>
         <locationY>309</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -298,7 +406,7 @@
     <screens>
         <name>Select_Data_provider_Apex_Class</name>
         <label>Select Data provider Apex Class</label>
-        <locationX>273</locationX>
+        <locationX>363</locationX>
         <locationY>556</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -322,7 +430,7 @@
     <screens>
         <name>Select_Object_Theme_Color</name>
         <label>Select Object Theme Color</label>
-        <locationX>943</locationX>
+        <locationX>1033</locationX>
         <locationY>381</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -346,7 +454,7 @@
     <screens>
         <name>Step_1_Confirm_Object</name>
         <label>Step 1: Confirm Object</label>
-        <locationX>158</locationX>
+        <locationX>248</locationX>
         <locationY>174</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -388,13 +496,13 @@
     <screens>
         <name>Step_2_Select_Related_Object</name>
         <label>Step 2: Select Related Object</label>
-        <locationX>289</locationX>
+        <locationX>379</locationX>
         <locationY>76</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Is_Object_Task</targetReference>
+            <targetReference>Step_3_Select_Title_Field</targetReference>
         </connector>
         <fields>
             <name>lwc_progress_2</name>
@@ -427,6 +535,10 @@
                 <assignToReference>var_relationshipName</assignToReference>
                 <name>relationshipName</name>
             </outputParameters>
+            <outputParameters>
+                <assignToReference>var_parentRefFieldName</assignToReference>
+                <name>parentRefFieldName</name>
+            </outputParameters>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
@@ -434,7 +546,7 @@
     <screens>
         <name>Step_3_Select_Title_Field</name>
         <label>Step 3: Select Title Field</label>
-        <locationX>544</locationX>
+        <locationX>571</locationX>
         <locationY>62</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -528,7 +640,7 @@
     <screens>
         <name>Step_4_Select_Date_Field</name>
         <label>Step 4: Select Date Field</label>
-        <locationX>657</locationX>
+        <locationX>747</locationX>
         <locationY>59</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -612,7 +724,7 @@
     <screens>
         <name>Step_5_Select_Display_Fields</name>
         <label>Step 5: Select Display Fields</label>
-        <locationX>798</locationX>
+        <locationX>888</locationX>
         <locationY>47</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -696,13 +808,13 @@
     <screens>
         <name>Step_6_Icon_Selection</name>
         <label>Step 6: Icon Selection</label>
-        <locationX>954</locationX>
+        <locationX>1044</locationX>
         <locationY>146</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Step_7_Confirmation</targetReference>
+            <targetReference>Add_Filter_Criteria</targetReference>
         </connector>
         <fields>
             <name>lwc_progress_6</name>
@@ -737,7 +849,7 @@
     <screens>
         <name>Step_7_Confirm_record_creation</name>
         <label>Step 7: Confirm record creation</label>
-        <locationX>1187</locationX>
+        <locationX>1277</locationX>
         <locationY>629</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -765,7 +877,7 @@
     <screens>
         <name>Step_7_Confirmation</name>
         <label>Step 7: Confirmation</label>
-        <locationX>1187</locationX>
+        <locationX>1277</locationX>
         <locationY>321</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -863,7 +975,7 @@
     <screens>
         <name>Verify_Apex_Class</name>
         <label>Verify Apex Class</label>
-        <locationX>473</locationX>
+        <locationX>563</locationX>
         <locationY>682</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -983,6 +1095,13 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <name>var_FilterJson</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
         <name>var_iconImageUrl</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -995,6 +1114,13 @@
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>var_IsSOQLVerified</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
     </variables>
     <variables>
         <name>var_objectApiName</name>
@@ -1011,6 +1137,13 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <name>var_parentRefFieldName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>var_relationshipName</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -1019,6 +1152,13 @@
     </variables>
     <variables>
         <name>var_selectedFields</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>var_SOQLWhere</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

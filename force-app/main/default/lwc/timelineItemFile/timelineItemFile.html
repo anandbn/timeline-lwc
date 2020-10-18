@@ -1,0 +1,47 @@
+<!-- 
+  Copyright (c) 2018, salesforce.com, inc.
+  All rights reserved.
+  SPDX-License-Identifier: BSD-3-Clause
+  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ -->
+
+ <template>
+    <li class="cardSpacing">
+        <div class={itemStyle}>
+            <span class="slds-assistive-text">{title}</span>
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <lightning-button-icon size="x-small" icon-name={expandCollapseIcon}
+                        alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
+                    </lightning-button-icon>
+                    <lightning-icon size="small" style={objectThemeColor} icon-name={themeInfo.iconName}></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                        <div
+                            class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+                            <h3 class="slds-truncate" title={title}>
+                                <a onclick={showFilePreview}>
+                                    {title}
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <p class="slds-timeline__date">{dateValue}</p>
+                        </div>
+                    </div>
+                    <div if:true={expanded} class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                        <div class="slds-form-element">
+                            <span class="slds-form-element__label">{label.Description}</span>
+                            <div class="slds-form-element__control">
+                                <lightning-formatted-text value={description}></lightning-formatted-text>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+
+</template>

@@ -1,0 +1,22 @@
+<template>
+    <li onclick={itemSelected} key={value} role="presentation" class="slds-listbox__item">
+        <div id={value} class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small"
+            role="option">
+            <template if:true={hasIcon}>
+                <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+            </template>
+            <span class="slds-media__body slds-p-left_small">
+                <div class="slds-truncate">
+                    {label}
+                    <template if:true={hasSubLabel}>
+                        <br />
+                        <span class="slds-lookup__result-meta slds-truncate slds-text-body--small">
+                            {subLabel}
+                        </span>
+                    </template>
+                </div>
+
+            </span>
+        </div>
+    </li>
+</template>

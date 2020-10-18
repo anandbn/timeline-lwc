@@ -2,9 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Provider_Apex_Classname__c</fullName>
     <deprecated>false</deprecated>
-    <description>Apex class name in case the data provider is &#39;Apex class&#39;</description>
+    <description>Apex class name in case the data provider is &apos;Apex class&apos;</description>
     <externalId>false</externalId>
-    <inlineHelpText>Apex class name in case the data provider is &#39;Apex class&#39;</inlineHelpText>
+    <inlineHelpText>Apex class name in case the data provider is &apos;Apex class&apos;</inlineHelpText>
     <label>Provider Apex Classname</label>
     <length>255</length>
     <required>false</required>

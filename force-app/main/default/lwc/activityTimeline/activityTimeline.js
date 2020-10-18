@@ -150,14 +150,20 @@ export default class ActivityTimeline extends LightningElement {
         var timelineItemsByMonth = new Array();
         for (let [key, value] of Object.entries(groupedByMonth)) {
             var monthItem = {};
-            if (Date.parse(key) - new Date().getTime() > 0) {
+            if (Date.parse(key) - new Date().getTime() > 0 ) {
                 futureItemGroup.timelineItems = futureItemGroup.timelineItems.concat(value);
             } else {
-                monthItem.monthValue = moment(key).format("MMM  •  YYYY");
-                monthItem.firstOfMonth = moment(key).format("YYYY-MM-01");
-                monthItem.timeFromNow = moment(monthItem.monthValue).fromNow();
-                monthItem.timelineItems = value;
-                timelineItemsByMonth.push(monthItem);
+                var tasksByStatus = this.getTasksByStatus(value);
+                if(tasksByStatus.overdueOrFuture.length>0){
+                    futureItemGroup.timelineItems = futureItemGroup.timelineItems.concat(tasksByStatus.overdueOrFuture);
+                }
+                if(tasksByStatus.notOverdueOrPast.length>0){
+                    monthItem.monthValue = moment(key).format("MMM  •  YYYY");
+                    monthItem.firstOfMonth = moment(key).format("YYYY-MM-01");
+                    monthItem.timeFromNow = moment(monthItem.firstOfMonth).fromNow();
+                    monthItem.timelineItems = tasksByStatus.notOverdueOrPast;
+                    timelineItemsByMonth.push(monthItem);
+                }
             }
 
         }
@@ -172,6 +178,22 @@ export default class ActivityTimeline extends LightningElement {
 
     }
 
+    getTasksByStatus(timelineItems){
+        var overdueOrFutureTasks = new Array();
+        var notOverdueOrPast = new Array();
+        for(var i=0;i<timelineItems.length;i++){
+            //If it's a task and overdue or in the future
+            if( timelineItems[i].isTask && 
+                (timelineItems[i].IsOverdue || (new Date().getTime() - Date.parse(timelineItems[i].ActivityDate) < 0))
+            ){
+                overdueOrFutureTasks.push(timelineItems[i]);
+            }else{
+                notOverdueOrPast.push(timelineItems[i])
+            }
+        }
+        return {"overdueOrFuture":overdueOrFutureTasks,"notOverdueOrPast":notOverdueOrPast};
+        
+    }
     createTimelineItem(config, apexConfigAndData, recordData) {
         let childRec = {};
         childRec.isTask = false;
@@ -207,6 +229,24 @@ export default class ActivityTimeline extends LightningElement {
             iconImgUrl: config.timeline__Icon_Image_Url__c,
             color: config.timeline__Object_Color__c
         };
+        childRec = this.setSpecialObjectValues(config,childRec,recordData);
+        return childRec;
+    }
+
+    setSpecialObjectValues(config,childRec,recordData){
+        if (config.timeline__Object__c === "ContentDocumentLink") {
+            childRec.isFile=true;
+            childRec.title=recordData.ContentDocument.Title;
+            childRec.description=recordData.ContentDocument.description;
+            childRec.documentId=recordData.ContentDocumentId;
+        }
+        if (config.timeline__Object__c === "CaseArticle") {
+            childRec.isKnowledgeArticle=true;
+            childRec.title=recordData.KnowledgeArticleVersion.Title;
+            childRec.description=recordData.KnowledgeArticleVersion.Summary;
+            childRec.articleType=recordData.KnowledgeArticleVersion.ArticleType;
+            childRec.urlName=recordData.KnowledgeArticleVersion.UrlName;
+        }
         if (config.timeline__Object__c === "Task") {
             //Special fields for Task
             childRec.isTask = true;
@@ -214,6 +254,10 @@ export default class ActivityTimeline extends LightningElement {
             childRec.description = recordData.Description;
             childRec.WhoId = recordData.WhoId;
             childRec.OwnerId = recordData.OwnerId;
+            childRec.IsClosed = recordData.IsClosed;
+            childRec.ActivityDate=recordData.ActivityDate;
+            //Flag as overdue of the Task is not complete and the due date is past today
+            childRec.IsOverdue = !childRec.IsClosed && (new Date().getTime() - Date.parse(childRec.ActivityDate)>0);
             childRec.assignedToName = (childRec.OwnerId === CURRENT_USER_ID) ? You : recordData.Owner.Name;
             if (recordData.Who) {
                 childRec.whoToName = recordData.Who.Name;
@@ -223,7 +267,6 @@ export default class ActivityTimeline extends LightningElement {
         }
         return childRec;
     }
-
     errorLoadingData(error) {
 
         this.error = true;

@@ -1,10 +1,3 @@
-/* 
- *  Copyright (c) 2018, salesforce.com, inc.
- *  All rights reserved.
- *  SPDX-License-Identifier: BSD-3-Clause
- *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
-
 import { LightningElement,api,wire,track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
@@ -19,6 +12,7 @@ export default class SelectChildObject extends LightningElement {
     @api objectApiName;
     @api childObjectApiName;
     @api relationshipName;
+    @api parentRefFieldName;
     @track columns = columns;
 
     @track childRelationships;
@@ -37,7 +31,8 @@ export default class SelectChildObject extends LightningElement {
                     this.childRelationships.push({
                         id:childObject.childObjectApiName+'_'+childObject.relationshipName,
                         apiName:childObject.childObjectApiName,
-                        relationshipName:childObject.relationshipName
+                        relationshipName:childObject.relationshipName,
+                        fieldName:childObject.fieldName
                     });
                 }
             }
@@ -68,6 +63,7 @@ export default class SelectChildObject extends LightningElement {
         const selRow = event.detail.selectedRows[0];
         this.childObjectApiName=selRow.apiName;
         this.relationshipName=selRow.relationshipName;
+        this.parentRefFieldName=selRow.fieldName;
 
     }
     

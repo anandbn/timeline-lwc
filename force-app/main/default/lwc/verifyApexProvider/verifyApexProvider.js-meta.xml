@@ -9,13 +9,13 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__FlowScreen">
-            <property name="selectedApexClass" role="inputOnly" type="String"></property>
-            <property name="verified" role="outputOnly" type="Boolean"></property>
-            <property name="childObjectName" role="outputOnly" type="String"></property>
-            <property name="childRelationshipName" role="outputOnly" type="String"></property>
-            <property name="titleFieldName" role="outputOnly" type="String"></property>
-            <property name="dateFieldName" role="outputOnly" type="String"></property>
-            <property name="fieldsToDisplay" role="outputOnly" type="String"></property>
+            <property name="selectedApexClass" role="inputOnly" type="String"/>
+            <property name="verified" role="outputOnly" type="Boolean"/>
+            <property name="childObjectName" role="outputOnly" type="String"/>
+            <property name="childRelationshipName" role="outputOnly" type="String"/>
+            <property name="titleFieldName" role="outputOnly" type="String"/>
+            <property name="dateFieldName" role="outputOnly" type="String"/>
+            <property name="fieldsToDisplay" role="outputOnly" type="String"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

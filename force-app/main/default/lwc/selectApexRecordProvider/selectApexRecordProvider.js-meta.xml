@@ -9,7 +9,7 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__FlowScreen">
-            <property name="selectedApexClass" role="outputOnly" type="String"></property>
+            <property name="selectedApexClass" role="outputOnly" type="String"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

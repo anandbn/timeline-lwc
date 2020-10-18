@@ -24,6 +24,12 @@ import Name from '@salesforce/label/c.Name';
 import Description from '@salesforce/label/c.Description';
 import You from '@salesforce/label/c.You';
 import have_a_upoming_task_with from '@salesforce/label/c.have_a_upoming_task_with';
+import Overdue from '@salesforce/label/c.Overdue';
+import have_a_task_overdue from '@salesforce/label/c.have_a_task_overdue';
+import No_Subject from '@salesforce/label/c.No_Subject';
+import and from '@salesforce/label/c.and';
+import other from '@salesforce/label/c.other';
+import others from '@salesforce/label/c.others';
 
 export default class TimelineItemTask extends NavigationMixin(LightningElement) {
 
@@ -39,8 +45,12 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     @api whoToName;
     @api taskSubtype;
     @api expandedFieldsToDisplay;
+    @api isOverdue;
+    @api isClosed;
     @track dataLoaded = false;
-
+    @track toAddresses;
+    @track ccAddresses;
+    @track firstRecipient;
     @api fieldData;
 
     label = {
@@ -54,7 +64,13 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         sent_an_email,
         sent_an_email_to,
         Name,
-        Description
+        Description,
+        Overdue,
+        have_a_task_overdue,
+        No_Subject,
+        and,
+        other,
+        others
     }
     
 
@@ -64,13 +80,29 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
             this.assignedToName=data.FromName;
             this.description=data.TextBody;
             this.recordId=data.Id;
+            this.activityId=data.ActivityId;
+            if(data.ToAddress){
+                this.toAddresses=data.ToAddress.split(';');
+                this.firstRecipient=this.toAddresses[0];
+            }
+            if(data.CcAddress){
+                this.ccAddresses=data.CcAddress.split(';');
+            }
             let emailRelations = data.EmailMessageRelations;
             if(emailRelations && emailRelations.length>=1){
-                this.whoToName=emailRelations[0].Relation.Name;
-                this.whoId=emailRelations[0].RelationId;
-                if(emailRelations.length === 2){
-                    this.assignedToName=emailRelations[1].RelationId===CURRENT_USER_ID?You:emailRelations[1].Relation.Name;
-                    this.ownerId=emailRelations[1].RelationId;
+                if(emailRelations[0].Relation){
+                    this.whoToName=emailRelations[0].Relation.Name;
+                    this.whoId=emailRelations[0].RelationId;
+                }
+                for(var i=0;i<emailRelations.length;i++){
+                    if(emailRelations[i].RelationType == "FromAddress"){
+                        if(emailRelations[i].Relation){
+                            this.assignedToName=emailRelations[i].RelationId===CURRENT_USER_ID?You:emailRelations[i].Relation.Name;
+                            this.ownerId=emailRelations[i].RelationId;
+                        }else{
+                            this.assignedToName = data.FromName;
+                        }
+                    }
                 }
 
             }
@@ -78,6 +110,35 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         } 
     };
 
+    get recipientCount(){
+        var count=0;
+        if(this.toAddresses && this.toAddresses.length>0){
+            count+=this.toAddresses.length;
+        } 
+        if(this.ccAddresses && this.ccAddresses.length>0){
+            count+=this.ccAddresses.length;
+        }        
+        return count;
+    }
+
+    get hasMoreThan1Recipient(){
+        return this.recipientCount>1;
+    }
+    get hasOnly2Recipients(){
+        return this.recipientCount==2;
+    }
+
+    get hasMoreThan2Recipients(){
+        return this.recipientCount>2;
+    }
+    get hasToOrCCAddresses(){
+        return  (this.toAddresses !=null && this.toAddresses.length>0) ||
+                (this.CcAddresses !=null && this.CcAddresses.length>0) 
+    }
+
+    get recipientLink(){
+        return `mailto:${this.firstRecipient}`;
+    }
     get itemStyle() {
         return this.expanded ? "slds-timeline__item_expandable slds-is-open" : "slds-timeline__item_expandable";
     }
@@ -105,7 +166,7 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     }
 
     get hasWhoTo(){
-        return this.whoId!=null;
+        return this.whoId!=null || this.hasToOrCCAddresses;
     }
 
     get isFutureTask(){
@@ -113,17 +174,32 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         return dtVal > new Date().getTime();
     }
 
+    get hasSubject(){
+        return this.title !=null;
+    }
+
+    get otherEmailRecipientLabel(){
+        if(this.hasOnly2Recipients){
+            return ` ${this.label.and} 1 ${this.label.other}`;
+        }
+        if(this.hasMoreThan2Recipients){
+            return ` ${this.label.and} ${this.recipientCount-1} ${this.label.others}`;
+        }
+    }
     
     navigateToOwner() {
-        // View a custom object record.
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: this.ownerId,
-                objectApiName: "User",
-                actionName: 'view'
-            }
-        });
+        if(this.ownerId){
+            // View a custom object record.
+            this[NavigationMixin.Navigate]({
+                type: 'standard__recordPage',
+                attributes: {
+                    recordId: this.ownerId,
+                    objectApiName: "User",
+                    actionName: 'view'
+                }
+            });
+        }
+
     }
 
     navigateToWho() {
@@ -155,7 +231,7 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
             getTimelineItemChildData({
                 objectApiName: 'Task',
                 fieldsToExtract: this.expandedFieldsToDisplay,
-                recordId: this.recordId
+                recordId: (this.isEmail?this.activityId:this.recordId)
             })
             .then(data => {
                 this.dataLoaded=true;

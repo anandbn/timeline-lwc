@@ -3,9 +3,9 @@
     <fullName>LWC_Ui_Api_Not_Supported__c</fullName>
     <defaultValue>false</defaultValue>
     <deprecated>false</deprecated>
-    <description>This field indicates that this object isn&#39;t supported via the LWC UI API and hence will need special handling that can&#39;t use outputField LWC component.</description>
+    <description>This field indicates that this object isn&apos;t supported via the LWC UI API and hence will need special handling that can&apos;t use outputField LWC component.</description>
     <externalId>false</externalId>
-    <inlineHelpText>This field indicates that this object isn&#39;t supported via the LWC UI API and hence will need special handling that can&#39;t use outputField LWC component.</inlineHelpText>
+    <inlineHelpText>This field indicates that this object isn&apos;t supported via the LWC UI API and hence will need special handling that can&apos;t use outputField LWC component.</inlineHelpText>
     <label>LWC Ui Api Not Supported</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>

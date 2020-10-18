@@ -1,15 +1,8 @@
- /*
- *  Copyright (c) 2018, salesforce.com, inc.
- *  All rights reserved.
- *  SPDX-License-Identifier: BSD-3-Clause
- *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
-
 @IsTest
 public with sharing class SampleDataProviderTest {
     @isTest static void  testProviderResponses() {
         Test.setMock(HttpCalloutMock.class, new SampleInvoiceMockImpl());
-        SampleApexDataProvider provider = new SampleApexDataProvider();
+        AbstractTimelineDataProvider provider = new SampleApexDataProvider();
         System.assert(provider.getFieldsToDisplay() !=null,'Fields to display is null');
         System.assert(provider.getDateField() !=null,'Date field is null');
         System.assert(provider.getFieldsToDisplayWithTypes() !=null,'FieldsToDisplayWithTypes field is null');

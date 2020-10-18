@@ -1,22 +1,15 @@
-<!-- 
-  Copyright (c) 2018, salesforce.com, inc.
-  All rights reserved.
-  SPDX-License-Identifier: BSD-3-Clause
-  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- -->
-
 <template>
     <div if:true={isLoading}>
         <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
     </div>
-    <div  if:false={isLoading} style="height: 300px;">
-        <lightning-datatable
+    <template if:false={isLoading} >
+        <c-searchable-data-table table-style="height: 300px;" search-placeholder="Search .."
                 key-field="id"
-                data={childRelationships}
+                table-data={childRelationships}
                 columns={columns}
                 max-row-selection="1"
                 onrowselection={rowSelected}>
-        </lightning-datatable>
-    </div>  
+        </c-searchable-data-table>
+    </template>  
     
 </template>

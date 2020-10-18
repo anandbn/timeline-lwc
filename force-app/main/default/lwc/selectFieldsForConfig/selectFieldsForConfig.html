@@ -1,18 +1,12 @@
-<!-- 
-  Copyright (c) 2018, salesforce.com, inc.
-  All rights reserved.
-  SPDX-License-Identifier: BSD-3-Clause
-  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- -->
-
 <template>
     <div class="slds-section slds-is-open">
-       <h3 class="slds-section__title slds-theme_shade">
-            <lightning-button-icon onclick={expandOrCollapse} name="expand_collapse" icon-name={sectionButtonIcon}></lightning-button-icon>
+        <h3 class="slds-section__title slds-theme_shade">
+            <lightning-button-icon onclick={expandOrCollapse} name="expand_collapse" icon-name={sectionButtonIcon}>
+            </lightning-button-icon>
             <span class="slds-truncate" title="Child Object details">Child Object details</span>
-       </h3>
+        </h3>
 
-       <div aria-hidden={configExpanded} class="slds-section__content" style={sectionDisplayStyle}>
+        <div aria-hidden={configExpanded} class="slds-section__content" style={sectionDisplayStyle}>
             <div class="slds-grid slds-gutters_direct-x-small">
                 <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
                     <div class="slds-form-element">
@@ -35,9 +29,9 @@
                 <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
                     <div class="slds-form-element">
                         <label class="slds-form-element__label">Icon</label>
-                        <div class="slds-form-element__control" if:true={hasIconInfo} >
+                        <div class="slds-form-element__control" if:true={hasIconInfo}>
                             <lightning-icon if:true={hasIconName} size="small" icon-name={iconName}></lightning-icon>
-                            <span  if:false={hasIconName} class="slds-avatar slds-avatar--small" style={objectIconStyle}>
+                            <span if:false={hasIconName} class="slds-avatar slds-avatar--small" style={objectIconStyle}>
                                 <img src={iconImageUrl} class="slds-m-around_x-small"></img>
                             </span>
                         </div>
@@ -90,16 +84,14 @@
                     </div>
                 </template>
             </div>
-       </div>
-   </div>
-   <div if:false={isConfirmationStep} class="slds-section slds-is-open">
-       <h3 class="slds-section__title slds-theme_shade">
-           <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{stepTitle}</span>
-       </h3>
-       <div style="height: 300px;">
-           <lightning-datatable key-field="fieldId" data={fields} columns={columns} max-row-selection={maxRowsToSelect}
-               onrowselection={rowSelected}>
-           </lightning-datatable>
-       </div>
-   </div>
+        </div>
+    </div>
+    <div if:false={isConfirmationStep} class="slds-section slds-is-open">
+        <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{stepTitle}</span>
+        </h3>
+        <c-searchable-data-table table-style="height: 300px;" key-field="fieldId" table-data={fields} columns={columns}
+            max-row-selection={maxRowsToSelect} onrowselection={rowSelected}>
+        </c-searchable-data-table>
+    </div>
 </template>

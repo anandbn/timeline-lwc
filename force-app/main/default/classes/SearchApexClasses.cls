@@ -1,4 +1,11 @@
- /*
+/*
+ *  Copyright (c) 2018, salesforce.com, inc.
+ *  All rights reserved.
+ *  SPDX-License-Identifier: BSD-3-Clause
+ *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
+/*
  *  Copyright (c) 2018, salesforce.com, inc.
  *  All rights reserved.
  *  SPDX-License-Identifier: BSD-3-Clause
@@ -16,7 +23,7 @@ public with sharing class SearchApexClasses {
             if(orgNamespace !=null){
                 soqlQuery = 'select Id,Name,NamespacePrefix from Apexclass WHERE NamespacePrefix = :orgNamespace and Name like :searchLikeStr';
             }else{
-                soqlQuery = 'select Id,Name,NamespacePrefix from Apexclass WHERE NamespacePrefix = null Name like :searchLikeStr';
+                soqlQuery = 'select Id,Name,NamespacePrefix from Apexclass WHERE NamespacePrefix = null and Name like :searchLikeStr';
             }
             System.debug('>>>>>>>> SOQL Query: '+soqlQuery);
             return (List<ApexClass>)Database.query(soqlQuery);    

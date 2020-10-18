@@ -1,0 +1,26 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        Title Field: {titleField} <br />
+        Date Field: {dateField} <br />
+        Fields To Display: {fieldsToDisplay} <br />
+    </div>
+    <lightning-button label="Test" onclick={testChildConfig}></lightning-button>
+    <template if:true={hasRecords}>
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="SOQL">SOQL Query</span>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content">
+                <lightning-textarea name="soqlQuery" label="SOQL Query" value={soqlQuery} disabled></lightning-textarea>
+            </div>
+        </div>
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Child Record Data">Child Record Data</span>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content">
+                <lightning-datatable data={childRecords} columns={displayColumns} key-field="Id"></lightning-datatable>
+            </div>
+        </div>
+    </template>
+</template>

@@ -1,0 +1,71 @@
+<template>
+
+    <template if:false={isLoading}>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_4-of-12 slds-p-around_x-small">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning-combobox options={fieldOptions} placeholder="Select a field"
+                            onchange={handleFieldSelected}></lightning-combobox>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_2-of-12 slds-p-around_x-small">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning-combobox options={operatorOptions} placeholder="Select an operator"
+                            onchange={operatorSelected}></lightning-combobox>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_3-of-12 slds-p-around_x-small">
+                <template if:false={isFieldBooleanOrPicklist}>
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <lightning-input type={selectedFieldType} onchange={setFieldValue}></lightning-input>
+                        </div>
+                    </div>
+                    <template if:true={isDateField}>
+                        <div class="slds-form-element slds-p-top_small">
+                            or choose a date literal:<br />
+                            <lightning-combobox options={dateLiteralOptions} onchange={handleDateLiteralSelected}>
+                            </lightning-combobox>
+                            <div class="slds-col" style="display:flex;">
+                                <template if:true={showNVariable}>
+                                    <lightning-input style="width:50px;" max-length="3" placeholder="n"
+                                        onchange={setDateLiteralNValue}></lightning-input>
+                                    <span class="slds-p-left_small slds-p-top_large">{nVariableLabel}</span>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                </template>
+                <template if:true={isFieldBooleanOrPicklist}>
+                    <div class="slds-form-element">
+                        <lightning-combobox options={boolPicklistOptions} onchange={setFieldValue}>
+                        </lightning-combobox>
+                    </div>
+
+                </template>
+
+
+            </div>
+            <div class="slds-col slds-size_1-of-12 slds-p-around_x-small">
+                <div class="slds-p-top_medium">
+                    <template if:true={isFilterValid}>
+                        <lightning-button icon-name="utility:add" variant="" label="Add" onclick={addFilterCriteria}></lightning-button>
+                    </template>
+                    <template if:false={isFilterValid}>
+                        <lightning-button icon-name="utility:add" variant="" label="Add" disabled></lightning-button>
+                    </template>
+                </div>
+
+            </div>
+        </div>
+    </template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Fetching field metadata" size="small"></lightning-spinner>
+        Fetching field metadata...
+    </template>
+</template>

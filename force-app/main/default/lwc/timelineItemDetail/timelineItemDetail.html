@@ -1,10 +1,3 @@
-<!-- 
-  Copyright (c) 2018, salesforce.com, inc.
-  All rights reserved.
-  SPDX-License-Identifier: BSD-3-Clause
-  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- -->
-
 <template>
     <template for:each={fieldData} for:item="theField">
         <div class="slds-form-element" key={theField.apiName}>
@@ -13,12 +6,18 @@
                 <template if:false={theField.isBoolean}>
                     <div class="slds-form-element__static">
                         <template if:false={theField.isHyperLink}>
-                            {theField.fieldValue}
+                            <template if:true={theField.isRichText}>
+                                <lightning-formatted-rich-text value={theField.fieldValue}></lightning-formatted-rich-text>
+                            </template>
+                            <template if:false={theField.isRichText}>
+                                {theField.fieldValue}
+                            </template>
                         </template>
                         <template if:true={theField.isHyperLink}>
                             <c-linked-output-text record-id={theField.hyperLinkToId} object={theField.object} label={theField.fieldValue} is-header="false">
                             </c-linked-output-text>
                         </template>
+                       
 
                     </div>
                 </template>

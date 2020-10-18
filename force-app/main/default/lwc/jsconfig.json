@@ -9,35 +9,8 @@
             "c/addChildObjectProgressBar": [
                 "addChildObjectProgressBar/addChildObjectProgressBar.js"
             ],
-            "c/getObjectNameFromConfig": [
-                "getObjectNameFromConfig/getObjectNameFromConfig.js"
-            ],
-            "c/objectIconSelector": [
-                "objectIconSelector/objectIconSelector.js"
-            ],
-            "c/selectChildObject": [
-                "selectChildObject/selectChildObject.js"
-            ],
-            "c/selectFieldsForConfig": [
-                "selectFieldsForConfig/selectFieldsForConfig.js"
-            ],
-            "c/timelineItem": [
-                "timelineItem/timelineItem.js"
-            ],
-            "c/timelineItemTask": [
-                "timelineItemTask/timelineItemTask.js"
-            ],
-            "c/timelineItemOtherObject": [
-                "timelineItemOtherObject/timelineItemOtherObject.js"
-            ],
-            "c/linkedOutputText": [
-                "linkedOutputText/linkedOutputText.js"
-            ],
-            "c/timelineFilterPanel": [
-                "timelineFilterPanel/timelineFilterPanel.js"
-            ],
-            "c/selectApexRecordProvider": [
-                "selectApexRecordProvider/selectApexRecordProvider.js"
+            "c/addFilterToChildObject": [
+                "addFilterToChildObject/addFilterToChildObject.js"
             ],
             "c/apexClassRowItem": [
                 "apexClassRowItem/apexClassRowItem.js"
@@ -45,17 +18,83 @@
             "c/apexVerifyStepItem": [
                 "apexVerifyStepItem/apexVerifyStepItem.js"
             ],
-            "c/verifyApexProvider": [
-                "verifyApexProvider/verifyApexProvider.js"
+            "c/diagnosticTestItem": [
+                "diagnosticTestItem/diagnosticTestItem.js"
+            ],
+            "c/getObjectNameFromConfig": [
+                "getObjectNameFromConfig/getObjectNameFromConfig.js"
+            ],
+            "c/linkedOutputText": [
+                "linkedOutputText/linkedOutputText.js"
+            ],
+            "c/logATask": [
+                "logATask/logATask.js"
+            ],
+            "c/logAnEvent": [
+                "logAnEvent/logAnEvent.js"
+            ],
+            "c/objectIconSelector": [
+                "objectIconSelector/objectIconSelector.js"
+            ],
+            "c/readonlyTextWithIcon": [
+                "readonlyTextWithIcon/readonlyTextWithIcon.js"
+            ],
+            "c/searchableDataTable": [
+                "searchableDataTable/searchableDataTable.js"
+            ],
+            "c/selectApexRecordProvider": [
+                "selectApexRecordProvider/selectApexRecordProvider.js"
+            ],
+            "c/selectChildObject": [
+                "selectChildObject/selectChildObject.js"
+            ],
+            "c/selectFieldsForConfig": [
+                "selectFieldsForConfig/selectFieldsForConfig.js"
             ],
             "c/selectObjectThemeColor": [
                 "selectObjectThemeColor/selectObjectThemeColor.js"
             ],
+            "c/textComboBox": [
+                "textComboBox/textComboBox.js"
+            ],
+            "c/textComboBoxItem": [
+                "textComboBoxItem/textComboBoxItem.js"
+            ],
+            "c/timelineComposer": [
+                "timelineComposer/timelineComposer.js"
+            ],
+            "c/timelineDiagnostic": [
+                "timelineDiagnostic/timelineDiagnostic.js"
+            ],
+            "c/timelineFilterPanel": [
+                "timelineFilterPanel/timelineFilterPanel.js"
+            ],
+            "c/timelineItem": [
+                "timelineItem/timelineItem.js"
+            ],
+            "c/timelineItemCaseArticle": [
+                "timelineItemCaseArticle/timelineItemCaseArticle.js"
+            ],
             "c/timelineItemDetail": [
                 "timelineItemDetail/timelineItemDetail.js"
             ],
+            "c/timelineItemFile": [
+                "timelineItemFile/timelineItemFile.js"
+            ],
+            "c/timelineItemOtherObject": [
+                "timelineItemOtherObject/timelineItemOtherObject.js"
+            ],
+            "c/timelineItemTask": [
+                "timelineItemTask/timelineItemTask.js"
+            ],
             "c/timelineMonth": [
                 "timelineMonth/timelineMonth.js"
+            ],
+            "c/verifyApexProvider": [
+                "verifyApexProvider/verifyApexProvider.js"
+            ],
+            "c/filterCriteria": [
+                "filterCriteria/filterCriteria.js"
             ]
         }
     },
@@ -66,6 +105,11 @@
     "typeAcquisition": {
         "include": [
             "jest"
+        ]
+    },
+    "paths": {
+        "c/*": [
+            "*"
         ]
     }
 }

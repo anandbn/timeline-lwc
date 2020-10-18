@@ -1,38 +1,31 @@
-<!-- 
-  Copyright (c) 2018, salesforce.com, inc.
-  All rights reserved.
-  SPDX-License-Identifier: BSD-3-Clause
-  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- -->
-
 <template>
     <lightning-tabset>
         <lightning-tab label="Standard Icons">
             <div style="height: 300px;">
-                <lightning-datatable key-field="id" data={standardIcons} columns={columns} max-row-selection="1"
-                    onrowselection={iconSelected}>
-                </lightning-datatable>
+                <c-searchable-data-table search-placeholder="Search ..." key-field="id" table-data={standardIcons}
+                    columns={columns} max-row-selection="1" onrowselection={iconSelected}>
+                </c-searchable-data-table>
             </div>
         </lightning-tab>
         <lightning-tab label="Action Icons">
             <div style="height: 300px;">
-                <lightning-datatable key-field="id" data={actionIcons} columns={columns} max-row-selection="1"
-                    onrowselection={iconSelected}>
-                </lightning-datatable>
+                <c-searchable-data-table search-placeholder="Search ..." key-field="id" table-data={actionIcons}
+                    columns={columns} max-row-selection="1" onrowselection={iconSelected}>
+                </c-searchable-data-table>
             </div>
         </lightning-tab>
         <lightning-tab label="Custom Icons">
             <div style="height: 300px;">
-                <lightning-datatable key-field="id" data={customIcons} columns={columns} max-row-selection="1"
-                    onrowselection={iconSelected}>
-                </lightning-datatable>
+                <c-searchable-data-table search-placeholder="Search ..." key-field="id" table-data={customIcons}
+                    columns={columns} max-row-selection="1" onrowselection={iconSelected}>
+                </c-searchable-data-table>
             </div>
         </lightning-tab>
         <lightning-tab label="Utility Icons">
             <div style="height: 300px;">
-                <lightning-datatable key-field="id" data={utilityIcons} columns={columns} max-row-selection="1"
-                    onrowselection={iconSelected}>
-                </lightning-datatable>
+                <c-searchable-data-table search-placeholder="Search ..." key-field="id" table-data={utilityIcons}
+                    columns={columns} max-row-selection="1" onrowselection={iconSelected}>
+                </c-searchable-data-table>
             </div>
         </lightning-tab>
     </lightning-tabset>

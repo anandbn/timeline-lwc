@@ -1,0 +1,19 @@
+<template>
+
+    <lightning-tabset variant="scoped">
+        <lightning-tab label="New Task">
+            <c-log-a-task parent-record-name={recordName} parent-record-id={recordId} parent-record-icon={recordIconUrl} parent-record-color={recordObjectColor}
+                          status="Not Started" hide-comments="true"></c-log-a-task>
+        </lightning-tab>
+        <lightning-tab label="Log a Call">
+            <c-log-a-task parent-record-name={recordName} parent-record-id={recordId} parent-record-icon={recordIconUrl} parent-record-color={recordObjectColor} 
+                          subject="Call" status="Completed" hide-due-date="true" hide-status="true" due-date={today} sub-type="Call"></c-log-a-task>
+        </lightning-tab>
+        <lightning-tab label="New Event">
+            <c-log-an-event parent-record-name={recordName} parent-record-id={recordId} parent-record-icon={recordIconUrl} parent-record-color={recordObjectColor}>
+                
+            </c-log-an-event>
+        </lightning-tab>
+    </lightning-tabset>
+
+</template>

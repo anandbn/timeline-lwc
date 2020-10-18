@@ -1,10 +1,3 @@
- /*
- *  Copyright (c) 2018, salesforce.com, inc.
- *  All rights reserved.
- *  SPDX-License-Identifier: BSD-3-Clause
- *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
-
 public with sharing class TimelineDataResponse {
     @AuraEnabled
     public Timeline_Configuration__c configuration {get; set;}
@@ -18,10 +11,14 @@ public with sharing class TimelineDataResponse {
     @AuraEnabled
     public List<ApexDescribeUtils.FieldData> fieldMetadata {get; set;}
 
+    @AuraEnabled
+    public List<String> logs {get; set;}
+
     public TimelineDataResponse(Timeline_Configuration__c conf,Sobject theRecord, Map<String,TimelineDataResponse.ApexConfigAndData> apexData) {
         this.configuration=conf;
         this.data=theRecord;
         this.apexConfigData=apexData;
+        this.logs =new List<String>();
     }
 
     public class ApexConfigAndData{

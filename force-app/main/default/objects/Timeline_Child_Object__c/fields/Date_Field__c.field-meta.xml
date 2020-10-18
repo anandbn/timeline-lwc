@@ -3,7 +3,7 @@
     <fullName>Date_Field__c</fullName>
     <deprecated>false</deprecated>
     <externalId>false</externalId>
-    <inlineHelpText>Field API Name that will be used to date and time part of the timeline. Created Date will be used as the default if this field isn&#39;t specified.</inlineHelpText>
+    <inlineHelpText>Field API Name that will be used to date and time part of the timeline. Created Date will be used as the default if this field isn&apos;t specified.</inlineHelpText>
     <label>Date Field</label>
     <length>255</length>
     <required>false</required>

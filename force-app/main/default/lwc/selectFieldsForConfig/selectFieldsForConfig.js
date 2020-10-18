@@ -1,10 +1,3 @@
-/* 
- *  Copyright (c) 2018, salesforce.com, inc.
- *  All rights reserved.
- *  SPDX-License-Identifier: BSD-3-Clause
- *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
-
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import getFieldsForObject from '@salesforce/apex/AddChildObjectToConfigController.getFieldsForObject';
@@ -32,6 +25,9 @@ export default class SelectFieldsForConfig extends LightningElement {
     @api uiApiNotSupported;
     @api selectedApexClass;
     @api providerType;
+    //No set .. had keep as the properties could not be removed from the metadata.xml
+    @api whereClause;
+    @api filterConfigJson;
 
     @track fields;
     @track columns = columns;
