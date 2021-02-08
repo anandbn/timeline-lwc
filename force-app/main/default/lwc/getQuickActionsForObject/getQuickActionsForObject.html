@@ -1,0 +1,78 @@
+<template>
+    <article class="slds-card">
+        <template if:false={isLoaded}>
+            <div class="slds-align_absolute-center" style="height:4rem">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_inline">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </template>
+        <template if:true={isLoaded}>
+            <div class="slds-tabs_scoped">
+                <ul class="slds-tabs_scoped__nav" role="tablist">
+                    <template for:each={composerActions} for:item="action">
+                        <li key={action.id} class={action.tabHdrCssClass} title={action.label} role="presentation">
+                            <a data-tabid={action.id} data-describe={action.actionTarget} class="slds-tabs_scoped__link"
+                                href="javascript:void(0);" onclick={handleTabClick} role="tab" tabindex={action.index}
+                                id={action.id}>{action.label}</a>
+                        </li>
+                    </template>
+                </ul>
+                <template for:each={composerActions} for:item="action">
+                    <div key={action.id} id={action.id} class={action.tabDtlCssClass} role="tabpanel"
+                        aria-labelledby={action.id}>
+                        <template if:false={hideCreateButton}>
+                            <template if:true={action.isFirstTab}>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_10-of-12">
+                                        <a data-tabid={action.id} data-describe={action.actionTarget}
+                                            onclick={showQuickAction}
+                                            class="slds-button slds-align_absolute-center slds-box slds-box_xx-small">Create
+                                            New</a>
+                                        
+                                    </div>
+                                    <div class="slds-col slds-size_2-of-12">
+                                        <lightning-button class="slds-var-p-left_x-small" data-tabid={action.id} data-describe={action.actionTarget} variant="brand" label="Save" onclick={showQuickAction}></lightning-button>
+                                        </div>
+                                </div>
+                            </template>
+                        </template>
+                        
+                        <template if:false={fieldsLoaded}>
+                            <template if:false={action.isFirstTab}>
+                                <div role="status" class="slds-spinner slds-spinner_small slds-spinner_inline">
+                                    <span class="slds-assistive-text">Loading</span>
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:true={hasFieldsToDisplay}>
+                            <div class="slds-grid slds-grid_vertical">
+                                <template for:each={actionFieldsToDisplay} for:item="layoutRow">
+                                    <c-quick-action-layout-row parent-record-name={recordName}
+                                        parent-record-id={recordId} parent-record-icon={recordIconUrl}
+                                        parent-record-color={recordObjectColor} current-username={currentUsername}
+                                        key={layoutRow.index} layout-row={layoutRow} onselect={handleSelect}>
+                                    </c-quick-action-layout-row>
+                                </template>
+                                <div class="slds-col">
+                                    <div class="slds-clearfix">
+                                        <div class="slds-float_right">
+                                            <lightning-button variant="brand" label="Save" onclick={handleSave}></lightning-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+            </div>
+        </template>
+    </article>
+
+
+</template>

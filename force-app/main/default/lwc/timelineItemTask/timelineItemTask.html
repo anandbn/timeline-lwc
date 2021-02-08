@@ -38,10 +38,24 @@
                         </div>
                         <div class="slds-timeline__actions slds-timeline__actions_inline">
                             <template if:true={isOverdue}>
-                                <strong><p class="slds-timeline__date overdue">{dateValue}</p></strong>
+                                <strong><p class="slds-timeline__date overdue">
+                                    <template if:false={displayRelativeDates}>
+                                        <lightning-formatted-date-time value={dateValue}></lightning-formatted-date-time>
+                                    </template>
+                                    <template if:true={displayRelativeDates}>
+                                        {dateValue}
+                                    </template>
+                                </p></strong>
                             </template>
                             <template if:false={isOverdue}>
-                                <p class="slds-timeline__date">{dateValue}</p>
+                                <p class="slds-timeline__date">
+                                    <template if:false={displayRelativeDates}>
+                                        <lightning-formatted-date-time value={dateValue}></lightning-formatted-date-time>
+                                    </template>
+                                    <template if:true={displayRelativeDates}>
+                                        {dateValue}
+                                    </template>
+                                </p>
                             </template>
                             
                         </div>

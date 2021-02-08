@@ -25,7 +25,8 @@
                                 <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
                                     object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
                                     expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo}>
+                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo} navigation-behaviour={theRecord.navigationBehaviour}
+                                    display-relative-dates={theRecord.displayRelativeDates} is-overdue={theRecord.IsOverdue}>
                                 </c-timeline-item>
                                 <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported}
                                     key={theRecord.recordId} object={theRecord.object} title={theRecord.title}
@@ -35,12 +36,16 @@
                                     is-external-service-data={theRecord.isExternalServiceData}
                                     external-data={theRecord.externalData}
                                     external-data-field-types={theRecord.externalDataFieldTypes}
-                                    base-url-for-record-detail={theRecord.baseUrlForRecordDetail}>
+                                    base-url-for-record-detail={theRecord.baseUrlForRecordDetail}
+                                    navigation-behaviour={theRecord.navigationBehaviour}
+                                    display-relative-dates={theRecord.displayRelativeDates}
+                                    is-overdue={theRecord.IsOverdue}>
                                 </c-timeline-item-other-object>
                             </template>
                             <template if:true={theRecord.isKnowledgeArticle}>
                                 <c-timeline-item-case-article key={theRecord.knowledgeArticleId} title={theRecord.title} description={theRecord.description}
-                                        date-value={theRecord.dateValue} url-name={theRecord.urlName} theme-info={theRecord.themeInfo}>
+                                        date-value={theRecord.dateValue} url-name={theRecord.urlName} theme-info={theRecord.themeInfo}
+                                        display-relative-dates={theRecord.displayRelativeDates}>
 
                                 </c-timeline-item-case-article>
                             </template>
@@ -49,7 +54,8 @@
                         <template if:true={theRecord.isFile}>
                             <c-timeline-item-file key={theRecord.documentId} title={theRecord.title}
                                 description={theRecord.description} document-id={theRecord.documentId}
-                                date-value={theRecord.dateValue} theme-info={theRecord.themeInfo}>
+                                date-value={theRecord.dateValue} theme-info={theRecord.themeInfo}
+                                display-relative-dates={theRecord.displayRelativeDates}>
                             </c-timeline-item-file>
                         </template>
 
@@ -62,7 +68,8 @@
                             assigned-to-name={theRecord.assignedToName} who-id={theRecord.WhoId}
                             task-subtype={theRecord.TaskSubtype}
                             expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                            is-overdue={theRecord.IsOverdue} is-closed={theRecord.IsClosed}>
+                            is-overdue={theRecord.IsOverdue} is-closed={theRecord.IsClosed} 
+                            display-relative-dates={theRecord.displayRelativeDates}>
 
                         </c-timeline-item-task>
                     </template>

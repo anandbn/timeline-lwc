@@ -49,6 +49,9 @@ public with sharing class TimelineSOQLUtils {
         if(childObjConf.Title_Field__c !=null && !fieldsToQuery.contains(childObjConf.Title_Field__c)){
             fieldsToQuery.add(childObjConf.Title_Field__c);
         }
+        if(childObjConf.Overdue_Field__c !=null && !fieldsToQuery.contains(childObjConf.Overdue_Field__c)){
+            fieldsToQuery.add(childObjConf.Overdue_Field__c);
+        }
         childSoql += String.join(fieldsToQuery,',');
         childSoql +=' from '+(isDiagnosticMode?childObjConf.timeline__Object__c:childObjConf.timeline__Relationship_Name__c);
         String dateFilterStr;

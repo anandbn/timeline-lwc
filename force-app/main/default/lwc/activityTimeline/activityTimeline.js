@@ -116,10 +116,14 @@ export default class ActivityTimeline extends LightningElement {
                         apexConfigAndData = data.apexConfigData[configs[i].timeline__Relationship_Name__c];
                         relRecords = apexConfigAndData.apexData;
                     }
+                    
                     if (relRecords) {
                         this.hasTimelineData = true;
+                        var childObjLabel = data.objectLabels[configs[i].timeline__Object__c];
                         for (let j = 0; j < relRecords.length; j++) {
-                            var item = this.createTimelineItem(configs[i], apexConfigAndData, relRecords[j]);
+                            var item = this.createTimelineItem(configs[i], apexConfigAndData, relRecords[j],childObjLabel,data.configuration.timeline__Display_Relative_Dates__c);
+                            //backwards compatibility. Defauly relative date display to "true"
+                            item.displayRelativeDates = (data.configuration.timeline__Display_Relative_Dates__c !=null)?data.configuration.timeline__Display_Relative_Dates__c:true;
                             unsortedRecords.push(item);
                         }
                     }
@@ -157,24 +161,60 @@ export default class ActivityTimeline extends LightningElement {
                 if(tasksByStatus.overdueOrFuture.length>0){
                     futureItemGroup.timelineItems = futureItemGroup.timelineItems.concat(tasksByStatus.overdueOrFuture);
                 }
-                if(tasksByStatus.notOverdueOrPast.length>0){
+                var childRecordsByDueStatus = this.groupChildRecordsByOverdue(value);
+                if(childRecordsByDueStatus.overdue.length>0){
+                    futureItemGroup.timelineItems = futureItemGroup.timelineItems.concat(childRecordsByDueStatus.overdue);
+                }
+                var tasksAndChildRecords = new Array();
+                tasksAndChildRecords = tasksAndChildRecords.concat(tasksByStatus.notOverdueOrPast);
+                tasksAndChildRecords = tasksAndChildRecords.concat(childRecordsByDueStatus.notOverdueOrPast);
+                if(tasksAndChildRecords.length>0){
                     monthItem.monthValue = moment(key).format("MMM  •  YYYY");
                     monthItem.firstOfMonth = moment(key).format("YYYY-MM-01");
-                    monthItem.timeFromNow = moment(monthItem.firstOfMonth).fromNow();
-                    monthItem.timelineItems = tasksByStatus.notOverdueOrPast;
+                    //If the month is current month don't set the timeFromNow
+                    if(!(moment(new Date()).format("YYYY-MM")===moment(monthItem.firstOfMonth).format("YYYY-MM"))){
+                        monthItem.timeFromNow = moment(monthItem.firstOfMonth).fromNow();
+                    }
+                    monthItem.timelineItems = tasksAndChildRecords;
                     timelineItemsByMonth.push(monthItem);
                 }
+
+
             }
 
         }
         timelineItemsByMonth.sort(function (a, b) {
             return new Date(b.firstOfMonth) - new Date(a.firstOfMonth);
         });
+
         //Add the future items to the top of the list
         if (futureItemGroup.timelineItems.length > 0) {
+            //Sort the future and overdue items.
+            futureItemGroup.timelineItems.sort(function (a, b) {
+                return new Date(b.dateValueDB) - new Date(a.dateValueDB);
+            });
             timelineItemsByMonth.unshift(futureItemGroup);
         }
         return timelineItemsByMonth;
+
+    }
+
+    groupChildRecordsByOverdue(timelineItems){
+        var overdueRecords= new Array();
+        var notOverdueOrPast = new Array();
+
+        for(var i=0;i<timelineItems.length;i++){
+            //If it's a task and overdue or in the future
+            var timelineItem = timelineItems[i];
+            if( !timelineItem.isTask){
+                if(timelineItem.IsOverdue ){
+                    overdueRecords.push(timelineItem);
+                }else{
+                    notOverdueOrPast.push(timelineItem)
+                }
+            } 
+        }
+        return  {"overdue":overdueRecords,"notOverdueOrPast":notOverdueOrPast};;
 
     }
 
@@ -183,26 +223,41 @@ export default class ActivityTimeline extends LightningElement {
         var notOverdueOrPast = new Array();
         for(var i=0;i<timelineItems.length;i++){
             //If it's a task and overdue or in the future
-            if( timelineItems[i].isTask && 
-                (timelineItems[i].IsOverdue || (new Date().getTime() - Date.parse(timelineItems[i].ActivityDate) < 0))
-            ){
-                overdueOrFutureTasks.push(timelineItems[i]);
-            }else{
-                notOverdueOrPast.push(timelineItems[i])
-            }
+            if( timelineItems[i].isTask){
+                if(timelineItems[i].IsOverdue || (new Date().getTime() - Date.parse(timelineItems[i].ActivityDate) < 0))
+                {
+                    overdueOrFutureTasks.push(timelineItems[i]);
+                }else{
+                    notOverdueOrPast.push(timelineItems[i])
+                }
+            } 
         }
         return {"overdueOrFuture":overdueOrFutureTasks,"notOverdueOrPast":notOverdueOrPast};
         
     }
-    createTimelineItem(config, apexConfigAndData, recordData) {
+    createTimelineItem(config, apexConfigAndData, recordData,objLabel,displayRelativeDates) {
         let childRec = {};
         childRec.isTask = false;
         childRec.isExternalServiceData = false;
         childRec.isUiApiNotSupported = config.timeline__LWC_Ui_Api_Not_Supported__c;
         childRec.object = config.timeline__Object__c;
-        childRec.title = recordData[config.timeline__Title_Field__c];
+        //Determine navigation behaviour on clcking the title of the timeline item
+        //For backwards compatibility, the default is "Record Detail"
+        childRec.navigationBehaviour=config.timeline__Title_link_Navigate_to__c?config. timeline__Title_link_Navigate_to__c:'Record Detail';
+        if(config.timeline__Display_Object_Name__c){
+            childRec.title = `${objLabel} - ${recordData[config.timeline__Title_Field__c]}`;
+        }else{
+            childRec.title = recordData[config.timeline__Title_Field__c];
+        }
         childRec.dateValueDB = config.timeline__Date_Field__c ? recordData[config.timeline__Date_Field__c] : recordData.CreatedDate;
-        childRec.dateValue = moment(childRec.dateValueDB).fromNow();
+        if(config.timeline__Overdue_Field__c){
+            childRec.IsOverdue = recordData[config.timeline__Overdue_Field__c];
+        }
+        if(displayRelativeDates){
+            childRec.dateValue = moment(childRec.dateValueDB).fromNow();
+        }else{
+            childRec.dateValue = childRec.dateValueDB;
+        }
         childRec.monthValue = moment(childRec.dateValueDB).format("YYYY-MM-01");
 
         let fldsToDisplay = config.timeline__Fields_to_Display__c.split(',');

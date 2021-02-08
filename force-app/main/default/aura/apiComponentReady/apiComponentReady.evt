@@ -1,0 +1,1 @@
+<aura:event type="APPLICATION" description="Event fired when the API Bridge is ready"/>

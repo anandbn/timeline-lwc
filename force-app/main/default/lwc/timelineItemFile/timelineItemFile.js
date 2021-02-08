@@ -16,6 +16,7 @@ export default class TimelineItemFile extends NavigationMixin(LightningElement) 
     @api expanded;
     @api dateValue;
     @api themeInfo;
+    @api displayRelativeDates;
 
     label = {
         Description

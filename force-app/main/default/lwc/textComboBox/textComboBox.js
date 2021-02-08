@@ -124,11 +124,11 @@ export default class TextComboBox extends LightningElement {
             this.selectedRecordId = event.detail.recordId;
             this.selectedRecordName = event.detail.label;
             this.selectedRecordIcon = event.detail.iconName;
-            this.dispatchEvent(new CustomEvent('select', { detail: { "fieldName": this.fieldName, "value": event.detail.value, recordId: event.detail.recordId } }));
+            this.dispatchEvent(new CustomEvent('select', {  bubbles:true, composite:true, detail: { "fieldName": this.fieldName, "value": event.detail.value, recordId: event.detail.recordId } }));
 
         } else {
             this.value = event.detail.value;
-            this.dispatchEvent(new CustomEvent('select', { detail: { "fieldName": this.fieldName, "value": event.detail.value } }));
+            this.dispatchEvent(new CustomEvent('select', { bubbles:true, composite:true, detail: { "fieldName": this.fieldName, "value": event.detail.value } }));
 
         }
         this.showOptions = false;

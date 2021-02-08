@@ -18,6 +18,7 @@ export default class TimelineItemCaseArticle extends NavigationMixin(LightningEl
     @api expanded;
     @api dateValue;
     @api themeInfo;
+    @api displayRelativeDates;
 
     label = {
         Description

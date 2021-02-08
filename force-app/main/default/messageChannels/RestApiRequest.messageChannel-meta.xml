@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Message to make a REST API call</description>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <description>JSON Request Body to be sent</description>
+        <fieldName>requestBody</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <description>GET/POST/DELETE</description>
+        <fieldName>requestMethod</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <description>REST API URL</description>
+        <fieldName>requestUrl</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <description>Any headers for the request</description>
+        <fieldName>requestHeaders</fieldName>
+    </lightningMessageFields>
+    <masterLabel>RestApiRequest</masterLabel>
+</LightningMessageChannel>

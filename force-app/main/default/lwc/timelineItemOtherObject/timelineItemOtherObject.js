@@ -18,7 +18,9 @@ export default class TimelineItemOtherObject extends LightningElement {
     @api externalData;
     @api externalDataFieldTypes;
     @api baseUrlForRecordDetail;
-
+    @api navigationBehaviour="Record Detail";
+    @api displayRelativeDates;
+    @api isOverdue=false;
     @api expanded;
     @api themeInfo;
     @track dataLoaded = false;
@@ -79,6 +81,8 @@ export default class TimelineItemOtherObject extends LightningElement {
     }
 
     populateFieldData(data,fieldMetadata){
+        moment.locale(LOCALE);
+        moment.lang(LANG);
         let fieldData = new Array();
         for (let i = 0; i < fieldMetadata.length; i++) {
             let fld = fieldMetadata[i];
@@ -87,11 +91,11 @@ export default class TimelineItemOtherObject extends LightningElement {
             fldData.fieldLabel = fld.fieldLabel;
             fldData.dataType = fld.extraTypeInfo?fld.extraTypeInfo.toUpperCase():fld.dataType;
             fldData.fieldValue = data[fld.apiName];
-            if(fld.isNamePointing){
+            if(fld.isNamePointing && data[fld.relationshipName]){
                 fldData.fieldValue=data[fld.relationshipName]['Name'];
                 fldData.isHyperLink=true;
                 fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
-            }else if(fld.dataType.toUpperCase() === "REFERENCE"){
+            }else if(fld.dataType.toUpperCase() === "REFERENCE" && data[fld.relationshipName]){
                 fldData.fieldValue=data[fld.relationshipName][fld.referenceToApiName];
                 fldData.isHyperLink=true;
                 fldData.hyperLinkToId=data[fld.relationshipName]['Id'];
@@ -101,7 +105,7 @@ export default class TimelineItemOtherObject extends LightningElement {
                 fldData.isBooleanTrue = fldData.fieldValue;
             }
             if(fldData.dataType.toUpperCase() === "Date".toUpperCase() || fldData.dataType.toUpperCase() === "DateTime".toUpperCase()){
-                fldData.fieldValue =  moment(fldData.fieldValue).format("dddd, MMMM Do YYYY, h:mm:ss a");
+                fldData.fieldValue =  moment(fldData.fieldValue).format();
             }
  
             if(fldData.dataType.toUpperCase() === "RICHTEXTAREA".toUpperCase()){

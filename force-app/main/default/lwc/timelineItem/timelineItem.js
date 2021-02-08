@@ -11,6 +11,11 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
     @api recordId;
     @api expanded;
     @api themeInfo;
+    @api displayRelativeDates;
+    @api isOverdue=false;
+    //Default navigation behaviour is to go to the record detail
+    @api navigationBehaviour="Record Detail";
+
     label = {
         Toggle_details
     }
@@ -37,8 +42,14 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
     get isCase() {
         return this.object === "Case";
     }
+    
+    get shouldNavigateToRecord(){
+        return this.navigationBehaviour!='None';
+    }
     toggleDetailSection() {
         this.expanded = !this.expanded;
     }
+
+
 
 }

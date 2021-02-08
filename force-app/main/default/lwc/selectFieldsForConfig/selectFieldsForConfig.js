@@ -50,6 +50,17 @@ export default class SelectFieldsForConfig extends LightningElement {
                             type: fields[field].dataType
                         });
                     }
+
+                    if (this.stepName === "Overdue Field") {
+                        if (fields[field].dataType.toUpperCase() === "Boolean".toUpperCase()) {
+                            fieldResults.push({
+                                fieldId: fields[field].apiName,
+                                label: fields[field].label,
+                                apiName: fields[field].apiName,
+                                type: fields[field].dataType
+                            });
+                        }
+                    }
                     if (this.stepName === "Date Field") {
                         if (fields[field].dataType === "DateTime" || fields[field].dataType === "Date") {
                             fieldResults.push({
@@ -102,6 +113,17 @@ export default class SelectFieldsForConfig extends LightningElement {
                         });
                     }
                 }
+                //Only include Boolean fields for Overdue field
+                if (this.stepName === "Overdue Field") {
+                    if (fields[field].dataType.toUpperCase() === "Boolean".toUpperCase()) {
+                        fieldResults.push({
+                            fieldId: fields[field].apiName,
+                            label: fields[field].label,
+                            apiName: fields[field].apiName,
+                            type: fields[field].dataType
+                        });
+                    }
+                }
 
             }
         }
@@ -111,7 +133,7 @@ export default class SelectFieldsForConfig extends LightningElement {
     get maxRowsToSelect() {
         if (this.stepName === "Display Fields") {
             return 5;
-        } else if (this.stepName === "Date Field" || this.stepName === "Title Field") {
+        } else if (this.stepName === "Date Field" || this.stepName === "Title Field" || this.stepName === "Overdue Field") {
             return 1;
         } else {
             return 1;

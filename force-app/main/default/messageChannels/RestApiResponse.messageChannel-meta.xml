@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Response for RestAPIResponse</description>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <description>JSON Response Body</description>
+        <fieldName>responseBody</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <description>HTTP Status of the response</description>
+        <fieldName>responseStatus</fieldName>
+    </lightningMessageFields>
+    <masterLabel>RestApiResponse</masterLabel>
+</LightningMessageChannel>

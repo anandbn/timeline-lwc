@@ -1,0 +1,45 @@
+<template>
+    <c-text-combo-box  if:true={isSubject} field-name={field.name} label={field.label} 
+                        list-of-options={picklistOptions} value={subject} onselect={handleSelect} >
+    </c-text-combo-box>
+    <c-text-combo-box if:true={isWhoId} display-object-selector="true" field-name={field.name} label={field.label}
+        object-selector-config={nameObjectSelectorMenuConfig} search-delegate-apex-class="Blah"
+        onselect={handleSelect}>
+    </c-text-combo-box>
+    <c-readonly-text-with-icon if:true={isWhatId} label={field.label} icon-img-url={parentRecordIcon}
+        icon-size="x-small" icon-background-color={parentRecordColor} display-text={parentRecordName}
+        onselect={handleSelect}>
+    </c-readonly-text-with-icon>
+    <c-readonly-text-with-icon if:true={isAssignedTo} label={field.label} icon-name="standard:user" icon-size="x-small"
+        display-text={currentUsername}>
+    </c-readonly-text-with-icon>
+
+    <template if:false={isStandardField}>
+
+        <lightning-input if:true={isDate} class="slds-var-p-bottom_x-small composer_dueDate" type="date" field-level-help={field.inlineHelpText}
+            name={field.name} label={field.label} value={field.defaultValue} onchange={handleOnChange}>
+        </lightning-input>
+        <lightning-input if:true={isBoolean} class="slds-var-p-bottom_x-small composer_dueDate" type="checkbox" field-level-help={field.inlineHelpText}
+            name={field.name} label={field.label} value={field.defaultValue} onchange={handleOnChange}>
+        </lightning-input>
+        <template if:true={isPicklist}>
+            <div class="slds-var-p-bottom_x-small">
+                <div class="slds-grid slds-size_12-of-12">
+                    <div class="slds-col">
+                        <lightning-combobox name={field.name} label={field.label} value={field.defaultValue}
+                            options={picklistOptions} onchange={handleOnChange} field-level-help={field.inlineHelpText}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <lightning-textarea if:true={isTextArea} name={field.name} label={field.label} 
+                value={field.defaultValue} onchange={handleOnChange} field-level-help={field.inlineHelpText}>
+        </lightning-textarea>
+        <lightning-input if:true={isOtherType} class="slds-var-p-bottom_x-small" type="text" name={field.name}
+            label={field.label} value={field.defaultValue} onchange={handleOnChange} field-level-help={field.inlineHelpText}>
+        </lightning-input>
+
+    </template>
+
+</template>

@@ -10,7 +10,8 @@
                     <lightning-button-icon if:true={expanded} size="x-small" icon-name="utility:switch"
                         alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
                     </lightning-button-icon>
-                    <lightning-icon if:true={hasIconName} size="small" style={objectThemeColor} icon-name={themeInfo.iconName}></lightning-icon>
+                    <lightning-icon if:true={hasIconName} size="small" style={objectThemeColor}
+                        icon-name={themeInfo.iconName}></lightning-icon>
                     <span if:false={hasIconName} class="slds-avatar slds-avatar--small" style={objectThemeColor}>
                         <img src={themeInfo.iconImgUrl}></img>
                     </span>
@@ -19,17 +20,47 @@
                     <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
                         <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
                             <h3 class="slds-truncate" title={title}>
-                                <c-linked-output-text record-id={recordId} object={object} label={title} is-header="true"
-                                is-external-service-data={isExternalServiceData} base-url-for-record-detail={baseUrlForRecordDetail} >
-                                </c-linked-output-text>
+                                <template if:true={shouldNavigateToRecord}>
+                                    <c-linked-output-text record-id={recordId} object={object} label={title}
+                                        is-header="true" is-external-service-data={isExternalServiceData}
+                                        base-url-for-record-detail={baseUrlForRecordDetail}>
+                                    </c-linked-output-text>
+                                </template>
+                                <template if:false={shouldNavigateToRecord}>
+                                    {title}
+                                </template>
+                                <template if:true={isOverdue}>
+                                    &nbsp;<lightning-icon icon-name="utility:warning" variant="error" size="x-small" alternative-text={label.Overdue}></lightning-icon>
+                                </template>
+
                             </h3>
                         </div>
                         <div class="slds-timeline__actions slds-timeline__actions_inline">
-                            <p class="slds-timeline__date">{dateValue}</p>
+                            <template if:true={isOverdue}>
+                                <strong><p class="slds-timeline__date overdue">
+                                    <template if:false={displayRelativeDates}>
+                                        <lightning-formatted-date-time value={dateValue}></lightning-formatted-date-time>
+                                    </template>
+                                    <template if:true={displayRelativeDates}>
+                                        {dateValue}
+                                    </template>
+                                </p></strong>
+                            </template>
+                            <template if:false={isOverdue}>
+                                <p class="slds-timeline__date">
+                                    <template if:false={displayRelativeDates}>
+                                        <lightning-formatted-date-time value={dateValue}></lightning-formatted-date-time>
+                                    </template>
+                                    <template if:true={displayRelativeDates}>
+                                        {dateValue}
+                                    </template>
+                                </p>
+                            </template>
                         </div>
                     </div>
                     <template if:true={expanded}>
-                        <div class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                        <div
+                            class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
                             <c-timeline-item-detail field-data={fieldData}></c-timeline-item-detail>
                         </div>
                     </template>

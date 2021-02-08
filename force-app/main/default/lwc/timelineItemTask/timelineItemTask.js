@@ -52,6 +52,7 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     @track ccAddresses;
     @track firstRecipient;
     @api fieldData;
+    @api displayRelativeDates;
 
     label = {
         Toggle_Details,

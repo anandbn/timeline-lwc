@@ -14,6 +14,9 @@ public with sharing class TimelineDataResponse {
     @AuraEnabled
     public List<String> logs {get; set;}
 
+    @AuraEnabled
+    public Map<String,String> objectLabels {get; set;}
+
     public TimelineDataResponse(Timeline_Configuration__c conf,Sobject theRecord, Map<String,TimelineDataResponse.ApexConfigAndData> apexData) {
         this.configuration=conf;
         this.data=theRecord;

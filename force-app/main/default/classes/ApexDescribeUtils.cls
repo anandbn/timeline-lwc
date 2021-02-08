@@ -71,6 +71,7 @@ global class ApexDescribeUtils {
             Map<String, Schema.SObjectField> fieldMap = res.fields.getMap();
             for(String fieldKey:fieldMap.keySet()){
                 Schema.SObjectField fld = fieldMap.get(fieldKey);
+                System.debug('>>>>>> calling addFieldMetadata for '+fieldKey);
                 addFieldMetadata(fieldMap,fieldsForObject,fieldKey,objectApiName);
             }
 
@@ -118,6 +119,7 @@ global class ApexDescribeUtils {
     private static void addFieldMetadata(Map<String, Schema.SObjectField> fieldMap,List<FieldData> fieldsForObject,String fieldApiName,String objectApiName){
         Schema.SObjectField fld = fieldMap.get(fieldApiName);
         Schema.DescribeFieldResult fldDesc = fld.getDescribe();
+
         FieldData fieldData = new FieldData(    fldDesc.getName(),fldDesc.getType().name(),fldDesc.getLabel(),
                                                 fldDesc.getReferenceTo().isEmpty()?null:fldDesc.getReferenceTo()[0].getDescribe().getName(),
                                                 fldDesc.isNamePointing(),
@@ -125,7 +127,6 @@ global class ApexDescribeUtils {
                                                 fldDesc.isNameField());
         if(fldDesc.getType() == Schema.DisplayType.TEXTAREA){
             //Determine if this a rich text area and set the extraTypeInfo object
-            System.debug('>>>>>>>> objectApiName = '+objectApiName+',fieldApiName ='+fldDesc.getName());
             List<FieldDefinition> fldDefn = [ Select Id,ExtraTypeInfo 
                                         from FieldDefinition 
                                         where EntityDefinition.QualifiedApiName=:objectApiName
@@ -137,7 +138,7 @@ global class ApexDescribeUtils {
         if(fldDesc.getType() == Schema.DisplayType.PICKLIST || fldDesc.getType() == Schema.DisplayType.MULTIPICKLIST){
             List<PicklistEntry> pValues = new List<PicklistEntry>();
             for(Schema.PicklistEntry pVal: fldDesc.getPicklistValues()){
-                pValues.add(new PicklistEntry(pVal.label,pVal.value));
+                pValues.add(new PicklistEntry(pVal.label!=null?pVal.label:pVal.value,pVal.value));
             }
             fieldData.picklistValues=pValues;
         }

@@ -6,6 +6,11 @@
  */
 
 global class TaskUtils {
+
+    @AuraEnabled(cacheable=true)
+    global static String getCurrentUsername(){
+        return UserInfo.getName();
+    }
     @AuraEnabled(cacheable=true)
     global static TaskInfo getTaskSubjectOptions(){
         Schema.DescribeFieldResult fldDesc = Task.Subject.getDescribe();
@@ -122,6 +127,21 @@ global class TaskUtils {
         if(subType !=null){
             tsk.TaskSubType=subType;
         }
+        System.debug('>>>>>>>> Before insert:'+tsk);
+        insert tsk;
+        return tsk;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static SObject saveTaskFromObject(Task tsk){
+        /*Task tsk = new Task();
+        for(String key:tskMap.keySet()){
+            System.debug('>>>>>>>> Setting value: '+tsk);
+            tsk.put(key,tskMap.get(key));
+        }
+        tsk.put('OwnerId',UserInfo.getUserId());
+        */
+        tsk.OwnerId = UserInfo.getUserId();
         System.debug('>>>>>>>> Before insert:'+tsk);
         insert tsk;
         return tsk;

@@ -15,12 +15,13 @@ public with sharing class RecordTimelineDataProvider {
         log.add('confIdOrName='+confIdOrName+', record Id:'+recordId+',dateFilter:'+dateFilter);
         if(recordId !=null && confIdOrName!=null){
             if(areObjectAndFieldsAccessible()){
-                Timeline_Configuration__c conf  = [ select Id,timeline__Object__c,
+                Timeline_Configuration__c conf  = [ select Id,timeline__Object__c,timeline__Display_Relative_Dates__c,
                                                     (SELECT timeline__Date_Field__c,timeline__Fields_to_Display__c,timeline__Icon_Image_Url__c,
                                                             timeline__Icon_Name__c,Id,Name,timeline__Object_Color__c,timeline__Object__c,timeline__Relationship_Name__c,
                                                             timeline__Title_Field__c,timeline__LWC_Ui_Api_Not_Supported__c,timeline__Data_Provider_Type__c,
                                                             timeline__Provider_Apex_Classname__c,timeline__Reference_Field_Name__c,
-                                                            timeline__Where_Clause__c
+                                                            timeline__Where_Clause__c,timeline__Display_Object_Name__c,timeline__Title_link_Navigate_to__c,
+                                                            timeline__Overdue_Field__c
                                                     FROM timeline__Timeline_Child_Objects__r)
                                                     from timeline__Timeline_Configuration__c
                                                     where (Id=:confIdOrName or Name=:confIdOrName)
@@ -38,6 +39,7 @@ public with sharing class RecordTimelineDataProvider {
                     }
                     Map<String,TimelineDataResponse.ApexConfigAndData> apexData = getDataFromApexProviders(conf, recordId, datefilter);
                     TimelineDataResponse resp = new TimelineDataResponse(conf,theObject,apexData);
+                    resp.objectLabels = getChildObjectLabels(conf);
                     resp.logs=log;
                     return resp;
                 }
@@ -55,7 +57,8 @@ public with sharing class RecordTimelineDataProvider {
     private static Boolean areObjectAndFieldsAccessible(){
         return (Timeline_Configuration__c.sObjectType.getDescribe().isAccessible() &&
                 Timeline_Child_Object__c.sObjectType.getDescribe().isAccessible() &&
-                Schema.sObjectType.Timeline_Configuration__c.fields.Object__c.isAccessible() && 
+                Schema.sObjectType.Timeline_Configuration__c.fields.Object__c.isAccessible() &&
+                Schema.SObjectType.Timeline_Configuration__c.fields.timeline__Display_Relative_Dates__c.isAccessible() &&  
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Date_Field__c.isAccessible() &&
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Fields_to_Display__c.isAccessible() &&
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Icon_Image_Url__c.isAccessible() &&
@@ -66,9 +69,11 @@ public with sharing class RecordTimelineDataProvider {
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Title_Field__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.Data_Provider_Type__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.LWC_Ui_Api_Not_Supported__c.isAccessible() &&
-                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Provider_Apex_Classname__c.isAccessible()
-        );
+                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Provider_Apex_Classname__c.isAccessible() && 
+                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Title_link_Navigate_to__c.isAccessible() &&
+                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Overdue_Field__c.isAccessible());
     }
+
 
     @AuraEnabled(cacheable=true)
     public static EMailMessage getEmailDetails(String taskId) {
@@ -147,5 +152,21 @@ public with sharing class RecordTimelineDataProvider {
             }
         }
         return apexData;
+    }
+
+    private static Map<String,String> getChildObjectLabels(Timeline_Configuration__c conf){
+        List<String> childObjects = new List<String>();
+        for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
+            if(childObjConf.timeline__Data_Provider_Type__c ==null || childObjConf.timeline__Data_Provider_Type__c != 'Apex class'){
+                childObjects.add(childObjConf.timeline__Object__c);
+            }
+        }
+        
+        Map<String,String> childObjLabels = new Map<String,String>();
+        for(Schema.DescribeSObjectResult childObjDesc: Schema.describeSObjects(childObjects)){
+            childObjLabels.put(childObjDesc.getName(),childObjDesc.getLabel());
+
+        }
+        return childObjLabels;
     }
 }

@@ -4,7 +4,7 @@ Website: https://douglascayers.com
 GitHub: https://github.com/douglascayers/sfdx-lightning-api-component
 License: BSD 3-Clause License
  -->
-<aura:component controller="LC_VisualforceDomainController">
+<aura:component controller="LC_VisualforceDomainController" access="global">
 
     <ltng:require scripts="{!$Resource.penpal}"
                   afterScriptsLoaded="{!c.onScriptsLoaded}"/>
@@ -25,11 +25,14 @@ License: BSD 3-Clause License
                     access="private"
                     default="false"
                     description="Has the Penpal iframe been connected?"/>
-
+    <aura:attribute name="initUrl" 
+                    type="String" 
+                    access="global" 
+                    description="A URL to fetch from on initialization"/>
     <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
 
     <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
-
+    <lightning:messageChannel type="RestApiResponse__c" aura:id="restApiResponse" scope="APPLICATION"/>
     <!--
         Makes a Salesforce REST API request and returns a promise that resolves to the response.
 

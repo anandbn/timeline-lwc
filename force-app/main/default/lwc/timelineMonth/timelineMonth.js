@@ -12,6 +12,7 @@ export default class TimelineMonth extends LightningElement {
     @api month;
     @api monthAsDuration;
     @api timelineItems;
+    @api displayRelativeDates;
     @track expanded=true;
 
     toggleExpanded(){

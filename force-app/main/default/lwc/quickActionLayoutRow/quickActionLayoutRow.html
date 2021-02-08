@@ -1,0 +1,14 @@
+<template>
+    <div class="slds-col">
+        <div class="slds-grid slds-grid_vertical">
+            <template for:each={layoutItems} for:item="field">
+                
+                <div key={field.index} class="slds-col">
+                    <c-quick-action-layout-item onselect={handleSelect} parent-record-name={parentRecordName} parent-record-id={parentRecordId} 
+                                                parent-record-icon={parentRecordIcon} parent-record-color={parentRecordColor} 
+                                                current-username={currentUsername} field={field}></c-quick-action-layout-item>
+                </div>
+            </template>
+        </div>                                        
+    </div>
+</template>
