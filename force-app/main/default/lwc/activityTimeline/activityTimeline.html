@@ -17,8 +17,8 @@
                         </a>
                     </h2>
                 </div>
-                    <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
-                        onchange={handleFilterChange}></c-timeline-filter-panel>
+                <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
+                    onchange={handleFilterChange} onexpandcollapse={handleExpandCollapseEvent} show-expand-collapse={showExpandCollapse}></c-timeline-filter-panel>
             </header>
         </div>
         <article if:true={isParametersValid}>
@@ -27,19 +27,25 @@
                     <template if:true={hasTimelineData}>
                         <li if:false={showHeader}
                             class="slds-timeline__actions slds-timeline__actions_inline slds-is-relative">
-                            <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
-                                onchange={handleFilterChange}></c-timeline-filter-panel>
+                            <c-timeline-filter-panel object-filters={filteredObjects}
+                                available-objects={availableObjects} onchange={handleFilterChange}>
+                            </c-timeline-filter-panel>
                         </li>
+                        <template if:true={showSearch}>
+                            <div class="slds-p-bottom_small">
+                                <lightning-input type="text" placeholder="Search..." onchange={handleSearch}></lightning-input>
+                            </div>
+                        </template>
                         <template for:each={timelineItemsByMonth} for:item="theMonth">
-                            <c-timeline-month   key={theMonth.monthValue} month={theMonth.monthValue} 
-                                                month-as-duration={theMonth.timeFromNow}
-                                                timeline-items={theMonth.timelineItems}>
+                            <c-timeline-month key={theMonth.monthValue} month={theMonth.monthValue}
+                                month-as-duration={theMonth.timeFromNow} timeline-items={theMonth.timelineItems}>
                             </c-timeline-month>
                         </template>
                     </template>
                     <template if:false={hasTimelineData}>
                         <span class="slds-badge slds-theme_warning">
-                            <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>&nbsp;{label.No_data_found}
+                            <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                            &nbsp;{label.No_data_found}
                             !!!!
                         </span>
                     </template>
@@ -50,7 +56,8 @@
             </ul>
             <div if:true={error} class="slds-text-color_destructive">
                 <span class="slds-badge slds-theme_error">
-                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;{label.Error_loading_data}:
+                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                    &nbsp;{label.Error_loading_data}:
                 </span>
                 &nbsp;{errorMsg}
 
@@ -58,7 +65,8 @@
         </article>
         <div if:false={isParametersValid} class="slds-text-color_destructive">
             <span class="slds-badge slds-theme_error">
-                <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>&nbsp;{label.Invalid_parameters}
+                <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                &nbsp;{label.Invalid_parameters}
             </span>
             &nbsp; {label.Either_recordId_or_configId_are_empty}.
 

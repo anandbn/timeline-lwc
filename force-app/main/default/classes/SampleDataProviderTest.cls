@@ -1,6 +1,7 @@
 @IsTest
 public with sharing class SampleDataProviderTest {
-    @isTest static void  testProviderResponses() {
+
+    @isTest(SeeAllData=true) static void  testProviderResponses() {
         Test.setMock(HttpCalloutMock.class, new SampleInvoiceMockImpl());
         AbstractTimelineDataProvider provider = new SampleApexDataProvider();
         System.assert(provider.getFieldsToDisplay() !=null,'Fields to display is null');
@@ -12,5 +13,7 @@ public with sharing class SampleDataProviderTest {
         System.assert(provider.getBaseUrlForRecordDetail() !=null,'BaseUrlForRecordDetail field is null');
         System.assert(provider.getData(null,null) !=null,'Data returned is null');
         System.assert(provider.getRecordIdentifierField()!=null,'RecordIdentifierField is null');
+        System.assert(provider.isSalesforceObject()!=null,'isSalesforceObject is null');
+        System.assert(provider.isUiApiNotSupported()!=null,'isUiApiNotSupported is null');
     }
 }

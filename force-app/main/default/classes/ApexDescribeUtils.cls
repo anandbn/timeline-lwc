@@ -109,6 +109,7 @@ global class ApexDescribeUtils {
         for(Schema.DescribeSobjectResult res : results) {
             Map<String, Schema.SObjectField> fieldMap = res.fields.getMap();
             for(String fieldApiName: fieldsToReturn){
+                System.debug('>>>>>>>>>>> fieldApiName='+fieldApiName);
                 addFieldMetadata(fieldMap,fieldsForObject,fieldApiName,objectApiName);
             }
         }

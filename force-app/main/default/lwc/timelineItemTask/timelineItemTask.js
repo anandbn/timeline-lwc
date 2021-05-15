@@ -30,6 +30,12 @@ import No_Subject from '@salesforce/label/c.No_Subject';
 import and from '@salesforce/label/c.and';
 import other from '@salesforce/label/c.other';
 import others from '@salesforce/label/c.others';
+import {
+    subscribe,
+    APPLICATION_SCOPE,
+    MessageContext
+} from 'lightning/messageService';
+import timelineItemState from '@salesforce/messageChannel/TimelineItemState__c';
 
 export default class TimelineItemTask extends NavigationMixin(LightningElement) {
 
@@ -74,6 +80,21 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         others
     }
     
+
+    @wire(MessageContext)
+    messageContext;
+    subscription;
+
+    connectedCallback(){
+        if (!this.subscription) {
+            this.subscription = subscribe(
+                this.messageContext,
+                timelineItemState,
+                (message) => this.handleMessage(message),
+                { scope: APPLICATION_SCOPE }
+            );
+        }
+    }
 
     @wire(getEmailDetails,{taskId:'$recordId'})
     emailMessage ({ error, data }) {
@@ -228,6 +249,10 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
 
     toggleDetailSection() {
         this.expanded = !this.expanded;
+        this.handleToggleDetail();
+    }
+
+    handleToggleDetail(){
         if (this.expanded && !this.dataLoaded) {
             getTimelineItemChildData({
                 objectApiName: 'Task',
@@ -280,5 +305,10 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
             fieldData.push(fldData);
         } 
         return fieldData;       
+    }
+
+    handleMessage(message){
+        this.expanded=message.expanded;
+        this.handleToggleDetail();
     }
 }

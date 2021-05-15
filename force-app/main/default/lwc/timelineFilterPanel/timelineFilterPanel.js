@@ -11,6 +11,8 @@ import Next_7_days from '@salesforce/label/c.Next_7_days';
 import Last_30_days from '@salesforce/label/c.Last_30_days';
 import All_Types from '@salesforce/label/c.All_Types';
 import Filters from '@salesforce/label/c.Filters';
+import Expand_All from '@salesforce/label/c.Expand_All';
+import Collapse_All from '@salesforce/label/c.Collapse_All';
 
 export default class TimelineFilterPanel extends LightningElement {
     @track showFilter=false;
@@ -18,6 +20,7 @@ export default class TimelineFilterPanel extends LightningElement {
     @api objectFilters;
     @api availableObjects;
     @track expandAll=false;
+    @api showExpandCollapse=false;
 
     label = {
         Filter,Refresh_data,Apply,Date_Range,Select_Objects,Filter_Results,Filters
@@ -36,9 +39,22 @@ export default class TimelineFilterPanel extends LightningElement {
     }
 
 
+    expandCollapseAll(){
+        this.expandAll=!this.expandAll;
+        const expandAllEvent = new CustomEvent('expandcollapse', {
+            detail: {
+                "expanded":this.expandAll
+            }
+        });
+        this.dispatchEvent(expandAllEvent);
+    }
 
     get expandCollapseIcon(){
         return this.expandAll?'utility:collapse_all':'utility:expand_all';
+    }
+
+    get expandCollapseAltText(){
+        return this.expandAll?Collapse_All:Expand_All;
     }
 
     get filterAltText(){
@@ -82,6 +98,7 @@ export default class TimelineFilterPanel extends LightningElement {
     }
 
     applyFilters(){
+        this.expandAll=false;
         const filterChangeEvent = new CustomEvent('change', {
             detail: {
                 "dateFilter":this.dateFilterSelection,

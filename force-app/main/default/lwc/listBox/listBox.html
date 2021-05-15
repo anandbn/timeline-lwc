@@ -1,0 +1,44 @@
+<template>
+    <div class="slds-form-element" role="group" aria-labelledby="picklist-group-label">
+        <span id="picklist-group-label" class="slds-form-element__label slds-form-element__legend">Reorder selected fields</span>
+        <div class="slds-form-element__control">
+            <div class="slds-dueling-list">
+                <div class="slds-dueling-list__column">
+                    <div class="slds-dueling-list__options">
+                        <ul class="slds-listbox slds-listbox_vertical" role="listbox">
+                            <template for:each={items} for:item="item" for:index="index">
+                                <li key={item.apiName} role="presentation" class="slds-listbox__item" onclick={itemSelected} data-index={index}>
+                                    <template if:true={item.selected}>
+
+                                        <div class="slds-listbox__option slds-listbox__option_plain slds-media slds-media_small slds-media_inline slds-is-selected" aria-selected="true" role="option">
+                                            <span class="slds-media__body">
+                                                <span class="slds-truncate" title={item.label}>{item.label}</span>
+                                            </span>
+                                        </div>
+                                    </template>
+                                    <template if:false={item.selected}>
+                                        <div class="slds-listbox__option slds-listbox__option_plain slds-media slds-media_small slds-media_inline" aria-selected="false"  role="option">
+                                            <span class="slds-media__body">
+                                                <span class="slds-truncate" title={item.label}>{item.label}</span>
+                                            </span>
+                                        </div>
+                                    </template>
+
+                                   
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slds-dueling-list__column">
+                    <lightning-button-icon icon-name="utility:up" class="slds-button slds-button_icon slds-button_icon-container" title="Move Selection Up" onclick={moveUp}>
+
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:down" class="slds-button slds-button_icon slds-button_icon-container" title="Move Selection Up" onclick={moveDown}>
+
+                    </lightning-button-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -21,7 +21,8 @@ export default class SelectFieldsForConfig extends LightningElement {
     @track isLoading = true;
     @api stepName;
     @api childObjectFields;
-    @api selectedFields;
+    @api selectedFields = [];
+    selectedFieldList;
     @api uiApiNotSupported;
     @api selectedApexClass;
     @api providerType;
@@ -79,7 +80,7 @@ export default class SelectFieldsForConfig extends LightningElement {
         }
         if (error) {
             console.log(JSON.stringify(error, null, 4));
-            this.uiApiNotSupported=true;
+            this.uiApiNotSupported = true;
             getFieldsForObject({ objectApiName: this.childObjectApiName })
                 .then(result => {
                     this.processFieldResults(result);
@@ -90,7 +91,7 @@ export default class SelectFieldsForConfig extends LightningElement {
         }
     }
 
-    processFieldResults(fields){
+    processFieldResults(fields) {
         let fieldResults = [];
 
         for (let field in fields) {
@@ -98,7 +99,7 @@ export default class SelectFieldsForConfig extends LightningElement {
                 if (this.stepName === "Display Fields" || this.stepName === "Title Field") {
                     fieldResults.push({
                         fieldId: fields[field].apiName,
-                        label: fields[field].label,
+                        label: fields[field].label || fields[field].fieldLabel,
                         apiName: fields[field].apiName,
                         type: fields[field].dataType
                     });
@@ -107,7 +108,7 @@ export default class SelectFieldsForConfig extends LightningElement {
                     if (fields[field].dataType.toUpperCase() === "DateTime".toUpperCase() || fields[field].dataType.toUpperCase() === "Date".toUpperCase()) {
                         fieldResults.push({
                             fieldId: fields[field].apiName,
-                            label: fields[field].label,
+                            label: fields[field].label || fields[field].fieldLabel,
                             apiName: fields[field].apiName,
                             type: fields[field].dataType
                         });
@@ -118,7 +119,7 @@ export default class SelectFieldsForConfig extends LightningElement {
                     if (fields[field].dataType.toUpperCase() === "Boolean".toUpperCase()) {
                         fieldResults.push({
                             fieldId: fields[field].apiName,
-                            label: fields[field].label,
+                            label: fields[field].label || fields[field].fieldLabel,
                             apiName: fields[field].apiName,
                             type: fields[field].dataType
                         });
@@ -128,25 +129,38 @@ export default class SelectFieldsForConfig extends LightningElement {
             }
         }
         this.fields = fieldResults;
-        this.isLoading = false;        
+        this.isLoading = false;
     }
     get maxRowsToSelect() {
         if (this.stepName === "Display Fields") {
             return 5;
-        } else if (this.stepName === "Date Field" || this.stepName === "Title Field" || this.stepName === "Overdue Field") {
+        } else if (this.stepName === "Date Field" || this.stepName === "Overdue Field") {
             return 1;
-        } else {
-            return 1;
+        } else if (this.stepName === "Title Field") {
+            return 3;
         }
     }
 
     rowSelected(event) {
-        let selFlds = new Array();
-        let selRows = event.detail.selectedRows;
-        for (let i = 0; i < selRows.length; i++) {
-            selFlds.push(selRows[i].apiName);
+        if (event.detail.selectedRows && event.detail.selectedRows.length > 0) {
+            if (this.selectedFieldList && this.selectedFieldList.length > 0) {
+                for (let i = 0; i < event.detail.selectedRows.length; i++) {
+                    //Search for selected field in current selected list;
+                    let filteredFields = this.selectedFieldList.filter(fld => fld.apiName == event.detail.selectedRows[i].apiName);
+                    if (!filteredFields || filteredFields.length == 0) {
+                        this.selectedFieldList.push(event.detail.selectedRows[i]);
+                    }
+                }
+            }else{
+                this.selectedFieldList = event.detail.selectedRows;
+            }
+            this.selectedFields = this.selectedFieldList.map(fld => fld.apiName).join(',');
         }
-        this.selectedFields = selFlds.join(',');
+    }
+
+    handleFieldReordered(event) {
+        this.selectedFieldList = event.detail;
+        this.selectedFields = this.selectedFieldList.map(fld => fld.apiName).join(',');
     }
 
     get stepTitle() {
@@ -155,11 +169,15 @@ export default class SelectFieldsForConfig extends LightningElement {
         } else if (this.stepName === "Date Field") {
             return "Select a Date Field";
         } else if (this.stepName === "Title Field") {
-            return "Select a Title Field";
+            return "Select upto 3 fields to display on the Title";
         } else {
             return "";
         }
 
+    }
+
+    get showFieldReordering() {
+        return this.stepName === "Display Fields" || this.stepName === "Title Field";
     }
 
     get hasIconInfo() {
@@ -191,7 +209,7 @@ export default class SelectFieldsForConfig extends LightningElement {
         return this.iconName != null;
     }
 
-    get isApexProvider(){
+    get isApexProvider() {
         return this.providerType === "Apex class";
     }
     expandOrCollapse() {

@@ -56,8 +56,9 @@
                         </div>
                         <div if:true={expanded} class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
                             <template for:each={expandedFieldsToDisplay} for:item="fieldToDisplay">
-                                <lightning-output-field key={fieldToDisplay.id} field-name={fieldToDisplay.apiName}>
+                                <lightning-output-field key={fieldToDisplay.apiName} field-name={fieldToDisplay.apiName}>
                                 </lightning-output-field>
+                                
                             </template>
                         </div>
                     </div>

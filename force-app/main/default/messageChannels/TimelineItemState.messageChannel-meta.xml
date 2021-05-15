@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>TimelineItemState</masterLabel>
+    <isExposed>true</isExposed>
+    <description>Controls the state of hte Timeline Item (expanded or collapsed)</description>
+    <lightningMessageFields>
+        <fieldName>expanded</fieldName>
+        <description>a boolean flag to communicate the items if they need to be in expanded or collapsed state</description>
+    </lightningMessageFields>
+</LightningMessageChannel>

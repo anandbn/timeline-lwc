@@ -1,11 +1,18 @@
 <template>
     <div class="slds-no-flex slds-float_right slds-is-relative">
+        <template if:true={showExpandCollapse}>
+            <a class="slds-button" role="button" onclick={expandCollapseAll}>
+                <lightning-button-icon icon-name={expandCollapseIcon} alternative-text={expandCollapseAltText} size="small">
+                </lightning-button-icon>
+            </a>
+        </template>
+
         <a class="slds-button" role="button" onclick={showHideFilters}>
-            <lightning-button-icon icon-name="utility:filterList" alternative-text={filterAltText} size="x-small">
+            <lightning-button-icon icon-name="utility:filterList" alternative-text={filterAltText} size="small">
             </lightning-button-icon>
         </a>
         <a class="slds-button" role="button" onclick={applyFilters}>
-            <lightning-button-icon icon-name="action:refresh" alternative-text={label.Refresh_data} size="x-small">
+            <lightning-button-icon icon-name="action:refresh" alternative-text={label.Refresh_data} size="small">
             </lightning-button-icon>
         </a>
         <div class="filterPopover" style={filterStyles}>

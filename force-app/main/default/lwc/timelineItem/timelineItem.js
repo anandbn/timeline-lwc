@@ -1,6 +1,12 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation'
 import Toggle_details from '@salesforce/label/c.Toggle_details';
+import {
+    subscribe,
+    APPLICATION_SCOPE,
+    MessageContext
+} from 'lightning/messageService';
+import timelineItemState from '@salesforce/messageChannel/TimelineItemState__c';
 
 export default class TimelineItem extends NavigationMixin(LightningElement) {
 
@@ -15,6 +21,21 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
     @api isOverdue=false;
     //Default navigation behaviour is to go to the record detail
     @api navigationBehaviour="Record Detail";
+
+    @wire(MessageContext)
+    messageContext;
+    subscription;
+
+    connectedCallback(){
+        if (!this.subscription) {
+            this.subscription = subscribe(
+                this.messageContext,
+                timelineItemState,
+                (message) => this.handleMessage(message),
+                { scope: APPLICATION_SCOPE }
+            );
+        }
+    }
 
     label = {
         Toggle_details
@@ -50,6 +71,9 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
         this.expanded = !this.expanded;
     }
 
-
+    handleMessage(message){
+        //console.log('Expand Collapse message received:'+message.expanded);
+        this.expanded=message.expanded;
+    }
 
 }

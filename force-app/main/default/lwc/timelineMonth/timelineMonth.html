@@ -22,30 +22,44 @@
                     <template if:false={theRecord.isTask}>
                         <template if:false={theRecord.isFile}>
                             <template if:false={theRecord.isKnowledgeArticle}>
-                                <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
-                                    object={theRecord.object} title={theRecord.title} date-value={theRecord.dateValue}
-                                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo} navigation-behaviour={theRecord.navigationBehaviour}
-                                    display-relative-dates={theRecord.displayRelativeDates} is-overdue={theRecord.IsOverdue}>
-                                </c-timeline-item>
-                                <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported}
-                                    key={theRecord.recordId} object={theRecord.object} title={theRecord.title}
-                                    date-value={theRecord.dateValue}
-                                    expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                                    record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
-                                    is-external-service-data={theRecord.isExternalServiceData}
-                                    external-data={theRecord.externalData}
-                                    external-data-field-types={theRecord.externalDataFieldTypes}
-                                    base-url-for-record-detail={theRecord.baseUrlForRecordDetail}
-                                    navigation-behaviour={theRecord.navigationBehaviour}
-                                    display-relative-dates={theRecord.displayRelativeDates}
-                                    is-overdue={theRecord.IsOverdue}>
-                                </c-timeline-item-other-object>
+                                <template if:false={theRecord.isNote}>
+                                    <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
+                                        object={theRecord.object} title={theRecord.title}
+                                        date-value={theRecord.dateValue}
+                                        expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
+                                        record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
+                                        navigation-behaviour={theRecord.navigationBehaviour}
+                                        display-relative-dates={theRecord.displayRelativeDates}
+                                        is-overdue={theRecord.IsOverdue}>
+                                    </c-timeline-item>
+                                    <c-timeline-item-other-object if:true={theRecord.isUiApiNotSupported}
+                                        key={theRecord.recordId} object={theRecord.object} title={theRecord.title}
+                                        date-value={theRecord.dateValue}
+                                        expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
+                                        record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
+                                        is-external-service-data={theRecord.isExternalServiceData}
+                                        external-data={theRecord.externalData}
+                                        external-data-field-types={theRecord.externalDataFieldTypes}
+                                        base-url-for-record-detail={theRecord.baseUrlForRecordDetail}
+                                        navigation-behaviour={theRecord.navigationBehaviour}
+                                        display-relative-dates={theRecord.displayRelativeDates}
+                                        is-overdue={theRecord.IsOverdue}
+                                        is-salesforce-object={theRecord.isSalesforceObject}>
+                                    </c-timeline-item-other-object>
+                                </template>
+                                <template if:true={theRecord.isNote}>
+                                    <c-timeline-note    key={theRecord.recordId} title={theRecord.title} body={theRecord.body} 
+                                                        created-by-name={theRecord.createdByName} created-by-id={theRecord.createdById}
+                                                        display-relative-dates={theRecord.displayRelativeDates} date-value={theRecord.dateValue}>
+
+                                    </c-timeline-note>
+                                </template>
                             </template>
                             <template if:true={theRecord.isKnowledgeArticle}>
-                                <c-timeline-item-case-article key={theRecord.knowledgeArticleId} title={theRecord.title} description={theRecord.description}
-                                        date-value={theRecord.dateValue} url-name={theRecord.urlName} theme-info={theRecord.themeInfo}
-                                        display-relative-dates={theRecord.displayRelativeDates}>
+                                <c-timeline-item-case-article key={theRecord.knowledgeArticleId} title={theRecord.title}
+                                    description={theRecord.description} date-value={theRecord.dateValue}
+                                    url-name={theRecord.urlName} theme-info={theRecord.themeInfo}
+                                    display-relative-dates={theRecord.displayRelativeDates}>
 
                                 </c-timeline-item-case-article>
                             </template>
@@ -68,7 +82,7 @@
                             assigned-to-name={theRecord.assignedToName} who-id={theRecord.WhoId}
                             task-subtype={theRecord.TaskSubtype}
                             expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
-                            is-overdue={theRecord.IsOverdue} is-closed={theRecord.IsClosed} 
+                            is-overdue={theRecord.IsOverdue} is-closed={theRecord.IsClosed}
                             display-relative-dates={theRecord.displayRelativeDates}>
 
                         </c-timeline-item-task>

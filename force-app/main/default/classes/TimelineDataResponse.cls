@@ -5,6 +5,9 @@ public with sharing class TimelineDataResponse {
     @AuraEnabled
     public SObject data {get; set;}
 
+    @AuraEnabled
+    public Map<String,List<Object>> otherData {get; set;}
+
     @AuraEnabled 
     public Map<String,TimelineDataResponse.ApexConfigAndData> apexConfigData {get; set;}
 
@@ -22,6 +25,11 @@ public with sharing class TimelineDataResponse {
         this.data=theRecord;
         this.apexConfigData=apexData;
         this.logs =new List<String>();
+        this.otherData=new Map<String,List<Object>>();
+    }
+
+    public void addOtherData(String relatedName,List<Object> records){
+        this.otherData.put(relatedName,records);
     }
 
     public class ApexConfigAndData{
@@ -33,6 +41,10 @@ public with sharing class TimelineDataResponse {
         public String baseUrlForRecordDetail {get; set;}
         @AuraEnabled
         public List<TimelineFieldType> fieldsWithTypes {get; set;}
+        @AuraEnabled
+        public Boolean isSalesforceObject {get; set;}
+        @AuraEnabled
+        public Boolean isUiApiNotSupported {get; set;}
 
     }
 }

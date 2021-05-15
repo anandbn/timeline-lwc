@@ -5,7 +5,7 @@
  *  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api,wire } from 'lwc';
 import getTimelineItemData from '@salesforce/apex/RecordTimelineDataProvider.getTimelineItemData';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript } from 'lightning/platformResourceLoader';
@@ -17,9 +17,13 @@ import Error_loading_data from '@salesforce/label/c.Error_loading_data';
 import Invalid_parameters from '@salesforce/label/c.Invalid_parameters'
 import Either_recordId_or_configId_are_empty from '@salesforce/label/c.Either_recordId_or_configId_are_empty'
 import You from '@salesforce/label/c.You';
+import Notes from '@salesforce/label/c.Notes';
 import Upcoming from '@salesforce/label/c.Upcoming';
 import LANG from '@salesforce/i18n/lang';
 import LOCALE from '@salesforce/i18n/locale';
+
+import { publish, MessageContext } from 'lightning/messageService';
+import timelineItemState from '@salesforce/messageChannel/TimelineItemState__c';
 
 export default class ActivityTimeline extends LightningElement {
     @api recordId;
@@ -31,6 +35,8 @@ export default class ActivityTimeline extends LightningElement {
     @api availableObjects;
     @api initialObjectSelection;
     @api objectFilters;
+    @api showSearch=false;
+    @api showExpandCollapse=false;
     @track childRecords;
     @track timelineItemsByMonth;
     @track hasTimelineData;
@@ -40,6 +46,13 @@ export default class ActivityTimeline extends LightningElement {
     @track showFilter = false;
     @track dateFilterSelection = "all_time";
     @track isLoading = true;
+    @track serverData;
+    @track searchText;
+
+    @wire(MessageContext)
+    messageContext;
+
+    subscription;
 
     label = {
         No_data_found,
@@ -48,6 +61,7 @@ export default class ActivityTimeline extends LightningElement {
         Either_recordId_or_configId_are_empty
     }
     connectedCallback() {
+        
         Promise.all([
             loadScript(this, MOMENT_JS),
         ]).then(() => {
@@ -94,6 +108,7 @@ export default class ActivityTimeline extends LightningElement {
             this.isLoading = false;
             this.hasTimelineData = false;
             if (data) {
+                this.serverData=data;
                 this.childRecords = new Array();
                 let unsortedRecords = new Array();
                 //have to deep clone in order to Task and other standard objects
@@ -101,21 +116,51 @@ export default class ActivityTimeline extends LightningElement {
                 this.availableObjects = new Array();
                 this.initialObjectSelection = new Array();
                 for (let i = 0; i < configs.length; i++) {
-                    this.availableObjects.push({ "label": configs[i].timeline__Relationship_Name__c, "value": configs[i].timeline__Object__c });
-                    this.initialObjectSelection.push(configs[i].timeline__Object__c);
-                    //If the current object was filtered out, don't do any processing
-                    if (this.objectFilters && !this.objectFilters.includes(configs[i].timeline__Object__c)) {
-                        continue;
+                    if(configs[i].timeline__Object__c === 'ContentDocumentLink'){
+                        this.availableObjects.push({ "label": Notes, "value": Notes });
+                        this.initialObjectSelection.push(Notes);
+                    }else{
+                        if(configs[i].timeline__Data_Provider_Type__c === "Apex class"){
+                            this.availableObjects.push({ "label": configs[i].timeline__Relationship_Name__c, "value": configs[i].timeline__Relationship_Name__c });
+                            this.initialObjectSelection.push(configs[i].timeline__Relationship_Name__c);
+                        }else{
+                            this.availableObjects.push({ "label": configs[i].timeline__Relationship_Name__c, "value": configs[i].timeline__Object__c });
+                            this.initialObjectSelection.push(configs[i].timeline__Object__c);
+                        }
+                        
+
                     }
+                    //If the current object was filtered out, don't do any processing
+                    if(configs[i].timeline__Object__c ==='ContentDocumentLink'){
+                        if (this.objectFilters && !this.objectFilters.includes('Notes')) {
+                            continue;
+                        }
+                    }else{
+                        if (this.objectFilters && 
+                            !(
+                                this.objectFilters.includes(configs[i].timeline__Object__c) ||
+                                this.objectFilters.includes(configs[i].timeline__Relationship_Name__c)
+                            )
+                        ) {
+                            continue;
+                        }
+                    }
+
                     let relRecords;
                     if (configs[i].timeline__Data_Provider_Type__c === "Related Record") {
-                        relRecords = data.data[configs[i].timeline__Relationship_Name__c];
+                        if(configs[i].timeline__Object__c === 'ContentDocumentLink'){
+                            relRecords=data.otherData['ContentDocumentLink'];
+                        }else{
+                            relRecords = data.data[configs[i].timeline__Relationship_Name__c];
+                        }
+                        
                     }
                     let apexConfigAndData;
                     if (configs[i].timeline__Data_Provider_Type__c === "Apex class") {
                         apexConfigAndData = data.apexConfigData[configs[i].timeline__Relationship_Name__c];
                         relRecords = apexConfigAndData.apexData;
                     }
+                    
                     
                     if (relRecords) {
                         this.hasTimelineData = true;
@@ -124,7 +169,18 @@ export default class ActivityTimeline extends LightningElement {
                             var item = this.createTimelineItem(configs[i], apexConfigAndData, relRecords[j],childObjLabel,data.configuration.timeline__Display_Relative_Dates__c);
                             //backwards compatibility. Defauly relative date display to "true"
                             item.displayRelativeDates = (data.configuration.timeline__Display_Relative_Dates__c !=null)?data.configuration.timeline__Display_Relative_Dates__c:true;
-                            unsortedRecords.push(item);
+                            if(this.showSearch){
+                                //if the search text has values, then apply the search text to filter out those that don't match
+                                if(this.searchText && this.searchText.length>=3){
+                                    if(item.title.toLowerCase().includes(this.searchText.toLowerCase())){
+                                        unsortedRecords.push(item);
+                                    }
+                                }else{
+                                    unsortedRecords.push(item);
+                                }
+                            }else{
+                                unsortedRecords.push(item);
+                            }
                         }
                     }
 
@@ -168,6 +224,10 @@ export default class ActivityTimeline extends LightningElement {
                 var tasksAndChildRecords = new Array();
                 tasksAndChildRecords = tasksAndChildRecords.concat(tasksByStatus.notOverdueOrPast);
                 tasksAndChildRecords = tasksAndChildRecords.concat(childRecordsByDueStatus.notOverdueOrPast);
+
+                tasksAndChildRecords.sort(function (a, b) {
+                    return new Date(b.dateValueDB) - new Date(a.dateValueDB);
+                });
                 if(tasksAndChildRecords.length>0){
                     monthItem.monthValue = moment(key).format("MMM  •  YYYY");
                     monthItem.firstOfMonth = moment(key).format("YYYY-MM-01");
@@ -238,53 +298,81 @@ export default class ActivityTimeline extends LightningElement {
     createTimelineItem(config, apexConfigAndData, recordData,objLabel,displayRelativeDates) {
         let childRec = {};
         childRec.isTask = false;
+        childRec.isNote = false;
         childRec.isExternalServiceData = false;
         childRec.isUiApiNotSupported = config.timeline__LWC_Ui_Api_Not_Supported__c;
         childRec.object = config.timeline__Object__c;
         //Determine navigation behaviour on clcking the title of the timeline item
         //For backwards compatibility, the default is "Record Detail"
         childRec.navigationBehaviour=config.timeline__Title_link_Navigate_to__c?config. timeline__Title_link_Navigate_to__c:'Record Detail';
-        if(config.timeline__Display_Object_Name__c){
-            childRec.title = `${objLabel} - ${recordData[config.timeline__Title_Field__c]}`;
-        }else{
-            childRec.title = recordData[config.timeline__Title_Field__c];
-        }
-        childRec.dateValueDB = config.timeline__Date_Field__c ? recordData[config.timeline__Date_Field__c] : recordData.CreatedDate;
-        if(config.timeline__Overdue_Field__c){
-            childRec.IsOverdue = recordData[config.timeline__Overdue_Field__c];
-        }
-        if(displayRelativeDates){
-            childRec.dateValue = moment(childRec.dateValueDB).fromNow();
-        }else{
-            childRec.dateValue = childRec.dateValueDB;
-        }
-        childRec.monthValue = moment(childRec.dateValueDB).format("YYYY-MM-01");
-
-        let fldsToDisplay = config.timeline__Fields_to_Display__c.split(',');
-        if (!childRec.isUiApiNotSupported) {
-            childRec.expandedFieldsToDisplay = new Array();
-            for (let k = 0; k < fldsToDisplay.length; k++) {
-                childRec.expandedFieldsToDisplay.push({ "id": fldsToDisplay[k], "apiName": fldsToDisplay[k] });
+        if(childRec.object==='ContentDocumentLink'){
+            childRec.title = recordData.textPreview;
+            childRec.body = recordData.body;
+            childRec.isNote = true;
+            childRec.dateValueDB = recordData.createdDate;
+            childRec.createdByName=recordData.createdByName;
+            childRec.createdById=recordData.createdById;
+            childRec.recordId=recordData.recordId;
+            if(displayRelativeDates){
+                childRec.dateValue = moment(childRec.dateValueDB).fromNow();
+            }else{
+                childRec.dateValue = childRec.dateValueDB;
             }
-        } else {
-            childRec.expandedFieldsToDisplay = config.timeline__Fields_to_Display__c;
+            childRec.monthValue = moment(childRec.dateValueDB).format("YYYY-MM-01");
+            childRec.themeInfo = {
+                iconName: 'standard:note'
+            };
+        }else{
+            let titleFields = config.timeline__Title_Field__c.split(',');
+            let itemTitle = []; 
+            for(let i=0;i<titleFields.length;i++){
+                itemTitle.push(recordData[titleFields[i]]);
+            }
+            if(config.timeline__Display_Object_Name__c){
+                childRec.title = `${objLabel} - ${itemTitle.join(' | ')}`;
+            }else{
+                childRec.title = itemTitle.join(' | ');
+            }
+            childRec.dateValueDB = config.timeline__Date_Field__c ? recordData[config.timeline__Date_Field__c] : recordData.CreatedDate;
+            if(config.timeline__Overdue_Field__c){
+                childRec.IsOverdue = recordData[config.timeline__Overdue_Field__c];
+            }
+            if(displayRelativeDates){
+                childRec.dateValue = moment(childRec.dateValueDB).fromNow();
+            }else{
+                childRec.dateValue = childRec.dateValueDB;
+            }
+            childRec.monthValue = moment(childRec.dateValueDB).format("YYYY-MM-01");
+    
+            let fldsToDisplay = config.timeline__Fields_to_Display__c.split(',');
+            if (!childRec.isUiApiNotSupported) {
+                childRec.expandedFieldsToDisplay = new Array();
+                for (let k = 0; k < fldsToDisplay.length; k++) {
+                    childRec.expandedFieldsToDisplay.push({ "id": fldsToDisplay[k], "apiName": fldsToDisplay[k] });
+                }
+            } else {
+                childRec.expandedFieldsToDisplay = config.timeline__Fields_to_Display__c;
+            }
+            if (config.timeline__Data_Provider_Type__c === "Apex class") {
+                childRec.isExternalServiceData = true;
+                childRec.externalData = recordData;
+                childRec.externalDataFieldTypes = apexConfigAndData.fieldsWithTypes;
+                childRec.recordId = recordData[apexConfigAndData.recordIdentifierField];
+                childRec.baseUrlForRecordDetail = apexConfigAndData.baseUrlForRecordDetail;
+                childRec.isSalesforceObject = apexConfigAndData.isSalesforceObject;
+                childRec.isUiApiNotSupported=  apexConfigAndData.isUiApiNotSupported;
+            } else {
+                childRec.isExternalServiceData = false;
+                childRec.recordId = recordData.Id;
+            }
+            childRec.themeInfo = {
+                iconName: config.timeline__Icon_Name__c,
+                iconImgUrl: config.timeline__Icon_Image_Url__c,
+                color: config.timeline__Object_Color__c
+            };
+            childRec = this.setSpecialObjectValues(config,childRec,recordData);
         }
-        if (config.timeline__Data_Provider_Type__c === "Apex class") {
-            childRec.isExternalServiceData = true;
-            childRec.externalData = recordData;
-            childRec.externalDataFieldTypes = apexConfigAndData.fieldsWithTypes;
-            childRec.recordId = recordData[apexConfigAndData.recordIdentifierField];
-            childRec.baseUrlForRecordDetail = apexConfigAndData.baseUrlForRecordDetail;
-        } else {
-            childRec.isExternalServiceData = false;
-            childRec.recordId = recordData.Id;
-        }
-        childRec.themeInfo = {
-            iconName: config.timeline__Icon_Name__c,
-            iconImgUrl: config.timeline__Icon_Image_Url__c,
-            color: config.timeline__Object_Color__c
-        };
-        childRec = this.setSpecialObjectValues(config,childRec,recordData);
+        
         return childRec;
     }
 
@@ -372,6 +460,17 @@ export default class ActivityTimeline extends LightningElement {
             this.objectFilters = event.detail.objectFilter;
             this.refreshData();
         }
+    }
+
+    handleExpandCollapseEvent(event){
+        publish(this.messageContext, timelineItemState, {
+            "expanded":event.detail.expanded
+        });
+    }
+
+    handleSearch(event) {
+        this.searchText=event.detail.value;
+        this.processTimelineData(this.serverData);
     }
 
     get filteredObjects() {

@@ -17,6 +17,8 @@
             <property name="headerTitle" type="String" label="Title to display on the header"/>
             <property name="headerIcon" type="String" label="Header icon to display on the header (SLDS Icons)"/>
             <property name="additionalMargin" type="String" label="Additional margin style token" description="Refer to https://lightningdesignsystem.com/utilities/margin"/>
+            <property name="showSearch" type="Boolean" label="Display the search bar to filter timeline items" />
+            <property name="showExpandCollapse" type="Boolean" label="Display expand/collapse all icon" default="false"/>
         </targetConfig>
         <targetConfig targets="lightningCommunity__Default">
             <property name="recordId" type="String" label="Id of current record."/>
@@ -25,6 +27,7 @@
             <property name="headerTitle" type="String" label="Title to display on the header"/>
             <property name="headerIcon" type="String" label="Header icon to display on the header (SLDS Icons)"/>
             <property name="additionalMargin" type="String" label="Additional margin style token" description="Refer to https://lightningdesignsystem.com/utilities/margin"/>
+            <property name="showSearch" type="Boolean" label="Display the search bar to filter timeline items" />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

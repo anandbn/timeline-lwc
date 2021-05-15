@@ -5,6 +5,9 @@ global virtual class AbstractTimelineDataProvider implements ITimelineDataProvid
     global virtual String getDateField(){ return null;}
     global virtual String getBaseUrlForRecordDetail(){ return null;}
     global virtual String getRecordIdentifierField(){ return null;}
+
+    global virtual Boolean isSalesforceObject(){ return false;}
+    global virtual Boolean isUiApiNotSupported(){ return false;}
     global virtual List<String> getFieldsToDisplay(){ return null;}
     global virtual List<TimelineFieldType> getFieldsToDisplayWithTypes(){ return null;}
     global virtual List<Object> getData(Id recordId,String dateFilter){ return null;}

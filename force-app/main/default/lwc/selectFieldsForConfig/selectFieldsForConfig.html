@@ -90,8 +90,14 @@
         <h3 class="slds-section__title slds-theme_shade">
             <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{stepTitle}</span>
         </h3>
-        <c-searchable-data-table table-style="height: 300px;" key-field="fieldId" table-data={fields} columns={columns}
+        <c-searchable-data-table table-style="height: 200px;" key-field="fieldId" table-data={fields} columns={columns}
             max-row-selection={maxRowsToSelect} onrowselection={rowSelected}>
         </c-searchable-data-table>
     </div>
+    <template if:true={showFieldReordering}>
+        <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-p-horizontal_small" title="Reorder fields">Reorder fields</span>
+        </h3>
+        <c-list-box items={selectedFieldList} onreorder={handleFieldReordered}></c-list-box>     
+    </template>
 </template>

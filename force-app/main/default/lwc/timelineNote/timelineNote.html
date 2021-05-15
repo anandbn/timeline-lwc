@@ -1,0 +1,54 @@
+<template>
+    <li class="cardSpacing">
+        <div class={itemStyle}>
+            <span class="slds-assistive-text">{object}</span>
+            <div class="slds-media">
+                <div class="slds-media__figure" style="margin-right:4px">
+                    <lightning-button-icon if:false={expanded} size="x-small" icon-name="utility:chevronright"
+                        alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
+                    </lightning-button-icon>
+                    <lightning-button-icon if:true={expanded} size="x-small" icon-name="utility:switch"
+                        alternative-text={label.Toggle_Details} onclick={toggleDetailSection}>
+                    </lightning-button-icon>
+                    <lightning-icon     size="small" icon-name="standard:note"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                        <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+                            <h3 class="slds-truncate" title={title}>
+                                {title}
+                            </h3>
+                        </div>
+                        <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <p class="slds-timeline__date">
+                                <template if:false={displayRelativeDates}>
+                                    <lightning-formatted-date-time value={dateValue}></lightning-formatted-date-time>
+                                </template>
+                                <template if:true={displayRelativeDates}>
+                                    {dateValue}
+                                </template>
+                            </p>
+                        </div>
+                    </div>
+                    <template if:true={expanded}>
+                        <div class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <lightning-formatted-rich-text value={body}></lightning-formatted-rich-text>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Created By</span>
+                                <div class="slds-form-element__control">
+                                    {createdByName}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </li>
+
+</template>

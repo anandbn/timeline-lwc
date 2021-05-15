@@ -3,7 +3,8 @@ public with sharing class TimelineSOQLUtils {
         String soqlStmt = 'select Id,';
         List<String> childSoqls = new List<String>();
         for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
-            if(childObjConf.timeline__Data_Provider_Type__c ==null || childObjConf.timeline__Data_Provider_Type__c != 'Apex class'){
+            if(childObjConf.timeline__Data_Provider_Type__c ==null || childObjConf.timeline__Data_Provider_Type__c != 'Apex class' && 
+                childObjConf.timeline__Object__c !  = 'ContentDocumentLink'){
                 childSoqls.add(getSoqlForChildConfig(childObjConf,recordId,dateFilter,false));
             }
         }
@@ -46,8 +47,13 @@ public with sharing class TimelineSOQLUtils {
         if(childObjConf.timeline__Date_Field__c !=null && !fieldsToQuery.contains(childObjConf.timeline__Date_Field__c)){
             fieldsToQuery.add(childObjConf.timeline__Date_Field__c);
         }
-        if(childObjConf.Title_Field__c !=null && !fieldsToQuery.contains(childObjConf.Title_Field__c)){
-            fieldsToQuery.add(childObjConf.Title_Field__c);
+        if(childObjConf.Title_Field__c !=null){
+            for(String titleField : childObjConf.Title_Field__c.split(',')){
+                if(!fieldsToQuery.contains(titleField)){
+                    fieldsToQuery.add(titleField);
+
+                }
+            }
         }
         if(childObjConf.Overdue_Field__c !=null && !fieldsToQuery.contains(childObjConf.Overdue_Field__c)){
             fieldsToQuery.add(childObjConf.Overdue_Field__c);

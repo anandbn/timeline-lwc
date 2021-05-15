@@ -8,53 +8,67 @@
 global class SampleApexDataProvider extends AbstractTimelineDataProvider {
 
     global override String getObjectName(){
-        return 'Invoice';
+        return 'Case';
     }
     global override String getRelationshipName(){
-        return 'Invoices';
+        return 'OpenCases';
     }
-
 
     global override String getTitleField(){
-        return 'referenceNumber';
+        return 'Subject';
     }
     global override String getDateField(){
-        return 'invoiceDate';
+        return 'CreatedDate';
     }
     global override List<String> getFieldsToDisplay(){
-        return new List<String>{'amount','description','invoiceDate'};
+        return new List<String>{'Subject','CreatedDate','CreatedById','OwnerId','Status','ClosedDate'};
     }
 
-    global override List<TimelineFieldType> getFieldsToDisplayWithTypes(){
-        List<TimelineFieldType> fieldTypes= new List<TimelineFieldType>();
-        fieldTypes.add(new TimelineFieldType('Invoice Number','referenceNumber',Schema.DisplayType.STRING));
-        fieldTypes.add(new TimelineFieldType('Invoice Date','invoiceDate',Schema.DisplayType.DATETIME));
-        fieldTypes.add(new TimelineFieldType('Invoice Amount','amount',Schema.DisplayType.DOUBLE));
-        fieldTypes.add(new TimelineFieldType('Details','description',Schema.DisplayType.TEXTAREA));
+    global override List<timeline.TimelineFieldType> getFieldsToDisplayWithTypes(){
+        List<timeline.TimelineFieldType> fieldTypes= new List<timeline.TimelineFieldType>();
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Subject','Subject',Schema.DisplayType.String));
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Created Date','CreatedDate',Schema.DisplayType.String));
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Created By','CreatedById',Schema.DisplayType.String));
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Owner','OwnerId',Schema.DisplayType.String));
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Status','Status',Schema.DisplayType.String));
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Date/Time Closed','ClosedDate',Schema.DisplayType.String));
         return fieldTypes;
     }
     global override String getBaseUrlForRecordDetail(){
-        return 'https://timeline-sample-api.herokuapp.com/invoice';
+        return '';
     }
 
     global override String getRecordIdentifierField(){
-        return 'referenceNumber';
+        return 'Id';
     }
 
     global override List<Object> getData(Id recordId,String dateFilter){
-        Http h = new Http();
-
-        // Instantiate a new HTTP request, specify the method (GET) as well as the endpoint
-       HttpRequest req = new HttpRequest();
-       req.setEndpoint('https://timeline-sample-api.herokuapp.com/invoices/');
-       req.setMethod('GET');
-   
-       // Send the request, and return a response
-       HttpResponse res = h.send(req);
-       String invoiceStr = res.getBody();
-       System.debug('>>>>>>>>invoiceStr = '+invoiceStr);
-       return (List<Object>)JSON.deserializeUntyped(invoiceStr);
+        List<Object> result = new List<Object>();
+        //Id recordtypeId = '';
+        String fields = 'Subject, CreatedById, Owner.Name, Status, ClosedDate, CreatedDate';
+        for ( Case item:[select Id,Subject, CreatedBy.Name, Owner.Name, Status, ClosedDate, CreatedDate from Case where AccountId=:recordId and Status !='Closed' ]) {
+            Map<String,Object> obj = new Map<String,Object>();
+            obj.put('Id',item.Id);
+            obj.put('Subject',item.Subject);
+            obj.put('CreatedDate',item.CreatedDate.format());
+            obj.put('CreatedById',item.CreatedBy.Name);
+            obj.put('OwnerId',item.Owner.Name);
+            obj.put('Status',item.Status);
+            if ( item.ClosedDate !=null ) {
+                obj.put('ClosedDate',item.ClosedDate.format());
+            } else {
+                obj.put('ClosedDate','');
+            }
+            result.add(obj);
+        }
+        return result;
     }
 
+    global override Boolean isSalesforceObject(){
+        return true;
+    }
 
+    global override Boolean isUiApiNotSupported(){
+        return true;
+    }
 }

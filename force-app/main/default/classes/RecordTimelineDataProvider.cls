@@ -34,11 +34,17 @@ public with sharing class RecordTimelineDataProvider {
                     SObject theObject;
                     if(soqlToExec !=null){
                         List<SObject> result = Database.query(soqlToExec);
-                        log.add('After SOQL query: result = '+result);
+                        log.add('After SOQL query: result = '+JSON.serialize(result));
                         theObject= result[0];
                     }
                     Map<String,TimelineDataResponse.ApexConfigAndData> apexData = getDataFromApexProviders(conf, recordId, datefilter);
                     TimelineDataResponse resp = new TimelineDataResponse(conf,theObject,apexData);
+
+                    List<ObjectNote> relatedNotes = getNotes(conf,recordId,dateFilter,log);
+                    if(relatedNotes !=null){
+                        log.add('Related Notes# = '+relatedNotes.size());
+                        resp.addOtherData('ContentDocumentLink',relatedNotes);
+                    }
                     resp.objectLabels = getChildObjectLabels(conf);
                     resp.logs=log;
                     return resp;
@@ -137,17 +143,68 @@ public with sharing class RecordTimelineDataProvider {
         }
     }
 
+    private static List<ObjectNote> getNotes(timeline__Timeline_Configuration__c conf,String linkedEntityId,String datefilter,List<String> log){
+        List<ObjectNote> notes;
+        for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
+            if(childObjConf.timeline__Object__c == 'ContentDocumentLink'){
+                notes = new List<ObjectNote>();
+                List<Id> docIds = new List<Id>();
+                for(ContentDocumentLink attachNote:[select Id,ContentDocumentId from ContentDocumentLink where LinkedEntityId=:linkedEntityId]){
+                    docIds.add(attachNote.ContentDocumentId);
+
+                }
+
+
+                String soqlToExecute = 'SELECT Id,CreatedDate,TextPreview,Title,VersionData,CreatedBy.Name FROM ContentVersion where ContentDocumentId in :docIds and FileType=\'SNOTE\'';
+                String dateFilterStr=null;
+                if(dateFilter!=null){
+                    System.debug('Notes Date filter='+datefilter);
+                    switch on dateFilter{
+                        when 'last_7_days'{
+                            System.debug('Date filter= LAST_7_DAYS');
+                            dateFilterStr='LAST_N_DAYS:7';
+                        }
+                        when 'last_30_days'{
+                            System.debug('Date filter= LAST_30_DAYS');
+                            dateFilterStr='LAST_N_DAYS:30';
+                        }
+                        when 'next_7_days'{
+                            System.debug('Date filter= NEXT_7_DAYS');
+                            dateFilterStr='NEXT_N_DAYS:7';
+                        }
+                    }
+                    if(dateFilterStr != null){
+                        soqlToExecute += ' and CreatedDate='+dateFilterStr;
+                    }
+                    System.debug('Notes soqlToExecute = '+soqlToExecute);
+                }
+                log.add('Notes SOQL:'+ soqlToExecute);
+                for(ContentVersion noteDetail : Database.query(soqlToExecute)){
+                    notes.add(new ObjectNote(   noteDetail.TextPreview,noteDetail.VersionData.toString(),
+                                                noteDetail.CreatedBy.Name,noteDetail.CreatedBy.Id, noteDetail.CreatedDate,
+                                                noteDetail.Id
+                                            )
+                            );
+                }
+                break;
+            }
+        }
+        return notes;
+        
+    }
     private static Map<String,TimelineDataResponse.ApexConfigAndData> getDataFromApexProviders(timeline__Timeline_Configuration__c conf,String recordId,String datefilter){
         Map<String,TimelineDataResponse.ApexConfigAndData> apexData = new Map<String,TimelineDataResponse.ApexConfigAndData>();
         for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
             if(childObjConf.timeline__Data_Provider_Type__c == 'Apex class'){
                 Type providerClass = Type.forName(childObjConf.timeline__Provider_Apex_Classname__c);
-                ITimelineDataProvider provider = (ITimelineDataProvider)providerClass.newInstance();
+                AbstractTimelineDataProvider provider = (AbstractTimelineDataProvider)providerClass.newInstance();
                 TimelineDataResponse.ApexConfigAndData apexResp = new TimelineDataResponse.ApexConfigAndData();
                 apexResp.apexData=provider.getData(recordId, dateFilter);
                 apexResp.recordIdentifierField=provider.getRecordIdentifierField();
                 apexResp.baseUrlForRecordDetail=provider.getBaseUrlForRecordDetail();
                 apexResp.fieldsWithTypes=provider.getFieldsToDisplayWithTypes();
+                apexResp.isSalesforceObject=provider.isSalesforceObject();
+                apexResp.isUiApiNotSupported=provider.isUiApiNotSupported();
                 apexData.put(childObjConf.timeline__Relationship_Name__c,apexResp);
             }
         }
