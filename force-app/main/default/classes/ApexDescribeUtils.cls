@@ -119,31 +119,34 @@ global class ApexDescribeUtils {
 
     private static void addFieldMetadata(Map<String, Schema.SObjectField> fieldMap,List<FieldData> fieldsForObject,String fieldApiName,String objectApiName){
         Schema.SObjectField fld = fieldMap.get(fieldApiName);
-        Schema.DescribeFieldResult fldDesc = fld.getDescribe();
+        if(fld!= null){
+            Schema.DescribeFieldResult fldDesc = fld.getDescribe();
 
-        FieldData fieldData = new FieldData(    fldDesc.getName(),fldDesc.getType().name(),fldDesc.getLabel(),
-                                                fldDesc.getReferenceTo().isEmpty()?null:fldDesc.getReferenceTo()[0].getDescribe().getName(),
-                                                fldDesc.isNamePointing(),
-                                                fldDesc.getRelationshipName(),
-                                                fldDesc.isNameField());
-        if(fldDesc.getType() == Schema.DisplayType.TEXTAREA){
-            //Determine if this a rich text area and set the extraTypeInfo object
-            List<FieldDefinition> fldDefn = [ Select Id,ExtraTypeInfo 
-                                        from FieldDefinition 
-                                        where EntityDefinition.QualifiedApiName=:objectApiName
-                                        and QualifiedApiName =:fldDesc.getName()];
-            if(fldDefn != null && !fldDefn.isEmpty()){
-                fieldData.extraTypeInfo=fldDefn[0].ExtraTypeInfo;
+            FieldData fieldData = new FieldData(    fldDesc.getName(),fldDesc.getType().name(),fldDesc.getLabel(),
+                                                    fldDesc.getReferenceTo().isEmpty()?null:fldDesc.getReferenceTo()[0].getDescribe().getName(),
+                                                    fldDesc.isNamePointing(),
+                                                    fldDesc.getRelationshipName(),
+                                                    fldDesc.isNameField());
+            if(fldDesc.getType() == Schema.DisplayType.TEXTAREA){
+                //Determine if this a rich text area and set the extraTypeInfo object
+                List<FieldDefinition> fldDefn = [ Select Id,ExtraTypeInfo 
+                                            from FieldDefinition 
+                                            where EntityDefinition.QualifiedApiName=:objectApiName
+                                            and QualifiedApiName =:fldDesc.getName()];
+                if(fldDefn != null && !fldDefn.isEmpty()){
+                    fieldData.extraTypeInfo=fldDefn[0].ExtraTypeInfo;
+                }
             }
-        }
-        if(fldDesc.getType() == Schema.DisplayType.PICKLIST || fldDesc.getType() == Schema.DisplayType.MULTIPICKLIST){
-            List<PicklistEntry> pValues = new List<PicklistEntry>();
-            for(Schema.PicklistEntry pVal: fldDesc.getPicklistValues()){
-                pValues.add(new PicklistEntry(pVal.label!=null?pVal.label:pVal.value,pVal.value));
+            if(fldDesc.getType() == Schema.DisplayType.PICKLIST || fldDesc.getType() == Schema.DisplayType.MULTIPICKLIST){
+                List<PicklistEntry> pValues = new List<PicklistEntry>();
+                for(Schema.PicklistEntry pVal: fldDesc.getPicklistValues()){
+                    pValues.add(new PicklistEntry(pVal.label!=null?pVal.label:pVal.value,pVal.value));
+                }
+                fieldData.picklistValues=pValues;
             }
-            fieldData.picklistValues=pValues;
+            fieldsForObject.add(fieldData);
         }
-        fieldsForObject.add(fieldData);
+       
 
     }
 }

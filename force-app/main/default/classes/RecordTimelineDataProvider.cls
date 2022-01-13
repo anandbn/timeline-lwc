@@ -21,14 +21,14 @@ public with sharing class RecordTimelineDataProvider {
                                                             timeline__Title_Field__c,timeline__LWC_Ui_Api_Not_Supported__c,timeline__Data_Provider_Type__c,
                                                             timeline__Provider_Apex_Classname__c,timeline__Reference_Field_Name__c,
                                                             timeline__Where_Clause__c,timeline__Display_Object_Name__c,timeline__Title_link_Navigate_to__c,
-                                                            timeline__Overdue_Field__c
+                                                            timeline__Overdue_Field__c,timeline__Include_All_Records__c
                                                     FROM timeline__Timeline_Child_Objects__r)
                                                     from timeline__Timeline_Configuration__c
                                                     where (Id=:confIdOrName or Name=:confIdOrName)
                                                 ];
                 if(!conf.timeline__Timeline_Child_Objects__r.isEmpty()){
                     //String soqlToExec = getSOQLForTimeline(conf, recordId,dateFilter);
-                    String soqlToExec = TimelineSOQLUtils.getSOQLForTimeline(conf, recordId,dateFilter);
+                    String soqlToExec = TimelineSOQLUtils.getSOQLForTimeline(conf, recordId,dateFilter,log);
                     System.debug('>>>>>>>>> '+soqlToExec);
                     log.add(soqlToExec);
                     SObject theObject;
@@ -52,10 +52,14 @@ public with sharing class RecordTimelineDataProvider {
                 log.add('Child Objects are empty');
             }
             log.add('Fields are not accessible');
-            return null;
+            TimelineDataResponse resp = new TimelineDataResponse();
+            resp.logs=log;
+            return resp;
         }else{
             log.add('ConfId and/or record Id is null');
-            return null;
+            TimelineDataResponse resp = new TimelineDataResponse();
+            resp.logs=log;
+            return resp;
         }
 
     }
@@ -77,7 +81,8 @@ public with sharing class RecordTimelineDataProvider {
                 Schema.SObjectType.Timeline_Child_Object__c.fields.LWC_Ui_Api_Not_Supported__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Provider_Apex_Classname__c.isAccessible() && 
                 Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Title_link_Navigate_to__c.isAccessible() &&
-                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Overdue_Field__c.isAccessible());
+                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Overdue_Field__c.isAccessible() &&
+                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Include_All_Records__c.isAccessible());
     }
 
 
@@ -155,7 +160,7 @@ public with sharing class RecordTimelineDataProvider {
                 }
 
 
-                String soqlToExecute = 'SELECT Id,CreatedDate,TextPreview,Title,VersionData,CreatedBy.Name FROM ContentVersion where ContentDocumentId in :docIds and FileType=\'SNOTE\'';
+                String soqlToExecute = 'SELECT Id,Content,CreatedDate,TextPreview,Title,CreatedBy.Name,FileType FROM ContentNote where Id in :docIds ';
                 String dateFilterStr=null;
                 if(dateFilter!=null){
                     System.debug('Notes Date filter='+datefilter);
@@ -179,9 +184,10 @@ public with sharing class RecordTimelineDataProvider {
                     System.debug('Notes soqlToExecute = '+soqlToExecute);
                 }
                 log.add('Notes SOQL:'+ soqlToExecute);
-                for(ContentVersion noteDetail : Database.query(soqlToExecute)){
-                    notes.add(new ObjectNote(   noteDetail.TextPreview,noteDetail.VersionData.toString(),
+                for(ContentNote noteDetail : Database.query(soqlToExecute)){
+                    notes.add(new ObjectNote(   noteDetail.TextPreview,noteDetail.Content.toString(),
                                                 noteDetail.CreatedBy.Name,noteDetail.CreatedBy.Id, noteDetail.CreatedDate,
+                                                noteDetail.Id,
                                                 noteDetail.Id
                                             )
                             );

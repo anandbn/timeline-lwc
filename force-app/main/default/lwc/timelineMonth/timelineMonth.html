@@ -49,6 +49,7 @@
                                 </template>
                                 <template if:true={theRecord.isNote}>
                                     <c-timeline-note    key={theRecord.recordId} title={theRecord.title} body={theRecord.body} 
+                                                        record-id={theRecord.recordId} content-doc-id={theRecord.contentDocId}
                                                         created-by-name={theRecord.createdByName} created-by-id={theRecord.createdById}
                                                         display-relative-dates={theRecord.displayRelativeDates} date-value={theRecord.dateValue}>
 

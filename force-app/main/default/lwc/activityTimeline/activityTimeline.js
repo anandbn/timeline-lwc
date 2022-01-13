@@ -19,6 +19,7 @@ import Either_recordId_or_configId_are_empty from '@salesforce/label/c.Either_re
 import You from '@salesforce/label/c.You';
 import Notes from '@salesforce/label/c.Notes';
 import Upcoming from '@salesforce/label/c.Upcoming';
+import Search from '@salesforce/label/c.Search';
 import LANG from '@salesforce/i18n/lang';
 import LOCALE from '@salesforce/i18n/locale';
 
@@ -48,6 +49,7 @@ export default class ActivityTimeline extends LightningElement {
     @track isLoading = true;
     @track serverData;
     @track searchText;
+    @api noDataFoundWarnCss;
 
     @wire(MessageContext)
     messageContext;
@@ -58,7 +60,8 @@ export default class ActivityTimeline extends LightningElement {
         No_data_found,
         Error_loading_data,
         Invalid_parameters,
-        Either_recordId_or_configId_are_empty
+        Either_recordId_or_configId_are_empty,
+        Search
     }
     connectedCallback() {
         
@@ -124,7 +127,7 @@ export default class ActivityTimeline extends LightningElement {
                             this.availableObjects.push({ "label": configs[i].timeline__Relationship_Name__c, "value": configs[i].timeline__Relationship_Name__c });
                             this.initialObjectSelection.push(configs[i].timeline__Relationship_Name__c);
                         }else{
-                            this.availableObjects.push({ "label": configs[i].timeline__Relationship_Name__c, "value": configs[i].timeline__Object__c });
+                            this.availableObjects.push({ "label": data.objectLabels[configs[i].timeline__Object__c], "value": configs[i].timeline__Object__c });
                             this.initialObjectSelection.push(configs[i].timeline__Object__c);
                         }
                         
@@ -313,6 +316,7 @@ export default class ActivityTimeline extends LightningElement {
             childRec.createdByName=recordData.createdByName;
             childRec.createdById=recordData.createdById;
             childRec.recordId=recordData.recordId;
+            childRec.contentDocId=recordData.contentDocId;
             if(displayRelativeDates){
                 childRec.dateValue = moment(childRec.dateValueDB).fromNow();
             }else{
@@ -454,6 +458,19 @@ export default class ActivityTimeline extends LightningElement {
         ];
     }
 
+    get noDataFoundCss(){
+        switch (this.noDataFoundWarnCss){
+            case 'error':
+                return 'slds-badge slds-theme_error';
+                break;
+            case 'warning':
+                return 'slds-badge slds-theme_warning';
+                break;
+            case 'none':
+                return 'slds-badge';
+                break;
+        }
+    }
     handleFilterChange(event) {
         if (event.detail.dateFilter) {
             this.dateFilterSelection = event.detail.dateFilter;

@@ -11,14 +11,20 @@
         <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
+        
         <targetConfig targets="lightning__RecordPage">
             <property name="configId" type="String" label="Record Id or Name of the Timeline configuration to use"/>
             <property name="showHeader" type="Boolean" label="Check to display the header"/>
             <property name="headerTitle" type="String" label="Title to display on the header"/>
             <property name="headerIcon" type="String" label="Header icon to display on the header (SLDS Icons)"/>
             <property name="additionalMargin" type="String" label="Additional margin style token" description="Refer to https://lightningdesignsystem.com/utilities/margin"/>
+            <property name="noDataFoundWarnCss" type="String" label="SLDS CSS Class when No Data found is displayed" datasource="error,warning,none" default="warning" description="Refer to https://lightningdesignsystem.com/utilities/margin"/>
             <property name="showSearch" type="Boolean" label="Display the search bar to filter timeline items" />
             <property name="showExpandCollapse" type="Boolean" label="Display expand/collapse all icon" default="false"/>
+            <supportedFormFactors>
+                <supportedFormFactor type="Small" />
+                <supportedFormFactor type="Large" />
+            </supportedFormFactors>
         </targetConfig>
         <targetConfig targets="lightningCommunity__Default">
             <property name="recordId" type="String" label="Id of current record."/>
@@ -28,6 +34,7 @@
             <property name="headerIcon" type="String" label="Header icon to display on the header (SLDS Icons)"/>
             <property name="additionalMargin" type="String" label="Additional margin style token" description="Refer to https://lightningdesignsystem.com/utilities/margin"/>
             <property name="showSearch" type="Boolean" label="Display the search bar to filter timeline items" />
+            <property name="noDataFoundWarnCss" type="String" label="SLDS CSS Class when No Data found is displayed"  datasource="error,warning,none" default="warning" description="Refer to https://lightningdesignsystem.com/utilities/margin"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

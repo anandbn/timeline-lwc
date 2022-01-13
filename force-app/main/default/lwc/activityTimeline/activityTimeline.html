@@ -7,16 +7,25 @@
 
 <template>
     <div class="slds-card">
-        <div if:true={showHeader} class="slds-card__header slds-grid">
+        <div class="slds-card__header slds-grid">
             <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <lightning-icon icon-name={headerIcon} class="slds-m-around_xx-small"></lightning-icon>
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <a href="#" class="slds-card__header-link slds-truncate" title={headerTitle}>
-                            <span>{headerTitle}</span>
-                        </a>
-                    </h2>
-                </div>
+                <template if:true={showHeader}>
+                    <lightning-icon icon-name={headerIcon} class="slds-m-around_xx-small"></lightning-icon>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="#" class="slds-card__header-link slds-truncate" title={headerTitle}>
+                                <span>{headerTitle}</span>
+                            </a>
+                        </h2>
+                    </div>
+                </template>
+                <template if:false={showHeader}>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            &nbsp;
+                        </h2>
+                    </div>
+                </template>
                 <c-timeline-filter-panel object-filters={filteredObjects} available-objects={availableObjects}
                     onchange={handleFilterChange} onexpandcollapse={handleExpandCollapseEvent} show-expand-collapse={showExpandCollapse}></c-timeline-filter-panel>
             </header>
@@ -25,15 +34,9 @@
             <ul if:false={error} class="slds-timeline slds-m-around_small">
                 <template if:false={isLoading}>
                     <template if:true={hasTimelineData}>
-                        <li if:false={showHeader}
-                            class="slds-timeline__actions slds-timeline__actions_inline slds-is-relative">
-                            <c-timeline-filter-panel object-filters={filteredObjects}
-                                available-objects={availableObjects} onchange={handleFilterChange}>
-                            </c-timeline-filter-panel>
-                        </li>
                         <template if:true={showSearch}>
                             <div class="slds-p-bottom_small">
-                                <lightning-input type="text" placeholder="Search..." onchange={handleSearch}></lightning-input>
+                                <lightning-input type="text" placeholder={label.Search} onchange={handleSearch}></lightning-input>
                             </div>
                         </template>
                         <template for:each={timelineItemsByMonth} for:item="theMonth">
@@ -43,10 +46,9 @@
                         </template>
                     </template>
                     <template if:false={hasTimelineData}>
-                        <span class="slds-badge slds-theme_warning">
+                        <span class={noDataFoundCss}>
                             <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
                             &nbsp;{label.No_data_found}
-                            !!!!
                         </span>
                     </template>
                 </template>

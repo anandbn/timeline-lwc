@@ -42,7 +42,7 @@ public with sharing class RecordTimelineDataProviderTest {
 
     @isTest static void testGetTimelineItemDataNullInput(){
         TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(null,null,null);
-        System.assert(resp==null, 'Timeline configuration is not null');
+        System.assert(resp.data==null, 'Timeline data is not null');
     }
 
     @isTest static void testGetTimelineItemChildData(){

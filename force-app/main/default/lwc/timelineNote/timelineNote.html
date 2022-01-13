@@ -16,7 +16,8 @@
                     <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
                         <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
                             <h3 class="slds-truncate" title={title}>
-                                {title}
+                                <c-linked-output-text record-id={contentDocId} object="ContentNote" label={title} is-header="true">
+                                </c-linked-output-text>
                             </h3>
                         </div>
                         <div class="slds-timeline__actions slds-timeline__actions_inline">
@@ -41,6 +42,18 @@
                                 <span class="slds-form-element__label">Created By</span>
                                 <div class="slds-form-element__control">
                                     {createdByName}
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Id</span>
+                                <div class="slds-form-element__control">
+                                    {recordId}
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Content Doc Id</span>
+                                <div class="slds-form-element__control">
+                                    {contentDocId}
                                 </div>
                             </div>
                             

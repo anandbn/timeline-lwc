@@ -1,11 +1,11 @@
 public with sharing class TimelineSOQLUtils {
-    public static String getSOQLForTimeline(timeline__Timeline_Configuration__c conf,String recordId,String dateFilter){
+    public static String getSOQLForTimeline(timeline__Timeline_Configuration__c conf,String recordId,String dateFilter,List<String> log){
         String soqlStmt = 'select Id,';
         List<String> childSoqls = new List<String>();
         for(timeline__Timeline_Child_Object__c childObjConf: conf.timeline__Timeline_Child_Objects__r){
             if(childObjConf.timeline__Data_Provider_Type__c ==null || childObjConf.timeline__Data_Provider_Type__c != 'Apex class' && 
-                childObjConf.timeline__Object__c !  = 'ContentDocumentLink'){
-                childSoqls.add(getSoqlForChildConfig(childObjConf,recordId,dateFilter,false));
+                childObjConf.timeline__Object__c != 'ContentDocumentLink'){
+                childSoqls.add(getSoqlForChildConfig(childObjConf,recordId,dateFilter,false,log));
             }
         }
         if(!childSoqls.isEmpty()){
@@ -18,12 +18,13 @@ public with sharing class TimelineSOQLUtils {
         }
     }
 
-    public static String getSoqlForChildConfig(timeline__Timeline_Child_Object__c childObjConf,String recordId,String dateFilter,Boolean isDiagnosticMode){
+    public static String getSoqlForChildConfig(timeline__Timeline_Child_Object__c childObjConf,String recordId,String dateFilter,Boolean isDiagnosticMode,List<String> log){
 
         String childSoql = isDiagnosticMode?'select ':'(select ';
 
         childObjConf.timeline__Data_Provider_Type__c='Related Record';
         List<String> fieldsToQuery = childObjConf.timeline__Fields_to_Display__c.split(',');
+       
         if(!fieldsToQuery.contains('Id')) fieldsToQuery.add('Id');
         if(childObjConf.Object__c.equalsIgnoreCase('ContentDocumentLink')){
             if(!fieldsToQuery.contains('ContentDocumentId'))  fieldsToQuery.add('ContentDocumentId');
@@ -50,15 +51,32 @@ public with sharing class TimelineSOQLUtils {
         if(childObjConf.Title_Field__c !=null){
             for(String titleField : childObjConf.Title_Field__c.split(',')){
                 if(!fieldsToQuery.contains(titleField)){
-                    fieldsToQuery.add(titleField);
-
+                   fieldsToQuery.add(titleField);
                 }
             }
         }
         if(childObjConf.Overdue_Field__c !=null && !fieldsToQuery.contains(childObjConf.Overdue_Field__c)){
             fieldsToQuery.add(childObjConf.Overdue_Field__c);
         }
-        childSoql += String.join(fieldsToQuery,',');
+        log.add('Fields being included in SOQL: '+ String.join(fieldsToQuery,','));
+        Map<String,ApexDescribeUtils.FieldData> feildMetaMap = new Map<String,ApexDescribeUtils.FieldData>();
+
+        for(ApexDescribeUtils.FieldData fldMeta: ApexDescribeUtils.getFieldsForObject(childObjConf.timeline__Object__c,fieldsToQuery)){
+            feildMetaMap.put(fldMeta.apiName,fldMeta);
+        }
+        log.add('feildMetaMap: '+ feildMetaMap);
+        List<String> soqlFields = new List<String>();
+        for(String fldApiName: fieldsToQuery){
+            ApexDescribeUtils.FieldData fldMeta = (ApexDescribeUtils.FieldData)feildMetaMap.get(fldApiName);
+            if(fldMeta != null && fldMeta.dataType == 'PICKLIST'){
+                log.add('Field: '+ fldApiName + ' is a PICKLIST. Adding toLabel()');
+                soqlFields.add('toLabel('+fldApiName+')');
+            }else{
+                soqlFields.add(fldApiName);
+            }
+        }
+        childSoql += String.join(soqlFields,',');
+        
         childSoql +=' from '+(isDiagnosticMode?childObjConf.timeline__Object__c:childObjConf.timeline__Relationship_Name__c);
         String dateFilterStr;
         if(dateFilter!=null){
@@ -91,6 +109,7 @@ public with sharing class TimelineSOQLUtils {
                 childSoql +=' and '+ childObjConf.timeline__Where_Clause__c;
             }
             childSoql +=' order by '+childObjConf.timeline__Date_Field__c+' desc';
+//            childSoql += childObjConf.timeline__Include_All_Records__c?' ALL ROWS':'';
         }else if(!childObjConf.timeline__Object__c.endsWith('__x')){
             if(isDiagnosticMode){
                 childSoql +=' where '+childObjConf.timeline__Reference_Field_Name__c+'=\''+recordId+ '\'';

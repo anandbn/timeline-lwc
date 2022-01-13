@@ -11,13 +11,16 @@ public class ObjectNote {
     public Datetime createdDate {get; set;}
     @AuraEnabled
     public Id recordId;
+    @AuraEnabled
+    public Id contentDocId;
 
-    public ObjectNote(String txt,String body,String createdName, Id createdId,Datetime createdDate,Id recordId ) {
+    public ObjectNote(String txt,String body,String createdName, Id createdId,Datetime createdDate,Id recordId,Id contentDocId ) {
         this.textPreview=txt;
         this.body=body;
         this.createdByName=createdName;
         this.createdById=createdId;
         this.createdDate=createdDate;
         this.recordId=recordId;
+        this.contentDocId=contentDocId;
     }
 }

@@ -17,6 +17,7 @@ export default class TimelineNote extends LightningElement {
     @api object;
     @api dateValue;
     @api recordId;
+    @api contentDocId;
     @api navigationBehaviour="None";
     @api displayRelativeDates;
     @api expanded=false;
