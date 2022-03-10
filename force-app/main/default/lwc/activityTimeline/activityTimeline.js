@@ -44,7 +44,7 @@ export default class ActivityTimeline extends LightningElement {
     @track error;
     @track errorMsg;
     @track momentJSLoaded = false;
-    @track showFilter = false;
+    @api showFilter = false;
     @track dateFilterSelection = "all_time";
     @track isLoading = true;
     @track serverData;
@@ -330,7 +330,9 @@ export default class ActivityTimeline extends LightningElement {
             let titleFields = config.timeline__Title_Field__c.split(',');
             let itemTitle = []; 
             for(let i=0;i<titleFields.length;i++){
-                itemTitle.push(recordData[titleFields[i]]);
+                if(recordData[titleFields[i]]){
+                    itemTitle.push(recordData[titleFields[i]]);
+                }
             }
             if(config.timeline__Display_Object_Name__c){
                 childRec.title = `${objLabel} - ${itemTitle.join(' | ')}`;
@@ -475,6 +477,7 @@ export default class ActivityTimeline extends LightningElement {
         if (event.detail.dateFilter) {
             this.dateFilterSelection = event.detail.dateFilter;
             this.objectFilters = event.detail.objectFilter;
+            this.showHideFilters();
             this.refreshData();
         }
     }

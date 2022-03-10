@@ -99,6 +99,7 @@ export default class TimelineFilterPanel extends LightningElement {
 
     applyFilters(){
         this.expandAll=false;
+        this.showFilter=false;
         const filterChangeEvent = new CustomEvent('change', {
             detail: {
                 "dateFilter":this.dateFilterSelection,

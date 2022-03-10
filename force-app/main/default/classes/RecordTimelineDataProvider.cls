@@ -136,7 +136,14 @@ public with sharing class RecordTimelineDataProvider {
             }
         }
         //get the data from the record
-        String soqlStmt = 'select Id,'+String.join(newFieldsToQuery,',')+' from '+objectApiName+' where Id=:recordId';
+        String soqlStmt ='';
+        if(objectApiName !='ActivityHistory'){
+            soqlStmt ='select Id,'+String.join(newFieldsToQuery,',')+' from '+objectApiName+' where Id=:recordId';
+        }else{
+            soqlStmt ='select Id,'+String.join(newFieldsToQuery,',')+' from Task where Id=:recordId ALL ROWS';
+
+        }
+         
         System.debug('>>>>>> getTimelineItemChildData: soqlStmt = '+soqlStmt);
         List<SObject> result = Database.query(soqlStmt);
         if(!result.isEmpty()){

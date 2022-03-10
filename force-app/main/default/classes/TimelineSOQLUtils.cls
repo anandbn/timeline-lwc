@@ -127,6 +127,7 @@ public with sharing class TimelineSOQLUtils {
 
         if(!isDiagnosticMode)
             childSoql +=')';
+        log.add('>>>>>>>>>>> '+ childObjConf.timeline__Object__c+' SOQL :'+childSoql);
         return childSoql;
     }
 }
