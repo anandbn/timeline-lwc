@@ -16,6 +16,7 @@ export default class SelectFieldsForConfig extends LightningElement {
     @api displayFields;
     @api dateField;
     @api titleField;
+    @api subTitleField;
     @api relationshipName;
     @api iconName;
     @track isLoading = true;
@@ -43,7 +44,7 @@ export default class SelectFieldsForConfig extends LightningElement {
             let fieldResults = [];
             for (let field in fields) {
                 if (Object.prototype.hasOwnProperty.call(fields, field)) {
-                    if (this.stepName === "Display Fields" || this.stepName === "Title Field") {
+                    if (this.stepName === "Display Fields" || this.stepName === "Title Field" || this.stepName === "Subtitle Field") {
                         fieldResults.push({
                             fieldId: fields[field].apiName,
                             label: fields[field].label,
@@ -96,7 +97,7 @@ export default class SelectFieldsForConfig extends LightningElement {
 
         for (let field in fields) {
             if (Object.prototype.hasOwnProperty.call(fields, field)) {
-                if (this.stepName === "Display Fields" || this.stepName === "Title Field") {
+                if (this.stepName === "Display Fields" || this.stepName === "Title Field" || this.stepName === "Subtitle Field") {
                     fieldResults.push({
                         fieldId: fields[field].apiName,
                         label: fields[field].label || fields[field].fieldLabel,
@@ -138,6 +139,8 @@ export default class SelectFieldsForConfig extends LightningElement {
             return 1;
         } else if (this.stepName === "Title Field") {
             return 3;
+        }else if (this.stepName === "Subtitle Field") {
+            return 3;
         }
     }
 
@@ -154,6 +157,7 @@ export default class SelectFieldsForConfig extends LightningElement {
             }else{
                 this.selectedFieldList = event.detail.selectedRows;
             }
+            console.log(`rowSelected() - this.selectedFieldList = `+(this.selectedFieldList.map(fld => fld.apiName).join(',')));
             this.selectedFields = this.selectedFieldList.map(fld => fld.apiName).join(',');
         }
     }
@@ -168,18 +172,20 @@ export default class SelectFieldsForConfig extends LightningElement {
             return "Select upto 5 fields to display";
         } else if (this.stepName === "Date Field") {
             return "Select a Date Field";
-        } else if (this.stepName === "Title Field") {
+        } else if (this.stepName === "Title Field")  {
             return "Select upto 3 fields to display on the Title";
+        } else if (this.stepName === "Subtitle Field")  {
+            return "Select upto 3 fields to display on the Sub-title";
         } else {
             return "";
         }
 
     }
 
+
     get showFieldReordering() {
         return this.stepName === "Display Fields" || this.stepName === "Title Field";
     }
-
     get hasIconInfo() {
         return (this.iconImageUrl != null && this.objectColor != null) ||
             (this.iconName != null);

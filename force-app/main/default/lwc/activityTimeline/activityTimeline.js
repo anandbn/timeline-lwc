@@ -213,9 +213,10 @@ export default class ActivityTimeline extends LightningElement {
         var timelineItemsByMonth = new Array();
         for (let [key, value] of Object.entries(groupedByMonth)) {
             var monthItem = {};
-            if (Date.parse(key) - new Date().getTime() > 0 ) {
+            /*if (Date.parse(key) - new Date().getTime() > 0 ) {
                 futureItemGroup.timelineItems = futureItemGroup.timelineItems.concat(value);
-            } else {
+                var tasksByStatus = this.getTasksByStatus(value);
+            } else {*/
                 var tasksByStatus = this.getTasksByStatus(value);
                 if(tasksByStatus.overdueOrFuture.length>0){
                     futureItemGroup.timelineItems = futureItemGroup.timelineItems.concat(tasksByStatus.overdueOrFuture);
@@ -243,7 +244,7 @@ export default class ActivityTimeline extends LightningElement {
                 }
 
 
-            }
+            //}
 
         }
         timelineItemsByMonth.sort(function (a, b) {
@@ -285,9 +286,9 @@ export default class ActivityTimeline extends LightningElement {
         var overdueOrFutureTasks = new Array();
         var notOverdueOrPast = new Array();
         for(var i=0;i<timelineItems.length;i++){
-            //If it's a task and overdue or in the future
+            //If it's a task and overdue or in the future and not closed
             if( timelineItems[i].isTask){
-                if(timelineItems[i].IsOverdue || (new Date().getTime() - Date.parse(timelineItems[i].ActivityDate) < 0))
+                if(!timelineItems[i].IsClosed && (timelineItems[i].IsOverdue || (new Date().getTime() - Date.parse(timelineItems[i].ActivityDate) < 0)))
                 {
                     overdueOrFutureTasks.push(timelineItems[i]);
                 }else{
@@ -333,6 +334,16 @@ export default class ActivityTimeline extends LightningElement {
                 if(recordData[titleFields[i]]){
                     itemTitle.push(recordData[titleFields[i]]);
                 }
+            }
+            if(config.timeline__Sub_Title_Fields__c){
+                let subTitleFields = config.timeline__Sub_Title_Fields__c.split(',');
+                let itemSubTitle = []; 
+                for(let i=0;i<titleFields.length;i++){
+                    if(recordData[subTitleFields[i]]){
+                        itemSubTitle.push(recordData[subTitleFields[i]]);
+                    }
+                }
+                childRec.subTitle = itemSubTitle.join(' | ');
             }
             if(config.timeline__Display_Object_Name__c){
                 childRec.title = `${objLabel} - ${itemTitle.join(' | ')}`;

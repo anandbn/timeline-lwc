@@ -11,6 +11,7 @@ import timelineItemState from '@salesforce/messageChannel/TimelineItemState__c';
 export default class TimelineItem extends NavigationMixin(LightningElement) {
 
     @api title;
+    @api subTitle;
     @api object;
     @api dateValue;
     @api expandedFieldsToDisplay;

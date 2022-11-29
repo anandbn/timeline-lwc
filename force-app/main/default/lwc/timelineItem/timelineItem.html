@@ -30,7 +30,7 @@
                                     </template>
                                 </h3>
                             </div>
-                            <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <div class="slds-timeline__actions_inline">
 
                                 <template if:true={isOverdue}> 
                                     <strong><p class="slds-timeline__date overdue">
@@ -54,7 +54,10 @@
                                 </template>
                             </div>
                         </div>
-                        <div if:true={expanded} class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                        <p class="slds-var-m-horizontal_xx-small slds-truncate" title={subTitle}>
+                            {subTitle}
+                        </p>
+                        <div if:true={expanded} class="slds-box slds-theme_shade slds-var-m-top_x-small slds-var-m-horizontal_xx-small slds-var-p-around_medium">
                             <template for:each={expandedFieldsToDisplay} for:item="fieldToDisplay">
                                 <lightning-output-field key={fieldToDisplay.apiName} field-name={fieldToDisplay.apiName}>
                                 </lightning-output-field>

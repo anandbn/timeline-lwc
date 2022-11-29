@@ -32,7 +32,7 @@
                         <div class="slds-form-element__control" if:true={hasIconInfo}>
                             <lightning-icon if:true={hasIconName} size="small" icon-name={iconName}></lightning-icon>
                             <span if:false={hasIconName} class="slds-avatar slds-avatar--small" style={objectIconStyle}>
-                                <img src={iconImageUrl} class="slds-m-around_x-small"></img>
+                                <img src={iconImageUrl} class="slds-var-m-around_x-small"></img>
                             </span>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
             <div class="slds-grid slds-gutters_direct-x-small">
                 <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
                     <div class="slds-form-element">
-                        <label class="slds-form-element__label">Title Field</label>
+                        <label class="slds-form-element__label">Title Field(s)</label>
                         <div class="slds-form-element__control">
                             <input type="text" disabled value={titleField} class="slds-input" />
                         </div>
@@ -84,11 +84,21 @@
                     </div>
                 </template>
             </div>
+            <div class="slds-grid slds-gutters_direct-x-small">
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Sub Title Field(s)</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" disabled value={subTitleField} class="slds-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div if:false={isConfirmationStep} class="slds-section slds-is-open">
         <h3 class="slds-section__title slds-theme_shade">
-            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{stepTitle}</span>
+            <span class="slds-truncate slds-var-p-horizontal_small" title="Section Title">{stepTitle}</span>
         </h3>
         <c-searchable-data-table table-style="height: 200px;" key-field="fieldId" table-data={fields} columns={columns}
             max-row-selection={maxRowsToSelect} onrowselection={rowSelected}>
@@ -96,7 +106,7 @@
     </div>
     <template if:true={showFieldReordering}>
         <h3 class="slds-section__title slds-theme_shade">
-            <span class="slds-truncate slds-p-horizontal_small" title="Reorder fields">Reorder fields</span>
+            <span class="slds-truncate slds-var-p-horizontal_small" title="Reorder fields">Reorder fields</span>
         </h3>
         <c-list-box items={selectedFieldList} onreorder={handleFieldReordered}></c-list-box>     
     </template>

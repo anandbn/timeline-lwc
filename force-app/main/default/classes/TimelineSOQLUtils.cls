@@ -55,6 +55,13 @@ public with sharing class TimelineSOQLUtils {
                 }
             }
         }
+        if(childObjConf.Sub_Title_Fields__c !=null){
+            for(String subTitlefield : childObjConf.Sub_Title_Fields__c.split(',')){
+                if(!fieldsToQuery.contains(subTitlefield)){
+                   fieldsToQuery.add(subTitlefield);
+                }
+            }
+        }
         if(childObjConf.Overdue_Field__c !=null && !fieldsToQuery.contains(childObjConf.Overdue_Field__c)){
             fieldsToQuery.add(childObjConf.Overdue_Field__c);
         }

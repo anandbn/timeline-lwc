@@ -21,8 +21,16 @@ global class TimelineFieldType {
         this.apiName=apiName;
         this.dataType=fldType.name();
     }
+    public TimelineFieldType(String fldLabel,String apiName,String fldType) {
+        this.fieldLabel=fldLabel;
+        this.apiName=apiName;
+        this.dataType=fldType;
+    }
 
     global static TimelineFieldType newInstance(String fldLabel,String apiName,Schema.DisplayType fldType){
+        return new TimelineFieldType(fldLabel,apiName,fldType);
+    }
+    global static TimelineFieldType newInstance(String fldLabel,String apiName,String fldType){
         return new TimelineFieldType(fldLabel,apiName,fldType);
     }
 }

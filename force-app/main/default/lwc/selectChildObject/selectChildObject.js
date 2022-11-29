@@ -59,7 +59,7 @@ export default class SelectChildObject extends LightningElement {
 
 
     rowSelected(event) {
-
+        console.log('>>> rowselected on selectChildObject ');
         const selRow = event.detail.selectedRows[0];
         this.childObjectApiName=selRow.apiName;
         this.relationshipName=selRow.relationshipName;

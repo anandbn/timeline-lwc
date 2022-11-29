@@ -21,7 +21,7 @@ public with sharing class RecordTimelineDataProvider {
                                                             timeline__Title_Field__c,timeline__LWC_Ui_Api_Not_Supported__c,timeline__Data_Provider_Type__c,
                                                             timeline__Provider_Apex_Classname__c,timeline__Reference_Field_Name__c,
                                                             timeline__Where_Clause__c,timeline__Display_Object_Name__c,timeline__Title_link_Navigate_to__c,
-                                                            timeline__Overdue_Field__c,timeline__Include_All_Records__c
+                                                            timeline__Overdue_Field__c,timeline__Include_All_Records__c, timeline__Sub_Title_Fields__c
                                                     FROM timeline__Timeline_Child_Objects__r)
                                                     from timeline__Timeline_Configuration__c
                                                     where (Id=:confIdOrName or Name=:confIdOrName)
@@ -68,7 +68,7 @@ public with sharing class RecordTimelineDataProvider {
         return (Timeline_Configuration__c.sObjectType.getDescribe().isAccessible() &&
                 Timeline_Child_Object__c.sObjectType.getDescribe().isAccessible() &&
                 Schema.sObjectType.Timeline_Configuration__c.fields.Object__c.isAccessible() &&
-                Schema.SObjectType.Timeline_Configuration__c.fields.timeline__Display_Relative_Dates__c.isAccessible() &&  
+                Schema.SObjectType.Timeline_Configuration__c.fields.Display_Relative_Dates__c.isAccessible() &&  
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Date_Field__c.isAccessible() &&
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Fields_to_Display__c.isAccessible() &&
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Icon_Image_Url__c.isAccessible() &&
@@ -79,10 +79,11 @@ public with sharing class RecordTimelineDataProvider {
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Title_Field__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.Data_Provider_Type__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.LWC_Ui_Api_Not_Supported__c.isAccessible() &&
-                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Provider_Apex_Classname__c.isAccessible() && 
-                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Title_link_Navigate_to__c.isAccessible() &&
-                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Overdue_Field__c.isAccessible() &&
-                Schema.SObjectType.Timeline_Child_Object__c.fields.timeline__Include_All_Records__c.isAccessible());
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Provider_Apex_Classname__c.isAccessible() && 
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Title_link_Navigate_to__c.isAccessible() &&
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Overdue_Field__c.isAccessible() &&
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Include_All_Records__c.isAccessible() && 
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Sub_Title_Fields__c.isAccessible());
     }
 
 

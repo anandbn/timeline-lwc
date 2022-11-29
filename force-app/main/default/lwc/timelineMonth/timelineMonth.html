@@ -24,7 +24,7 @@
                             <template if:false={theRecord.isKnowledgeArticle}>
                                 <template if:false={theRecord.isNote}>
                                     <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
-                                        object={theRecord.object} title={theRecord.title}
+                                        object={theRecord.object} title={theRecord.title} sub-title={theRecord.subTitle}
                                         date-value={theRecord.dateValue}
                                         expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
                                         record-id={theRecord.recordId} theme-info={theRecord.themeInfo}

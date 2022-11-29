@@ -7,7 +7,7 @@
 
 global class SampleApexDataProvider extends AbstractTimelineDataProvider {
 
- 
+
 
     global override String getObjectName(){
 
@@ -186,5 +186,98 @@ global class SampleApexDataProvider extends AbstractTimelineDataProvider {
     global override Boolean isUiApiNotSupported(){
         return false;
     }
-    */   
+    */  
+
+    /*
+    
+    global override String getObjectName(){
+
+        return 'RichTextApex';
+
+    }
+
+    global override String getRelationshipName(){
+
+        return 'RichTextApex';
+
+    }
+
+ 
+
+    global override String getTitleField(){
+
+        return 'Subject';
+
+    }
+
+    global override String getDateField(){
+
+        return 'CreatedDate';
+
+    }
+
+    global override List<String> getFieldsToDisplay(){
+
+        return new List<String>{'Subject','CreatedDate','Description'};
+
+    }
+
+ 
+
+    global override List<timeline.TimelineFieldType> getFieldsToDisplayWithTypes(){
+
+        List<timeline.TimelineFieldType> fieldTypes= new List<timeline.TimelineFieldType>();
+
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Subject','Subject',Schema.DisplayType.String));
+
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Created Date','CreatedDate',Schema.DisplayType.String));
+        fieldTypes.add(timeline.TimelineFieldType.newInstance('Description','Description','RICHTEXTAREA'));
+
+        return fieldTypes;
+
+    }
+
+    global override String getBaseUrlForRecordDetail(){
+
+        return '';
+
+    }
+
+ 
+
+    global override String getRecordIdentifierField(){
+
+        return 'Id';
+
+    }
+
+ 
+
+    global override List<Object> getData(Id recordId,String dateFilter){
+
+        List<Object> result = new List<Object>();
+        Map<String,Object> obj = new Map<String,Object>();
+        obj.put('Subject','Something');
+        obj.put('Description','<p><b>BOld</b></p>');
+        obj.put('CreatedDate',System.now());
+        result.add(obj);
+        return result;
+
+    }
+
+ 
+
+    global override Boolean isSalesforceObject(){
+
+        return false;
+
+    }
+
+ 
+
+    global override Boolean isUiApiNotSupported(){
+
+        return true;
+
+    }*/
 }
