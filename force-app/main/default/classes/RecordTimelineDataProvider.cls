@@ -21,13 +21,13 @@ public with sharing class RecordTimelineDataProvider {
                                                             timeline__Title_Field__c,timeline__LWC_Ui_Api_Not_Supported__c,timeline__Data_Provider_Type__c,
                                                             timeline__Provider_Apex_Classname__c,timeline__Reference_Field_Name__c,
                                                             timeline__Where_Clause__c,timeline__Display_Object_Name__c,timeline__Title_link_Navigate_to__c,
-                                                            timeline__Overdue_Field__c,timeline__Include_All_Records__c, timeline__Sub_Title_Fields__c
+                                                            timeline__Overdue_Field__c,timeline__Include_All_Records__c, timeline__Sub_Title_Fields__c,
+                                                            timeline__Subtitle_Label__c
                                                     FROM timeline__Timeline_Child_Objects__r)
                                                     from timeline__Timeline_Configuration__c
                                                     where (Id=:confIdOrName or Name=:confIdOrName)
                                                 ];
                 if(!conf.timeline__Timeline_Child_Objects__r.isEmpty()){
-                    //String soqlToExec = getSOQLForTimeline(conf, recordId,dateFilter);
                     String soqlToExec = TimelineSOQLUtils.getSOQLForTimeline(conf, recordId,dateFilter,log);
                     System.debug('>>>>>>>>> '+soqlToExec);
                     log.add(soqlToExec);
@@ -83,7 +83,8 @@ public with sharing class RecordTimelineDataProvider {
                 Schema.SObjectType.Timeline_Child_Object__c.fields.Title_link_Navigate_to__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.Overdue_Field__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Child_Object__c.fields.Include_All_Records__c.isAccessible() && 
-                Schema.SObjectType.Timeline_Child_Object__c.fields.Sub_Title_Fields__c.isAccessible());
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Sub_Title_Fields__c.isAccessible() &&
+                Schema.SObjectType.Timeline_Child_Object__c.fields.Subtitle_Label__c.isAccessible());
     }
 
 

@@ -36,7 +36,7 @@
                                 </template>
                             </h3>
                         </div>
-                        <div class="slds-timeline__actions slds-timeline__actions_inline">
+                        <div class=" slds-timeline__actions_inline">
                             <template if:true={isOverdue}>
                                 <strong><p class="slds-timeline__date overdue">
                                     <template if:false={displayRelativeDates}>
@@ -60,7 +60,12 @@
                             
                         </div>
                     </div>
-                    <p if:true={isTask} class="slds-m-horizontal_xx-small">
+                    <template if:true={hasSubTitle}>
+                        <p class="slds-var-m-horizontal_xx-small slds-truncate" title={subTitle}>
+                            <span class="slds-text-title slds-var-p-right_xx-small"><b>{subTitleLabel}</b></span>{subTitle}
+                        </p>    
+                    </template>
+                    <p if:true={isTask} class="slds-var-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> 
                         <template if:false={hasWhoTo}>
                             <template if:true={isFutureTask}>
@@ -81,13 +86,13 @@
                             <a onclick={navigateToWho}>{whoToName}</a>
                         </template>
                     </p>
-                    <p if:true={isCall} class="slds-m-horizontal_xx-small">
+                    <p if:true={isCall} class="slds-var-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a>
                         <span if:false={hasWhoTo}> {label.logged_a_task}</span>
                         <span if:true={hasWhoTo}> {label.logged_a_call_with}&nbsp;</span>
                         <a if:true={hasWhoTo} onclick={navigateToWho}>{whoToName}</a>
                     </p>
-                    <p if:true={isEmail} class="slds-m-horizontal_xx-small">
+                    <p if:true={isEmail} class="slds-var-m-horizontal_xx-small">
                         <a onclick={navigateToOwner}>{assignedToName}</a> 
                         <span if:false={hasWhoTo}> {label.sent_an_email}</span>
                         <span if:true={hasWhoTo}> {label.sent_an_email_to} </span>
@@ -100,7 +105,7 @@
                         </template>
                     </p>
                     <div if:true={expanded}
-                        class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                        class="slds-box slds-theme_shade slds-var-m-top_x-small slds-var-m-horizontal_xx-small slds-var-p-around_medium">
                         <c-timeline-item-detail field-data={fieldData}></c-timeline-item-detail>
                     </div>
                 </div>

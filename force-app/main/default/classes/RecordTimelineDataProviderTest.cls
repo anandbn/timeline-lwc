@@ -11,6 +11,7 @@ public with sharing class RecordTimelineDataProviderTest {
                                                                             Relationship_Name__c='Tasks',
                                                                             Icon_Name__c='standard:task',
                                                                             Title_Field__c='Subject',
+                                                                            Sub_Title_Fields__c='Type',
                                                                             Timeline_Configuration__c=timelineConf.Id);
         insert childConf;
 
@@ -22,6 +23,14 @@ public with sharing class RecordTimelineDataProviderTest {
                                                                             Title_Field__c='Subject',
                                                                             Timeline_Configuration__c=timelineConf.Id);
         insert childConf;
+        childConf = new Timeline_Child_Object__c(   Date_Field__c='CreatedDate',
+                                                    Fields_To_Display__c='Title',
+                                                    Object__c='ContentDocumentLink',
+                                                    Relationship_Name__c='Notes',
+                                                    Icon_Name__c='standard:note',
+                                                    Title_Field__c='Title',
+                                                    Timeline_Configuration__c=timelineConf.Id);
+        insert childConf;
         Account acct = new Account(Name='My Timeline Test data account');
         insert acct;
         Contact ct = new Contact(FirstName='Test',LastName='Contact',Email='test@timeline.com',AccountId=acct.Id);
@@ -29,6 +38,11 @@ public with sharing class RecordTimelineDataProviderTest {
         Task acctTask = new Task(Subject='Test Task',ActivityDate=System.today(),Status='Completed',Description='Test Description',
                                 WhatId=acct.Id,WhoId=ct.Id);
         insert acctTask;
+        ContentNote cNote = new ContentNote(Title='Test');
+        insert cNote;
+
+        ContentDocumentLink cDocLink  = new ContentDocumentLink(LinkedEntityId=acct.Id,ContentDocumentId=cNote.Id);
+        insert cDocLink;
         
     }
 
@@ -36,6 +50,7 @@ public with sharing class RecordTimelineDataProviderTest {
         Account acct = [select Id from Account limit 1];
         Timeline_Configuration__c conf = [select Id from Timeline_Configuration__c limit 1];
         TimelineDataResponse resp = RecordTimelineDataProvider.getTimelineItemData(conf.Id, acct.Id,null);
+        System.debug('>>>>>>>> resp = '+resp);
         System.assert(resp.configuration!=null, 'Timeline configuration is null');
         System.assert(resp.data!=null, 'Timeline data is null');
     }

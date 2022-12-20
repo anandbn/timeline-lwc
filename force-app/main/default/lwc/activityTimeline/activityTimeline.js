@@ -344,6 +344,10 @@ export default class ActivityTimeline extends LightningElement {
                     }
                 }
                 childRec.subTitle = itemSubTitle.join(' | ');
+                if(config.timeline__Subtitle_Label__c){
+                    childRec.subTitleLabel = config.timeline__Subtitle_Label__c;
+
+                }
             }
             if(config.timeline__Display_Object_Name__c){
                 childRec.title = `${objLabel} - ${itemTitle.join(' | ')}`;

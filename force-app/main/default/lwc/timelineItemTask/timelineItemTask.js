@@ -40,6 +40,8 @@ import timelineItemState from '@salesforce/messageChannel/TimelineItemState__c';
 export default class TimelineItemTask extends NavigationMixin(LightningElement) {
 
     @api title;
+    @api subTitle;
+    @api subTitleLabel;
     @api dateValue;
     @api dateValueFromDb;
     @api recordId;
@@ -132,6 +134,9 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
         } 
     };
 
+    get hasSubTitle(){
+        return this.subTitle!=null && this.subTitle.length > 0;
+    }
     get recipientCount(){
         var count=0;
         if(this.toAddresses && this.toAddresses.length>0){

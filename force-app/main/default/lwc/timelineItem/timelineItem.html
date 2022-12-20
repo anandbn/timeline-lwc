@@ -1,3 +1,4 @@
+<!-- sldsValidatorIgnore -->
 <template>
     <lightning-record-view-form record-id={recordId} object-api-name={object}>
         <li class="cardSpacing">
@@ -31,7 +32,6 @@
                                 </h3>
                             </div>
                             <div class="slds-timeline__actions_inline">
-
                                 <template if:true={isOverdue}> 
                                     <strong><p class="slds-timeline__date overdue">
                                         <template if:false={displayRelativeDates}>
@@ -54,9 +54,11 @@
                                 </template>
                             </div>
                         </div>
-                        <p class="slds-var-m-horizontal_xx-small slds-truncate" title={subTitle}>
-                            {subTitle}
-                        </p>
+                        <template if:true={hasSubTitle}>
+                            <p class="slds-var-m-horizontal_xx-small slds-truncate" title={subTitle}>
+                                <span class="slds-text-title slds-var-p-right_xx-small"><b>{subTitleLabel}</b></span>{subTitle}
+                            </p>    
+                        </template>
                         <div if:true={expanded} class="slds-box slds-theme_shade slds-var-m-top_x-small slds-var-m-horizontal_xx-small slds-var-p-around_medium">
                             <template for:each={expandedFieldsToDisplay} for:item="fieldToDisplay">
                                 <lightning-output-field key={fieldToDisplay.apiName} field-name={fieldToDisplay.apiName}>

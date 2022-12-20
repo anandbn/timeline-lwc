@@ -12,6 +12,7 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
 
     @api title;
     @api subTitle;
+    @api subTitleLabel;
     @api object;
     @api dateValue;
     @api expandedFieldsToDisplay;
@@ -42,6 +43,9 @@ export default class TimelineItem extends NavigationMixin(LightningElement) {
         Toggle_details
     }
 
+    get hasSubTitle(){
+        return this.subTitle!=null && this.subTitle.length > 0;
+    }
     get hasIconName() {
         return this.themeInfo.iconName != null;
     }

@@ -25,7 +25,7 @@
                                 <template if:false={theRecord.isNote}>
                                     <c-timeline-item if:false={theRecord.isUiApiNotSupported} key={theRecord.recordId}
                                         object={theRecord.object} title={theRecord.title} sub-title={theRecord.subTitle}
-                                        date-value={theRecord.dateValue}
+                                        sub-title-label={theRecord.subTitleLabel} date-value={theRecord.dateValue}
                                         expanded-fields-to-display={theRecord.expandedFieldsToDisplay}
                                         record-id={theRecord.recordId} theme-info={theRecord.themeInfo}
                                         navigation-behaviour={theRecord.navigationBehaviour}
@@ -76,7 +76,8 @@
 
                     </template>
                     <template if:true={theRecord.isTask}>
-                        <c-timeline-item-task key={theRecord.recordId} title={theRecord.title}
+                        <c-timeline-item-task key={theRecord.recordId} title={theRecord.title} 
+                            sub-title={theRecord.subTitle} sub-title-label={theRecord.subTitleLabel}
                             date-value={theRecord.dateValue} date-value-from-db={theRecord.dateValueDB}
                             record-id={theRecord.recordId} description={theRecord.description}
                             who-to-name={theRecord.whoToName} owner-id={theRecord.OwnerId}
