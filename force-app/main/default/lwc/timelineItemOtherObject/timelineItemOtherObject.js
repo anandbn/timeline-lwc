@@ -17,6 +17,8 @@ export default class TimelineItemOtherObject extends LightningElement {
     @api title;
     @api object;
     @api dateValue;
+    @api subTitle;
+    @api subTitleLabel;
     @api expandedFieldsToDisplay;
     @api fieldData;
     @api recordId;
@@ -92,6 +94,10 @@ export default class TimelineItemOtherObject extends LightningElement {
 
     get shouldNavigateToRecord(){
         return this.navigationBehaviour!='None';
+    }
+
+    get hasSubTitle(){
+        return this.subTitle!=null && this.subTitle.length > 0;
     }
 
     handleMessage(message) {

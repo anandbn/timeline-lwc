@@ -32,7 +32,6 @@
                                 <template if:true={isOverdue}>
                                     &nbsp;<lightning-icon icon-name="utility:warning" variant="error" size="x-small" alternative-text={label.Overdue}></lightning-icon>
                                 </template>
-
                             </h3>
                         </div>
                         <div class="slds-timeline__actions slds-timeline__actions_inline">
@@ -58,6 +57,12 @@
                             </template>
                         </div>
                     </div>
+                    <template if:true={hasSubTitle}>
+                        <p class="slds-var-m-horizontal_xx-small slds-truncate" title={subTitle}>
+                            <span class="slds-text-title slds-var-p-right_xx-small"><b>{subTitleLabel}</b></span>{subTitle}
+                        </p>    
+                    </template>
+
                     <template if:true={expanded}>
                         <div
                             class="slds-box slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
