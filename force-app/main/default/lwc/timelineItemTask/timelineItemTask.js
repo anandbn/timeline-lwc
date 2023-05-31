@@ -101,35 +101,38 @@ export default class TimelineItemTask extends NavigationMixin(LightningElement) 
     @wire(getEmailDetails,{taskId:'$recordId'})
     emailMessage ({ error, data }) {
         if (data) {
-            this.assignedToName=data.FromName;
-            this.description=data.TextBody;
-            this.recordId=data.Id;
-            this.activityId=data.ActivityId;
-            if(data.ToAddress){
-                this.toAddresses=data.ToAddress.split(';');
-                this.firstRecipient=this.toAddresses[0];
-            }
-            if(data.CcAddress){
-                this.ccAddresses=data.CcAddress.split(';');
-            }
-            let emailRelations = data.EmailMessageRelations;
-            if(emailRelations && emailRelations.length>=1){
-                if(emailRelations[0].Relation){
-                    this.whoToName=emailRelations[0].Relation.Name;
-                    this.whoId=emailRelations[0].RelationId;
+            if (data.ActivityId) {
+                // its data from the EmailMessage object
+                this.assignedToName=data.FromName;
+                this.description=data.TextBody;
+                this.recordId=data.Id;
+                this.activityId=data.ActivityId;
+                if(data.ToAddress){
+                    this.toAddresses=data.ToAddress.split(';');
+                    this.firstRecipient=this.toAddresses[0];
                 }
-                for(var i=0;i<emailRelations.length;i++){
-                    if(emailRelations[i].RelationType == "FromAddress"){
-                        if(emailRelations[i].Relation){
-                            this.assignedToName=emailRelations[i].RelationId===CURRENT_USER_ID?You:emailRelations[i].Relation.Name;
-                            this.ownerId=emailRelations[i].RelationId;
-                        }else{
-                            this.assignedToName = data.FromName;
+                if(data.CcAddress){
+                    this.ccAddresses=data.CcAddress.split(';');
+                }
+                let emailRelations = data.EmailMessageRelations;
+                if(emailRelations && emailRelations.length>=1){
+                    if(emailRelations[0].Relation){
+                        this.whoToName=emailRelations[0].Relation.Name;
+                        this.whoId=emailRelations[0].RelationId;
+                    }
+                    for(var i=0;i<emailRelations.length;i++){
+                        if(emailRelations[i].RelationType == "FromAddress"){
+                            if(emailRelations[i].Relation){
+                                this.assignedToName=emailRelations[i].RelationId===CURRENT_USER_ID?You:emailRelations[i].Relation.Name;
+                                this.ownerId=emailRelations[i].RelationId;
+                            }else{
+                                this.assignedToName = data.FromName;
+                            }
                         }
                     }
-                }
 
-            }
+                }
+            } 
            
         } 
     };

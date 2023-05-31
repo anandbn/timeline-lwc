@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>External_Key__c</fullName>
+    <caseSensitive>true</caseSensitive>
+    <description>The external key of the record can be used in automated pipelines to upsert data.</description>
+    <externalId>true</externalId>
+    <inlineHelpText>Use the External Key to set a fixed unique key for this record. This can be used to load data into Salesforce.</inlineHelpText>
+    <label>External Key</label>
+    <length>80</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

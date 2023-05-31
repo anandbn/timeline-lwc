@@ -20,6 +20,7 @@
             <property name="dateField" type="String"/>
             <property name="titleField" type="String"/>
             <property name="subTitleField" type="String"/>
+            <property name="externalKey" type="String"/>
             <property name="whereClause" type="String"/>
             <property name="filterConfigJson" type="String"/>
             <property name="uiApiNotSupported" type="Boolean" role="outputOnly"/>

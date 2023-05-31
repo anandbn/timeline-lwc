@@ -22,10 +22,10 @@ public with sharing class RecordTimelineDataProvider {
                                                             timeline__Provider_Apex_Classname__c,timeline__Reference_Field_Name__c,
                                                             timeline__Where_Clause__c,timeline__Display_Object_Name__c,timeline__Title_link_Navigate_to__c,
                                                             timeline__Overdue_Field__c,timeline__Include_All_Records__c, timeline__Sub_Title_Fields__c,
-                                                            timeline__Subtitle_Label__c
+                                                            timeline__Subtitle_Label__c,timeline__External_Key__c 
                                                     FROM timeline__Timeline_Child_Objects__r)
                                                     from timeline__Timeline_Configuration__c
-                                                    where (Id=:confIdOrName or Name=:confIdOrName)
+                                                    where (Id=:confIdOrName or Name=:confIdOrName or timeline__External_Key__c=:confIdOrName)
                                                 ];
                 if(!conf.timeline__Timeline_Child_Objects__r.isEmpty()){
                     String soqlToExec = TimelineSOQLUtils.getSOQLForTimeline(conf, recordId,dateFilter,log);
@@ -69,6 +69,7 @@ public with sharing class RecordTimelineDataProvider {
                 Timeline_Child_Object__c.sObjectType.getDescribe().isAccessible() &&
                 Schema.sObjectType.Timeline_Configuration__c.fields.Object__c.isAccessible() &&
                 Schema.SObjectType.Timeline_Configuration__c.fields.Display_Relative_Dates__c.isAccessible() &&  
+                Schema.SObjectType.Timeline_Configuration__c.fields.External_Key__c.isAccessible() && 
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Date_Field__c.isAccessible() &&
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Fields_to_Display__c.isAccessible() &&
                 Schema.sObjectType.Timeline_Child_Object__c.fields.Icon_Image_Url__c.isAccessible() &&
@@ -89,19 +90,23 @@ public with sharing class RecordTimelineDataProvider {
 
 
     @AuraEnabled(cacheable=true)
-    public static EMailMessage getEmailDetails(String taskId) {
-        List<EmailMessage> msgs = [ select Id,ActivityId,Subject,FromName,FromAddress,ToAddress,CcAddress,TextBody,
-                                          (select RelationId,Relation.Name,RelationObjectType,RelationType
-                                          from EmailMessageRelations
-                                          where RelationType in('FromAddress','ToAddress')
-                                          order by RelationType asc)
-                                    from EmailMessage
-                                    where ActivityId=:taskId];
-        if(!msgs.isEmpty()){
-            return msgs[0];
+    public static Object getEmailDetails(String taskId) {
+        String query = 'Select Id, ActivityId, Subject, FromName, FromAddress, ToAddress, CcAddress, TextBody, ';
+        query += '(Select RelationId,Relation.Name,RelationObjectType,RelationType ';
+        query += 'From EmailMessageRelations ';
+        query += 'Where RelationType In (\'FromAddress\',\'ToAddress\') ';
+        query += 'Order By RelationType ASC) ';
+        query += 'From EmailMessage ';
+        query += 'Where ActivityId = \'' +String.escapeSingleQuotes(taskId) + '\'';
+        try {
+            List<Object> msgs = Database.query(query);
+            if(!msgs.isEmpty()){
+                return msgs[0];
+            }
+        } catch (Exception e) {
+            // maybe in future provide information about enabling Enhanced Email
         }
         return null;
-
     }
 
 

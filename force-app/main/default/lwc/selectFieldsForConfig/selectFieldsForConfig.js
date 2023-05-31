@@ -17,6 +17,7 @@ export default class SelectFieldsForConfig extends LightningElement {
     @api dateField;
     @api titleField;
     @api subTitleField;
+    @api externalKey;
     @api relationshipName;
     @api iconName;
     @track isLoading = true;
@@ -196,7 +197,7 @@ export default class SelectFieldsForConfig extends LightningElement {
     }
 
     get isConfirmationStep() {
-        return this.stepName === "Confirmation";
+        return this.stepName === "Confirmation" || this.stepName === 'External Key';
     }
 
     get configSectionStyle() {

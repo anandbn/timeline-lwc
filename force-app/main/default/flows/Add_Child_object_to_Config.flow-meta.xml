@@ -3,8 +3,8 @@
     <assignments>
         <name>Assign_LWC_UI_Support</name>
         <label>Assign LWC UI Support</label>
-        <locationX>1034</locationX>
-        <locationY>541</locationY>
+        <locationX>50</locationX>
+        <locationY>878</locationY>
         <assignmentItems>
             <assignToReference>uiApiNotSupported</assignToReference>
             <operator>Assign</operator>
@@ -35,8 +35,8 @@
     <decisions>
         <name>Check_Provider_Type</name>
         <label>Check Provider Type</label>
-        <locationX>348</locationX>
-        <locationY>407</locationY>
+        <locationX>710</locationX>
+        <locationY>398</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Apex_class</name>
@@ -72,8 +72,8 @@
     <decisions>
         <name>Is_Apex_Class_Valid</name>
         <label>Is Apex Class Valid</label>
-        <locationX>749</locationX>
-        <locationY>545</locationY>
+        <locationX>314</locationX>
+        <locationY>758</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Apex_Class_Valid</name>
@@ -109,8 +109,8 @@
     <decisions>
         <name>Is_SOQL_Verified</name>
         <label>Is SOQL Verified</label>
-        <locationX>1554</locationX>
-        <locationY>360</locationY>
+        <locationX>336</locationX>
+        <locationY>1910</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Soql_Verified_yes</name>
@@ -146,8 +146,8 @@
     <decisions>
         <name>Proceed_to_adding_criteria</name>
         <label>Proceed to adding criteria?</label>
-        <locationX>1375</locationX>
-        <locationY>137</locationY>
+        <locationX>710</locationX>
+        <locationY>1670</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Yes</name>
@@ -175,7 +175,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Step_7_Confirmation</targetReference>
+                <targetReference>Navigation_Behaviour</targetReference>
             </connector>
             <label>No</label>
         </rules>
@@ -189,12 +189,27 @@
         <picklistField>Data_Provider_Type__c</picklistField>
         <picklistObject>Timeline_Child_Object__c</picklistObject>
     </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <description>Navigation behaviour when clicking on the timeline item title.</description>
+        <name>NavigationBehaviour</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Title_link_Navigate_to__c</picklistField>
+        <picklistObject>Timeline_Child_Object__c</picklistObject>
+    </dynamicChoiceSets>
     <interviewLabel>Add Child object to Config {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Add Child object to Config</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -207,12 +222,15 @@
     <recordCreates>
         <name>Create_Timeline_Child_Object</name>
         <label>Create Timeline Child Object</label>
-        <locationX>1277</locationX>
-        <locationY>462</locationY>
+        <locationX>710</locationX>
+        <locationY>2462</locationY>
         <assignRecordIdToReference>var_childConfigId</assignRecordIdToReference>
         <connector>
             <targetReference>Step_7_Confirm_record_creation</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Step_7_Record_creation_failed</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Data_Provider_Type__c</field>
             <value>
@@ -223,6 +241,12 @@
             <field>Date_Field__c</field>
             <value>
                 <elementReference>var_dateField</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>External_Key__c</field>
+            <value>
+                <elementReference>var_externalKey</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -298,6 +322,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Title_link_Navigate_to__c</field>
+            <value>
+                <elementReference>var_NavigationBehaviour</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Where_Clause__c</field>
             <value>
                 <elementReference>var_SOQLWhere</elementReference>
@@ -308,8 +338,8 @@
     <screens>
         <name>Add_Filter_Criteria</name>
         <label>Add Filter Criteria</label>
-        <locationX>1222</locationX>
-        <locationY>131</locationY>
+        <locationX>710</locationX>
+        <locationY>1550</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -332,8 +362,8 @@
     <screens>
         <name>Add_Filter_Criteria_Details</name>
         <label>Add Filter Criteria Details</label>
-        <locationX>1559</locationX>
-        <locationY>204</locationY>
+        <locationX>336</locationX>
+        <locationY>1790</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -383,8 +413,8 @@
         <description>Select if the related record is being provided by an Apex class or a related record of the primary object.</description>
         <name>Is_Apex_or_Related_Record</name>
         <label>Is Apex or Related Record</label>
-        <locationX>201</locationX>
-        <locationY>309</locationY>
+        <locationX>710</locationX>
+        <locationY>278</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -404,10 +434,32 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
+        <name>Navigation_Behaviour</name>
+        <label>Navigation Behaviour</label>
+        <locationX>820</locationX>
+        <locationY>1790</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Step_7_Confirmation</targetReference>
+        </connector>
+        <fields>
+            <name>var_NavigationBehaviour</name>
+            <choiceReferences>NavigationBehaviour</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>When clicking on title where should the page navigate to?</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Select_Data_provider_Apex_Class</name>
         <label>Select Data provider Apex Class</label>
-        <locationX>363</locationX>
-        <locationY>556</locationY>
+        <locationX>314</locationX>
+        <locationY>518</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -430,13 +482,13 @@
     <screens>
         <name>Select_Object_Theme_Color</name>
         <label>Select Object Theme Color</label>
-        <locationX>1033</locationX>
-        <locationY>381</locationY>
+        <locationX>50</locationX>
+        <locationY>998</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Step_6_Icon_Selection</targetReference>
+            <targetReference>Step_9_External_Key_Field</targetReference>
         </connector>
         <fields>
             <name>cmp_selectObjectColor</name>
@@ -454,8 +506,8 @@
     <screens>
         <name>Step_1_Confirm_Object</name>
         <label>Step 1: Confirm Object</label>
-        <locationX>248</locationX>
-        <locationY>174</locationY>
+        <locationX>710</locationX>
+        <locationY>158</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -496,8 +548,8 @@
     <screens>
         <name>Step_2_Select_Related_Object</name>
         <label>Step 2: Select Related Object</label>
-        <locationX>379</locationX>
-        <locationY>76</locationY>
+        <locationX>842</locationX>
+        <locationY>518</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -546,8 +598,8 @@
     <screens>
         <name>Step_3_Select_Title_Field</name>
         <label>Step 3: Select Title Field</label>
-        <locationX>571</locationX>
-        <locationY>62</locationY>
+        <locationX>842</locationX>
+        <locationY>638</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -640,8 +692,8 @@
     <screens>
         <name>Step_4_Select_Date_Field</name>
         <label>Step 4: Select Date Field</label>
-        <locationX>747</locationX>
-        <locationY>59</locationY>
+        <locationX>842</locationX>
+        <locationY>758</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -724,13 +776,13 @@
     <screens>
         <name>Step_5_Select_Display_Fields</name>
         <label>Step 5: Select Display Fields</label>
-        <locationX>888</locationX>
-        <locationY>47</locationY>
+        <locationX>842</locationX>
+        <locationY>878</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Step_6_Icon_Selection</targetReference>
+            <targetReference>Step_9_External_Key_Field</targetReference>
         </connector>
         <fields>
             <name>lwc_progress_5</name>
@@ -808,8 +860,8 @@
     <screens>
         <name>Step_6_Icon_Selection</name>
         <label>Step 6: Icon Selection</label>
-        <locationX>1044</locationX>
-        <locationY>146</locationY>
+        <locationX>710</locationX>
+        <locationY>1430</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -849,8 +901,8 @@
     <screens>
         <name>Step_7_Confirm_record_creation</name>
         <label>Step 7: Confirm record creation</label>
-        <locationX>1277</locationX>
-        <locationY>629</locationY>
+        <locationX>710</locationX>
+        <locationY>2582</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -877,8 +929,8 @@
     <screens>
         <name>Step_7_Confirmation</name>
         <label>Step 7: Confirmation</label>
-        <locationX>1277</locationX>
-        <locationY>321</locationY>
+        <locationX>710</locationX>
+        <locationY>2342</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -967,7 +1019,154 @@
                     <elementReference>var_dataProviderType2</elementReference>
                 </value>
             </inputParameters>
+            <inputParameters>
+                <name>externalKey</name>
+                <value>
+                    <elementReference>var_externalKey</elementReference>
+                </value>
+            </inputParameters>
             <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Step_7_Record_creation_failed</name>
+        <label>Step 7: Record creation failed</label>
+        <locationX>1370</locationX>
+        <locationY>2582</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>lwc_progress_7b</name>
+            <extensionName>timeline:addChildObjectProgressBar</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>currentStep</name>
+                <value>
+                    <stringValue>7</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Copy_1_of_display_confirmation</name>
+            <fieldText>&lt;p&gt;Something went wrong with creation the timeline child configuration:&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Step_9_External_Key_Field</name>
+        <label>Step 9: External Key Field</label>
+        <locationX>710</locationX>
+        <locationY>1310</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Step_6_Icon_Selection</targetReference>
+        </connector>
+        <fields>
+            <name>lwc_progress_9</name>
+            <extensionName>timeline:addChildObjectProgressBar</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>currentStep</name>
+                <value>
+                    <stringValue>9</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>lwc_external_key_field</name>
+            <extensionName>timeline:selectFieldsForConfig</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>childObjectApiName</name>
+                <value>
+                    <elementReference>var_childObjectApiName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>dateField</name>
+                <value>
+                    <elementReference>var_dateField</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>displayFields</name>
+                <value>
+                    <elementReference>var_fieldsToDisplay</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>iconImageUrl</name>
+                <value>
+                    <elementReference>var_iconImageUrl</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>objectColor</name>
+                <value>
+                    <elementReference>var_objectColor</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>relationshipName</name>
+                <value>
+                    <elementReference>var_relationshipName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>stepName</name>
+                <value>
+                    <stringValue>External Key</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>titleField</name>
+                <value>
+                    <elementReference>var_titleField</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>iconName</name>
+                <value>
+                    <elementReference>var_iconName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>selectedApexClass</name>
+                <value>
+                    <elementReference>selectedApexClass</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>providerType</name>
+                <value>
+                    <elementReference>var_dataProviderType2</elementReference>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>external_key_text</name>
+            <fieldText>&lt;p&gt;You can set an External Key for the child record or leave the field empty&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>set_external_key</name>
+            <extensionName>timeline:externalKeyField</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>var_externalKey</assignToReference>
+                <name>externalKey</name>
+            </outputParameters>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
@@ -975,8 +1174,8 @@
     <screens>
         <name>Verify_Apex_Class</name>
         <label>Verify Apex Class</label>
-        <locationX>563</locationX>
-        <locationY>682</locationY>
+        <locationX>314</locationX>
+        <locationY>638</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1028,8 +1227,8 @@
         <showHeader>true</showHeader>
     </screens>
     <start>
-        <locationX>39</locationX>
-        <locationY>78</locationY>
+        <locationX>584</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Step_1_Confirm_Object</targetReference>
         </connector>
@@ -1082,6 +1281,13 @@
     </variables>
     <variables>
         <name>var_dateField</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>var_externalKey</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
